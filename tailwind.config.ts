@@ -9,8 +9,33 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // Core design tokens
+        bg: "var(--bg)",
+        ink: "var(--ink)",
+        "surface-dark": "var(--surface-dark)",
+
+        // Brand colors (Editorial Red default)
+        brand: {
+          DEFAULT: "var(--brand)",
+          dark: "var(--brand-dark)",
+        },
+
+        // Accent
+        accent: {
+          DEFAULT: "var(--accent)",
+          dark: "var(--accent-dark)",
+        },
+
+        // Market indicators
+        up: "var(--up)",
+        down: "var(--down)",
+        neutral: "var(--neutral)",
+
+        // Red shades
+        red: {
+          DEFAULT: "var(--red)",
+          dark: "var(--red-dark)",
+        },
       },
     },
   },
