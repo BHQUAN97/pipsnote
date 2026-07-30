@@ -1,35 +1,95 @@
+﻿'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function AdminLoginPage() {
+  const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Login failed');
+        return;
+      }
+
+      router.push('/admin/settings');
+    } catch (err) {
+      setError('Network error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg">
       <div className="w-full max-w-md p-8 border rounded-lg">
         <h1 className="text-2xl font-bold mb-6">Admin Login</h1>
-        <form className="space-y-4">
+        
+        {error && (
+          <div className="mb-4 p-3 bg-red text-white rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm mb-2">Username</label>
             <input
               type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border rounded"
               placeholder="admin"
+              disabled={loading}
+              required
             />
           </div>
           <div>
             <label className="block text-sm mb-2">Password</label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded"
               placeholder="••••••••"
+              disabled={loading}
+              required
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-brand text-white rounded hover:bg-brand-dark"
+            disabled={loading}
+            className="w-full py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-        <p className="mt-4 text-sm text-neutral">
-          ⚠️ Protected by rate-limit: max 10 attempts/10min
-        </p>
+
+        <div className="mt-4 p-3 bg-neutral/10 rounded text-sm">
+          <p className="font-semibold mb-1">⚠️ Security:</p>
+          <ul className="text-xs space-y-1">
+            <li>• Max 10 attempts/10min</li>
+            <li>• Auto-block 1h after threshold</li>
+            <li>• Default: admin / admin123</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
