@@ -56,7 +56,7 @@ ssh $VPS "cd $APP_DIR && docker compose -f docker-compose.prod.yml up -d"
 echo "[10/10] Checking status..."
 sleep 5
 ssh $VPS "docker ps | grep pipsnote"
-ssh $VPS "curl -s http://127.0.0.1:5600/ | head -20 || echo 'App not responding yet'"
+ssh $VPS "curl -s http://127.0.0.1:5601/ | head -20 || echo 'App not responding yet'"
 
 echo ""
 echo "=== Deploy complete! ==="

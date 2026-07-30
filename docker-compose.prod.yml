@@ -13,7 +13,7 @@ services:
     container_name: pipsnote-app
     env_file: .env
     ports:
-      - "127.0.0.1:5600:3000"
+      - "127.0.0.1:5601:3000"
     networks:
       - webphoto_backend   # network shared co san — cham toi shared-mysql
       - pipsnote_internal  # cham toi redis/meilisearch cua rieng pipsnote
