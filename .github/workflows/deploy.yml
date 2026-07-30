@@ -1,0 +1,78 @@
+name: Deploy pipsnote
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  workflow_dispatch: {}
+
+concurrency:
+  group: pipsnote-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Deploy qua SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            APP_DIR=/opt/pipsnote
+
+            # Sync .env tu secrets (ghi de moi lan deploy — nguon su that la GitHub Secrets)
+            cat > "$APP_DIR/.env" <<EOF
+            DB_HOST=shared-mysql
+            DB_PORT=3306
+            DB_NAME=pipsnote
+            DB_USER=pipsnote_app
+            DB_PASSWORD=${{ secrets.PIPSNOTE_DB_PASSWORD }}
+            MYSQL_BACKUP_PASSWORD=${{ secrets.MYSQL_BACKUP_PASSWORD }}
+            REDIS_HOST=pipsnote-redis
+            REDIS_PORT=6379
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+            MEILI_HOST=http://pipsnote-meilisearch:7700
+            MEILI_MASTER_KEY=${{ secrets.MEILI_MASTER_KEY }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            R2_ENDPOINT=${{ secrets.R2_ENDPOINT }}
+            R2_BUCKET=${{ secrets.R2_BUCKET }}
+            R2_ACCESS_KEY_ID=${{ secrets.R2_ACCESS_KEY_ID }}
+            R2_SECRET_ACCESS_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}
+            BACKUP_ENC_KEY=${{ secrets.BACKUP_ENC_KEY }}
+            EOF
+            chmod 600 "$APP_DIR/.env"
+
+            # Dam bao user pipsnote_app + backup ton tai tren shared-mysql (idempotent)
+            docker exec -e MYSQL_PWD="${{ secrets.MYSQL_ROOT_PASSWORD }}" shared-mysql \
+              mysql --protocol=tcp -h 127.0.0.1 -uroot -e "
+                CREATE DATABASE IF NOT EXISTS pipsnote CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+                CREATE USER IF NOT EXISTS 'pipsnote_app'@'%' IDENTIFIED BY '${{ secrets.PIPSNOTE_DB_PASSWORD }}';
+                ALTER USER 'pipsnote_app'@'%' IDENTIFIED BY '${{ secrets.PIPSNOTE_DB_PASSWORD }}';
+                GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES ON pipsnote.* TO 'pipsnote_app'@'%';
+                CREATE USER IF NOT EXISTS 'pipsnote_backup'@'%' IDENTIFIED BY '${{ secrets.MYSQL_BACKUP_PASSWORD }}';
+                ALTER USER 'pipsnote_backup'@'%' IDENTIFIED BY '${{ secrets.MYSQL_BACKUP_PASSWORD }}';
+                GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, TRIGGER, PROCESS ON pipsnote.* TO 'pipsnote_backup'@'%';
+                FLUSH PRIVILEGES;
+              " 2>&1 || echo "::warning::shared-mysql chua chay hoac ensure-user that bai, kiem tra thu cong"
+
+            cd "$APP_DIR"
+            bash scripts/deploy.sh
+
+      - name: Health-check cuoi cung
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            curl -sf http://127.0.0.1:5600/api/health && echo "OK" || (echo "FAIL" && exit 1)
+            docker ps --filter "name=pipsnote-" --format "table {{.Names}}\t{{.Status}}"

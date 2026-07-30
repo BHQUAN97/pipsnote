@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPSNOTE — Forex Insights & Broker Reviews</title>
+<script>
+  // Chay som nhat co the (truoc CSS load) de tranh nhay trang sang->toi (FOUC)
+  (function(){
+    var saved = localStorage.getItem('pipsnote-theme');
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --ink:#0A0A0A;          /* mau chu / text — KHONG dung lam background khoi toi */
+    --surface-dark:#0A0A0A;  /* khoi luon toi (ticker, badge, news-box) — doc lap voi theme sang/toi */
+    --red:#E10600;
+    --red-dark:#B00500;
+    --gray-bg:#F5F4F1;
+    --gray-line:#E4E2DC;
+    --gray-mid:#6E6C66;
+    --up:#1a9e46;    /* gia tang — dung thong nhat 1 noi, khong hardcode rai rac */
+    --down:#E10600;  /* gia giam — mac dinh trung --red cho dong bo voi accent */
+  }
+  /* Dark theme — toggle qua [data-theme="dark"] tren <html>, xem nut o header + docs/DESIGN_SYSTEM.md */
+  [data-theme="dark"]{
+    --bg:#0B0C0E;
+    --ink:#F2F1ED;
+    --gray-bg:#16181C;
+    --gray-line:#2A2D33;
+    --gray-mid:#8B8D93;
+    --red:#FF4438;
+    --red-dark:#E10600;
+    --up:#39D353;
+    --down:#FF4438;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--red);
+    font-weight:500;
+  }
+  h1,h2,h3{font-family:'Archivo Black', sans-serif; line-height:1.05; letter-spacing:-0.01em;}
+
+  /* HEADER */
+  header{border-bottom:1px solid var(--gray-line); position:sticky; top:0; background:var(--bg); z-index:50;}
+  .headbar{display:flex; align-items:center; justify-content:space-between; height:76px;}
+  .logo{font-family:'Archivo Black'; font-size:22px; letter-spacing:-0.02em;}
+  .logo span{color:var(--red);}
+  nav{display:flex; gap:36px; align-items:center;}
+  nav a{font-size:14px; font-weight:500; position:relative; padding:6px 0;}
+  nav a::after{content:'';position:absolute; left:0; bottom:0; width:0; height:2px; background:var(--red); transition:width .2s;}
+  nav a:hover::after{width:100%;}
+  .nav-cta{background:var(--red); color:#fff; padding:10px 20px; font-size:13px; font-weight:600; border-radius:2px;}
+  .nav-cta:hover{background:var(--red-dark);}
+  .burger{display:none; font-size:26px; cursor:pointer;}
+
+  /* TICKER - signature element */
+  .ticker-strip{background:var(--surface-dark); overflow:hidden; white-space:nowrap; border-bottom:1px solid var(--surface-dark);}
+  .ticker-track{display:inline-flex; animation:scroll 32s linear infinite;}
+  .ticker-item{display:inline-flex; align-items:center; gap:8px; padding:9px 28px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#fff; border-right:1px solid #2b2b2b;}
+  .ticker-item .pair{font-weight:500; color:#fff;}
+  .ticker-item .up{color:var(--up);}
+  .ticker-item .down{color:var(--down);}
+  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  /* HERO */
+  .hero{padding:88px 0 72px; border-bottom:1px solid var(--gray-line);}
+  .hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:64px; align-items:end;}
+  .hero h1{font-size:58px; margin:14px 0 22px;}
+  .hero p{font-size:17px; color:var(--gray-mid); max-width:460px; line-height:1.6; margin-bottom:30px;}
+  .hero-actions{display:flex; gap:14px;}
+  .btn-primary{background:var(--red); color:#fff; padding:15px 26px; font-weight:600; font-size:14px; border-radius:2px; border:1px solid var(--red);}
+  .btn-primary:hover{background:var(--red-dark);}
+  .btn-outline{padding:15px 26px; font-weight:600; font-size:14px; border-radius:2px; border:1px solid var(--ink);}
+  .btn-outline:hover{background:var(--surface-dark); color:#fff;}
+  .hero-stat-card{border:1px solid var(--gray-line); padding:26px; background:var(--gray-bg);}
+  .hero-stat-card .row{display:flex; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--gray-line); font-size:14px;}
+  .hero-stat-card .row:last-child{border-bottom:none;}
+  .hero-stat-card .row .v{font-family:'IBM Plex Mono'; font-weight:500;}
+  .hero-stat-card .row .up{color:var(--up);}
+  .hero-stat-card .row .down{color:var(--down);}
+
+  /* SECTION HEADER */
+  .sec-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px;}
+  .sec-head h2{font-size:30px;}
+  .sec-head a{font-size:13px; font-weight:600; border-bottom:2px solid var(--red); padding-bottom:2px;}
+  section{padding:72px 0;}
+  section.alt{background:var(--gray-bg); border-top:1px solid var(--gray-line); border-bottom:1px solid var(--gray-line);}
+
+  /* BROKERS */
+  .broker-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .broker-card{border:1px solid var(--gray-line); background:var(--bg); padding:26px; display:flex; flex-direction:column; gap:16px; transition:border-color .2s, transform .2s;}
+  .broker-card:hover{border-color:var(--ink); transform:translateY(-3px);}
+  .broker-top{display:flex; justify-content:space-between; align-items:flex-start;}
+  .broker-mark{font-family:'Archivo Black'; font-size:19px;}
+  .badge{font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; background:var(--surface-dark); color:#fff; padding:4px 8px;}
+  .badge.hot{background:var(--red);}
+  .broker-specs{display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px; color:var(--gray-mid); border-top:1px solid var(--gray-line); padding-top:16px;}
+  .broker-specs b{display:block; color:var(--ink); font-family:'IBM Plex Mono'; font-size:14px; font-weight:500; margin-top:2px;}
+  .broker-cta{margin-top:auto; display:flex; justify-content:space-between; align-items:center; background:var(--red); color:#fff; padding:13px 16px; font-weight:600; font-size:13.5px; border-radius:2px;}
+  .broker-cta:hover{background:var(--red-dark);}
+
+  /* CATEGORIES */
+  .cat-row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:44px;}
+  .cat-pill{border:1px solid var(--gray-line); padding:9px 18px; font-size:13px; font-weight:500;}
+  .cat-pill.active{background:var(--surface-dark); color:#fff; border-color:var(--surface-dark);}
+
+  /* BLOG GRID */
+  .blog-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:28px;}
+  .post-card .thumb{aspect-ratio:4/3; background:var(--gray-bg); border:1px solid var(--gray-line); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--gray-mid); font-family:'IBM Plex Mono'; font-size:12px;}
+  .post-tag{font-family:'IBM Plex Mono'; font-size:11px; color:var(--red); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; display:block;}
+  .post-card h3{font-family:'Space Grotesk'; font-weight:600; font-size:18px; line-height:1.35; margin-bottom:8px;}
+  .post-meta{font-size:12.5px; color:var(--gray-mid);}
+
+  /* NEWSLETTER */
+  .news-box{background:var(--surface-dark); color:#fff; padding:56px; display:flex; justify-content:space-between; align-items:center; gap:40px;}
+  .news-box h2{font-size:26px; color:#fff; max-width:380px; margin-bottom:8px;}
+  .news-box p{color:#aaa; font-size:14px;}
+  .news-form{display:flex; gap:0; min-width:360px;}
+  .news-form input{flex:1; padding:15px 16px; border:1px solid #444; background:transparent; color:#fff; font-size:14px; font-family:'Space Grotesk';}
+  .news-form input::placeholder{color:#888;}
+  .news-form button{background:var(--red); color:#fff; border:none; padding:0 26px; font-weight:600; font-size:14px; cursor:pointer;}
+  .news-form button:hover{background:var(--red-dark);}
+
+  /* FOOTER */
+  footer{background:var(--bg); border-top:1px solid var(--gray-line); padding:64px 0 0;}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:48px;}
+  .foot-col h4{font-size:12.5px; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono'; margin-bottom:18px; color:var(--gray-mid);}
+  .foot-col a{display:block; font-size:14px; margin-bottom:12px; color:var(--ink);}
+  .foot-col a:hover{color:var(--red);}
+  .foot-logo{font-family:'Archivo Black'; font-size:22px; margin-bottom:14px;}
+  .foot-logo span{color:var(--red);}
+  .foot-desc{font-size:14px; color:var(--gray-mid); max-width:280px; line-height:1.6; margin-bottom:20px;}
+  .social-row{display:flex; gap:12px;}
+  .social-row a{width:34px; height:34px; border:1px solid var(--gray-line); display:flex; align-items:center; justify-content:center; font-size:13px; font-family:'IBM Plex Mono';}
+  .social-row a:hover{background:var(--surface-dark); color:#fff;}
+  .risk-note{border-top:1px solid var(--gray-line); padding:22px 0; font-size:12px; color:var(--gray-mid); line-height:1.7;}
+  .bottom-bar{border-top:1px solid var(--gray-line); padding:20px 0; display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--gray-mid);}
+  .bottom-links{display:flex; gap:22px;}
+
+  @media(max-width:920px){
+    nav{display:none;}
+    .burger{display:block;}
+    .hero-grid, .broker-grid, .blog-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:38px;}
+    .news-box{flex-direction:column; align-items:flex-start;}
+    .news-form{min-width:100%;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap headbar">
+    <a href="#" class="logo">PIPS<span>NOTE</span></a>
+    <nav>
+      <a href="#blog">Blog</a>
+      <a href="#instruction">Instruction</a>
+      <a href="#brokers">Top Broker</a>
+      <a href="#about">About Us</a>
+    </nav>
+    <a href="#brokers" class="nav-cta">Compare Brokers</a>
+    <button id="themeToggle" aria-label="Doi giao dien sang/toi" style="background:none;border:1px solid var(--gray-line);border-radius:2px;width:34px;height:34px;cursor:pointer;font-size:15px;">🌙</button>
+    <div class="burger">☰</div>
+  </div>
+</header>
+
+<div class="ticker-strip">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Market intelligence, without the noise</span>
+      <h1>Read the market.<br>Trade with clarity.</h1>
+      <p>Phân tích forex, chiến lược giao dịch và đánh giá sàn khách quan — giúp bạn ra quyết định dựa trên dữ liệu, không phải cảm tính.</p>
+      <div class="hero-actions">
+        <a href="#blog" class="btn-primary">Đọc bài mới nhất</a>
+        <a href="#brokers" class="btn-outline">Xem Top Broker</a>
+      </div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="row"><span>EUR/USD</span><span class="v up">1.0842 ▲</span></div>
+      <div class="row"><span>GBP/USD</span><span class="v down">1.2671 ▼</span></div>
+      <div class="row"><span>USD/JPY</span><span class="v up">155.32 ▲</span></div>
+      <div class="row"><span>XAU/USD</span><span class="v up">2,438.10 ▲</span></div>
+      <div class="row"><span>BTC/USD</span><span class="v down">64,215 ▼</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="brokers">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">Đối tác giao dịch</span>
+        <h2>Top Broker được đánh giá</h2>
+      </div>
+      <a href="#brokers">Xem bảng so sánh đầy đủ →</a>
+    </div>
+    <div class="broker-grid" id="brokerGrid"></div>
+  </div>
+</section>
+
+<section class="alt" id="blog">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">Kiến thức & phân tích</span>
+        <h2>Bài viết mới nhất</h2>
+      </div>
+      <a href="#blog">Xem tất cả →</a>
+    </div>
+    <div class="cat-row">
+      <div class="cat-pill active">Tất cả</div>
+      <div class="cat-pill">Kiến thức cơ bản</div>
+      <div class="cat-pill">Phân tích kỹ thuật</div>
+      <div class="cat-pill">Tin tức thị trường</div>
+      <div class="cat-pill">Chiến lược</div>
+      <div class="cat-pill">Review Broker</div>
+    </div>
+    <div class="blog-grid" id="blogGrid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="news-box">
+      <div>
+        <h2>Nhận phân tích thị trường mỗi tuần</h2>
+        <p>Không spam. Huỷ đăng ký bất cứ lúc nào.</p>
+      </div>
+      <form class="news-form" onsubmit="return false;">
+        <input type="email" placeholder="Email của bạn">
+        <button>Đăng ký</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">PIPS<span>NOTE</span></div>
+        <p class="foot-desc">Trang blog độc lập về forex — cung cấp phân tích thị trường, hướng dẫn giao dịch và đánh giá sàn để hỗ trợ nhà đầu tư ra quyết định sáng suốt hơn.</p>
+        <div class="social-row">
+          <a href="#">FB</a><a href="#">TG</a><a href="#">YT</a><a href="#">X</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Điều hướng</h4>
+        <a href="#blog">Blog</a>
+        <a href="#instruction">Instruction</a>
+        <a href="#brokers">Top Broker</a>
+        <a href="#about">About Us</a>
+      </div>
+      <div class="foot-col">
+        <h4>Chính sách</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Risk Disclosure</a>
+        <a href="#">Affiliate Disclosure</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+      <div class="foot-col">
+        <h4>Liên hệ</h4>
+        <a href="mailto:hello@pipsnote.com">hello@pipsnote.com</a>
+        <a href="#">Gửi phản hồi</a>
+        <a href="#">Hợp tác quảng cáo</a>
+      </div>
+    </div>
+    <div class="risk-note">
+      <strong>Cảnh báo rủi ro:</strong> Giao dịch forex và CFD có sử dụng đòn bẩy tiềm ẩn rủi ro mất vốn cao và có thể không phù hợp với mọi nhà đầu tư. Nội dung trên PipsNote chỉ mang tính chất tham khảo, không phải lời khuyên đầu tư. PipsNote có thể nhận hoa hồng giới thiệu (affiliate) từ một số sàn giao dịch được liệt kê trên trang.
+    </div>
+    <div class="bottom-bar">
+      <span>© 2026 PipsNote. All rights reserved.</span>
+      <div class="bottom-links">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const tickerData = [
+    ['EUR/USD','1.0842','up'],['GBP/USD','1.2671','down'],['USD/JPY','155.32','up'],
+    ['XAU/USD','2,438.10','up'],['USD/CHF','0.9012','down'],['AUD/USD','0.6614','up'],
+    ['BTC/USD','64,215','down'],['USD/CAD','1.3720','up'],['NZD/USD','0.6023','down'],
+    ['XAG/USD','29.14','up']
+  ];
+  const track = document.getElementById('tickerTrack');
+  const buildTicker = () => tickerData.map(([p,v,d]) =>
+    `<span class="ticker-item"><span class="pair">${p}</span><span class="${d}">${v} ${d==='up'?'▲':'▼'}</span></span>`
+  ).join('');
+  track.innerHTML = buildTicker() + buildTicker();
+
+  const brokers = [
+    {name:'IC Markets', spread:'0.0 pip', lev:'1:500', min:'$200', badge:'Hot'},
+    {name:'XM', spread:'0.6 pip', lev:'1:1000', min:'$5', badge:'Phổ biến'},
+    {name:'VT Markets', spread:'0.0 pip', lev:'1:500', min:'$50', badge:'Mới'},
+    {name:'HFM', spread:'0.2 pip', lev:'1:2000', min:'$5', badge:'Bonus'},
+    {name:'Vantage', spread:'0.0 pip', lev:'1:500', min:'$50', badge:''},
+    {name:'Exness', spread:'0.3 pip', lev:'Unlimited', min:'$1', badge:''}
+  ];
+  document.getElementById('brokerGrid').innerHTML = brokers.map(b => `
+    <div class="broker-card">
+      <div class="broker-top">
+        <span class="broker-mark">${b.name}</span>
+        ${b.badge ? `<span class="badge ${b.badge==='Hot'?'hot':''}">${b.badge}</span>` : ''}
+      </div>
+      <div class="broker-specs">
+        <div>Spread từ<b>${b.spread}</b></div>
+        <div>Đòn bẩy<b>${b.lev}</b></div>
+        <div>Nạp tối thiểu<b>${b.min}</b></div>
+        <div>Quy định<b>Đa quốc gia</b></div>
+      </div>
+      <a class="broker-cta" href="#" target="_blank" rel="nofollow noopener">Mở tài khoản <span>→</span></a>
+    </div>
+  `).join('');
+
+  const posts = [
+    {tag:'Kiến thức cơ bản', title:'Forex là gì? Hướng dẫn cho người mới bắt đầu từ A-Z', meta:'12 phút đọc · 24/07/2026'},
+    {tag:'Phân tích kỹ thuật', title:'Cách đọc mô hình nến Nhật trong giao dịch ngắn hạn', meta:'9 phút đọc · 22/07/2026'},
+    {tag:'Tin tức thị trường', title:'Fed giữ nguyên lãi suất: điều gì chờ đợi USD trong quý tới?', meta:'6 phút đọc · 21/07/2026'},
+    {tag:'Chiến lược', title:'5 chiến lược quản lý vốn giúp trader tồn tại lâu dài', meta:'11 phút đọc · 19/07/2026'},
+    {tag:'Review Broker', title:'So sánh chi tiết IC Markets và XM: nên chọn sàn nào?', meta:'8 phút đọc · 17/07/2026'},
+    {tag:'Kiến thức cơ bản', title:'Đòn bẩy và margin call: hiểu đúng để tránh cháy tài khoản', meta:'7 phút đọc · 15/07/2026'}
+  ];
+  document.getElementById('blogGrid').innerHTML = posts.map(p => `
+    <a href="#" class="post-card">
+      <div class="thumb">IMG</div>
+      <span class="post-tag">${p.tag}</span>
+      <h3>${p.title}</h3>
+      <span class="post-meta">${p.meta}</span>
+    </a>
+  `).join('');
+
+  // Theme toggle — doi mau/bo cuc chi bang 1 thuoc tinh data-theme, khong dam vao layout
+  const themeToggle = document.getElementById('themeToggle');
+  const applyThemeIcon = () => {
+    themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+  };
+  applyThemeIcon();
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('pipsnote-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('pipsnote-theme', 'dark');
+    }
+    applyThemeIcon();
+  });
+</script>
+
+</body>
+</html>

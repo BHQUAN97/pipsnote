@@ -1,0 +1,28 @@
+name: Backup pipsnote MySQL
+
+on:
+  schedule:
+    - cron: '30 18 * * *'   # 1:30 sang gio VN (UTC+7)
+  workflow_dispatch: {}
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Chay backup-mysql.sh qua SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            export MYSQL_BACKUP_PASSWORD='${{ secrets.MYSQL_BACKUP_PASSWORD }}'
+            export R2_ENDPOINT='${{ secrets.R2_ENDPOINT }}'
+            export R2_BUCKET='${{ secrets.R2_BUCKET }}'
+            export BACKUP_ENC_KEY='${{ secrets.BACKUP_ENC_KEY }}'
+            bash /opt/pipsnote/scripts/backup-mysql.sh
+          # Script fail-hard (set -euo pipefail) neu dump/verify/upload loi — job se FAIL,
+          # khong am tham bo qua (khac voi chi log warning).

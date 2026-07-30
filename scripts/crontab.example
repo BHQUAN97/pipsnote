@@ -1,0 +1,15 @@
+# scripts/crontab.example — Cron jobs chay TREN VPS cho pipsnote
+#
+# Cai dat: copy noi dung nay vao /etc/cron.d/pipsnote (hoac `crontab -e` cua user deploy)
+# roi `sudo chmod 644 /etc/cron.d/pipsnote` va restart cron.
+#
+# Luu y: gio server thuong la UTC — quy doi neu can (VN = UTC+7).
+
+# Backup MySQL hang ngay 2:00 sang (gio server)
+0 2 * * * /opt/pipsnote/scripts/backup-mysql.sh >> /var/log/pipsnote-backup.log 2>&1
+
+# Canh bao disk usage moi 30 phut
+*/30 * * * * /opt/pipsnote/scripts/monitor-disk.sh >> /var/log/pipsnote-monitor.log 2>&1
+
+# Don dep Docker image/container cu — chu nhat hang tuan, 3:00 sang
+0 3 * * 0 /opt/pipsnote/scripts/docker-cleanup.sh >> /var/log/pipsnote-cleanup.log 2>&1
