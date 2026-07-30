@@ -42,3 +42,22 @@ CREATE TABLE IF NOT EXISTS posts (
 ```
 
 Duoc goi tu dong (fatal) boi `scripts/deploy.sh` truoc moi lan deploy.
+
+## Seed Data Policy (QUAN TRONG)
+
+**Phan biet 2 loai seed:**
+
+1. **Config/System Seed** → GHI TRONG migration (folder nay)
+   - VD: `site_settings` defaults (theme colors, layout flags)
+   - VD: Initial admin user, currency/country master data (neu it)
+   - Ly do: Can thiet MOI moi truong (dev/staging/production)
+   - Pattern: Dung `ON DUPLICATE KEY UPDATE` de idempotent
+
+2. **Demo/Sample Content** → GHI RIENG `db/dataseed/` (folder khac)
+   - VD: Demo posts, sample brokers, test comments
+   - Ly do: CHI can dev/staging, production KHONG can
+   - Control: `SEED_DEMO_DATA=true` trong `.env` (xem `db/dataseed/README.md`)
+
+**Khi nao dung migration seed vs dataseed?**
+- Neu du lieu la **business requirement** (site can de hoat dong) → migration
+- Neu du lieu la **demo/test only** (co the xoa bat ky luc nao) → dataseed

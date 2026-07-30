@@ -61,6 +61,17 @@ Network: `webphoto_backend` (external, dung chung, cham toi shared-mysql) + `pip
 - `scripts/db-changelog.sh` chạy tự động trong `deploy.sh`, **fail thì dừng deploy ngay** (không có ORM migration riêng, đây là nguồn migration duy nhất).
 - Không sửa file changelog đã chạy (đã ghi vào bảng `schema_changelog`) — luôn thêm file mới để fix.
 
+## Dataseed (Demo Content)
+
+- **Khác với migration:** Dataseed = demo/sample content (posts, brokers) CHỈ chạy khi `SEED_DEMO_DATA=true` trong `.env`.
+- File SQL: `db/dataseed/<batch>/<NNN_mo_ta>.sql` — xem `db/dataseed/README.md`.
+- Script: `scripts/db-dataseed.sh` chạy **SAU** db-changelog trong deploy flow, **fail KHÔNG block deploy** (khác migration).
+- Environment control:
+  - **Production:** `SEED_DEMO_DATA=false` (default) → skip dataseed
+  - **Staging/Dev:** `SEED_DEMO_DATA=true` → chạy dataseed
+- Force re-seed (staging only): `FORCE_RESEED=true bash scripts/db-dataseed.sh` (xóa tracking + chạy lại)
+- Tracking: bảng `dataseed_version` (riêng với `schema_changelog`)
+
 ## ⚠️ Trạng thái hiện tại
 
 Bộ script/workflow này **chưa được test trên VPS thật** — VPS, R2 bucket, và GitHub Secrets thật chưa tồn tại tại thời điểm scaffold (2026-07-30). Trước khi bật CI tự động:

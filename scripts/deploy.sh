@@ -28,19 +28,23 @@ git pull origin main
 log_info "2/6 docker compose build ${APP_SERVICE}"
 docker compose -f "$COMPOSE_FILE" build "$APP_SERVICE"
 
-log_info "3/6 db-changelog (FATAL neu that bai — day la nguon migration duy nhat)"
+log_info "3/7 db-changelog (FATAL neu that bai — day la nguon migration duy nhat)"
 if ! "${SCRIPT_DIR}/db-changelog.sh"; then
   log_error "db-changelog that bai — DUNG DEPLOY, container cu van dang chay binh thuong"
   exit 1
 fi
 
-log_info "4/6 dam bao network pipsnote_internal ton tai"
+log_info "4/7 db-dataseed (optional, chi chay neu SEED_DEMO_DATA=true)"
+# Dataseed fail KHONG block deploy (khac voi migration)
+"${SCRIPT_DIR}/db-dataseed.sh" || log_warn "db-dataseed fail — tiep tuc deploy (demo data khong critical)"
+
+log_info "5/7 dam bao network pipsnote_internal ton tai"
 docker network create pipsnote_internal 2>/dev/null || true
 
-log_info "5/6 up -d --no-deps ${APP_SERVICE} (zero-downtime: container cu van serve trong luc nay)"
+log_info "6/7 up -d --no-deps ${APP_SERVICE} (zero-downtime: container cu van serve trong luc nay)"
 docker compose -f "$COMPOSE_FILE" up -d --no-deps "$APP_SERVICE"
 
-log_info "6/6 health-check ${HEALTH_URL} (toi da ${HEALTH_RETRIES} lan, moi lan cach ${HEALTH_INTERVAL}s)"
+log_info "7/7 health-check ${HEALTH_URL} (toi da ${HEALTH_RETRIES} lan, moi lan cach ${HEALTH_INTERVAL}s)"
 healthy=false
 for i in $(seq 1 "$HEALTH_RETRIES"); do
   if curl -sf "$HEALTH_URL" >/dev/null 2>&1; then
