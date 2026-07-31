@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       }
 
       router.push('/admin/settings');
-    } catch (err) {
+    } catch {
       setError('Network error');
     } finally {
       setLoading(false);
@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded"
+              className="w-full min-h-[44px] px-4 py-2 border rounded"
               placeholder="admin"
               disabled={loading}
               required
@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded"
+              className="w-full min-h-[44px] px-4 py-2 border rounded"
               placeholder="••••••••"
               disabled={loading}
               required
@@ -76,13 +76,13 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
+            className="w-full min-h-[44px] py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        <div className="mt-4 p-3 bg-neutral/10 rounded text-sm">
+        <div className="mt-4 p-3 bg-gray-bg rounded text-sm">
           <p className="font-semibold mb-1">⚠️ Security:</p>
           <ul className="text-xs space-y-1">
             <li>• Max 10 attempts/10min</li>

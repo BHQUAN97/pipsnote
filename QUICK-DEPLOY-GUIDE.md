@@ -149,7 +149,7 @@ sleep 10
 docker logs pipsnote-app --tail=50
 
 # Test HTTP
-curl -I http://127.0.0.1:5600/
+curl -I http://127.0.0.1:5601/
 # Should return: HTTP/1.1 200 OK (hoặc 404 nếu route không tồn tại, vẫn OK nếu server respond)
 ```
 
@@ -244,7 +244,7 @@ Common causes:
 ### Nginx 502 Bad Gateway
 ```bash
 # Check app responding
-curl http://127.0.0.1:5600/
+curl http://127.0.0.1:5601/
 
 # Check Nginx config
 nginx -t
@@ -310,7 +310,7 @@ docker image prune -f
 
 **✅ Deploy Complete Checklist:**
 - [ ] Containers running (3/3)
-- [ ] App responding on :5600
+- [ ] App responding on :5601
 - [ ] Nginx proxy working
 - [ ] HTTPS certificate valid
 - [ ] Database seeded (if needed)

@@ -124,7 +124,7 @@ $maxRetries = 30
 $healthy = $false
 
 while ($retries -lt $maxRetries) {
-    $healthCheck = SSH-Exec "curl -sf http://127.0.0.1:5600/ 2>&1"
+    $healthCheck = SSH-Exec "curl -sf http://127.0.0.1:5601/ 2>&1"
     if ($healthCheck.Success) {
         $healthy = $true
         break
@@ -151,7 +151,7 @@ if ($nginxExists.Output -match 'no') {
 
     $nginxConfig = @"
 upstream pipsnote_upstream {
-    server 127.0.0.1:5600;
+    server 127.0.0.1:5601;
     keepalive 32;
 }
 

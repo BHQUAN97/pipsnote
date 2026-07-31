@@ -18,7 +18,11 @@ async function loginHandler(req: NextRequest) {
   }
 
   const { username, password } = parsed.data;
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+  const ip =
+    req.headers.get('cf-connecting-ip') ||
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip') ||
+    'unknown';
 
   const result = await verifyLogin(username, password);
 

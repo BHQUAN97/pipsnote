@@ -1,4 +1,5 @@
 import { logger } from './logger';
+import { query } from './db';
 
 export interface LogEntry {
   level: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
@@ -11,19 +12,30 @@ export interface LogEntry {
   url?: string;
   method?: string;
   statusCode?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export async function persistLog(entry: LogEntry): Promise<void> {
   // Fire-and-forget: insert log vào DB mà không block response
   try {
-    // TODO: Khi có mysql2 pool setup, insert vào system_logs
-    // const conn = await pool.getConnection();
-    // await conn.query('INSERT INTO system_logs SET ?', entry);
-    // conn.release();
-
-    // Tạm log ra console trong dev
-    logger.info({ ...entry }, 'Log persisted (DB insert pending)');
+    await query(
+      `INSERT INTO system_logs
+        (level, message, stacktrace, module, request_id, ip_address, user_id, url, method, status_code, metadata)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        entry.level,
+        entry.message,
+        entry.stacktrace ?? null,
+        entry.module ?? null,
+        entry.requestId ?? null,
+        entry.ipAddress ?? null,
+        entry.userId ?? null,
+        entry.url ?? null,
+        entry.method ?? null,
+        entry.statusCode ?? null,
+        entry.metadata ? JSON.stringify(entry.metadata) : null,
+      ]
+    );
   } catch (err) {
     // Không throw error ra ngoài — logging failure không được làm sập app
     logger.error({ err }, 'Failed to persist log to DB');

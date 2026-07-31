@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { withApiHandler } from '@/lib/withApiHandler';
 
-async function logoutHandler(req: NextRequest) {
+async function logoutHandler(_req: NextRequest) {
   const response = NextResponse.json({ success: true });
   response.cookies.delete('admin_token');
   return response;

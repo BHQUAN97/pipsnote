@@ -6,9 +6,9 @@ Kiến trúc hạ tầng, quy trình deploy/backup/restore/changelog cho PIPSNOT
 
 ```
 VPS (shared voi NoiThat2026/VietNet2026)
-├── shared-nginx     (dung chung — reverse proxy toi 127.0.0.1:5600)
+├── shared-nginx     (dung chung — reverse proxy toi 127.0.0.1:5601)
 ├── shared-mysql     (dung chung — DB rieng "pipsnote" ben trong)
-├── pipsnote-app     (rieng — Next.js, port noi bo 127.0.0.1:5600 → 3000)
+├── pipsnote-app     (rieng — Next.js, port noi bo 127.0.0.1:5601 → 3000)
 ├── pipsnote-redis   (rieng — internal-only, khong public port)
 └── pipsnote-meilisearch (rieng — internal-only, khong public port)
 ```
@@ -23,7 +23,7 @@ Network: `webphoto_backend` (external, dung chung, cham toi shared-mysql) + `pip
 4. Chạy SQL tạo DB + user in ra từ bước 2 trên `shared-mysql` (cần root password MySQL).
 5. Chạy `db/changelog/_init/001_initial_schema.sql` (nếu có) trực tiếp 1 lần — sau đó mọi thay đổi schema đi qua `db/changelog/` + `scripts/db-changelog.sh`.
 6. Set GitHub Secrets (bảng dưới).
-7. Cấu hình vhost `shared-nginx` proxy `127.0.0.1:5600` cho domain pipsnote (nằm ngoài repo này, cấu hình trực tiếp trên VPS/repo hạ tầng chung).
+7. Cấu hình vhost `shared-nginx` proxy `127.0.0.1:5601` cho domain pipsnote (nằm ngoài repo này, cấu hình trực tiếp trên VPS/repo hạ tầng chung).
 8. Cài crontab: `sudo cp scripts/crontab.example /etc/cron.d/pipsnote && sudo chmod 644 /etc/cron.d/pipsnote`.
 9. Chạy thử `bash scripts/deploy.sh` thủ công 1 lần để xác nhận trước khi bật CI tự động (xem cảnh báo cuối file).
 

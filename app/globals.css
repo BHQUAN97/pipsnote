@@ -4,35 +4,99 @@
 
 :root {
   --bg: #ffffff;
-  --ink: #1a1a1a;
-  --surface-dark: #1a1a1a;
-  --brand: #dc2626;
-  --brand-dark: #991b1b;
-  --accent: #3b82f6;
-  --accent-dark: #1e40af;
-  --up: #10b981;
-  --down: #dc2626;
-  --neutral: #6b7280;
-  --red: #dc2626;
-  --red-dark: #991b1b;
+  --ink: #0a0a0a;
+  --surface-dark: #0a0a0a;
+  --red: #e10600;
+  --red-dark: #b00500;
+  --gray-bg: #f5f4f1;
+  --gray-line: #e4e2dc;
+  --gray-mid: #6e6c66;
+  --up: #1a9e46;
+  --down: #e10600;
 }
 
 [data-theme="dark"] {
-  --bg: #0a0a0a;
-  --ink: #f5f5f5;
-  --surface-dark: #1a1a1a;
-  --brand: #ef4444;
-  --brand-dark: #dc2626;
-  --accent: #60a5fa;
-  --accent-dark: #3b82f6;
-  --up: #34d399;
-  --down: #f87171;
-  --neutral: #9ca3af;
-  --red: #ef4444;
-  --red-dark: #dc2626;
+  --bg: #0b0c0e;
+  --ink: #f2f1ed;
+  --surface-dark: #0a0a0a;
+  --red: #ff4438;
+  --red-dark: #e10600;
+  --gray-bg: #16181c;
+  --gray-line: #2a2d33;
+  --gray-mid: #8b8d93;
+  --up: #39d353;
+  --down: #ff4438;
 }
 
 body {
   background-color: var(--bg);
   color: var(--ink);
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-archivo-black), sans-serif;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-ticker-scroll {
+  animation: ticker-scroll 32s linear infinite;
+}
+
+.article-content {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.article-content > * + * {
+  margin-top: 1.25em;
+}
+
+.article-content h2 {
+  font-size: 1.4rem;
+  margin-top: 1.75em;
+}
+
+.article-content h3 {
+  font-size: 1.15rem;
+  margin-top: 1.5em;
+}
+
+.article-content ul,
+.article-content ol {
+  padding-left: 1.4em;
+}
+
+.article-content ul {
+  list-style: disc;
+}
+
+.article-content ol {
+  list-style: decimal;
+}
+
+.article-content a {
+  color: var(--red);
+  text-decoration: underline;
+}
+
+.article-content blockquote {
+  border-left: 3px solid var(--gray-line);
+  padding-left: 1em;
+  color: var(--gray-mid);
+  font-style: italic;
+}
+
+.article-content strong {
+  font-weight: 600;
+}
+
+.article-content img {
+  max-width: 100%;
 }

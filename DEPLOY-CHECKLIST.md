@@ -195,7 +195,7 @@ Add:
 After all steps:
 
 - [ ] Containers running: `docker ps | grep pipsnote` (3 containers: app, redis, meilisearch)
-- [ ] App responding: `curl http://127.0.0.1:5600/` (should return HTML)
+- [ ] App responding: `curl http://127.0.0.1:5601/` (should return HTML)
 - [ ] Nginx proxy working: `curl http://hoan.bhquan.store/` (should redirect to HTTPS)
 - [ ] HTTPS working: `curl -I https://hoan.bhquan.store/` (should return 200)
 - [ ] DB connection: `docker logs pipsnote-app | grep -i "database connected"` (no errors)
@@ -217,8 +217,8 @@ Common issues:
 
 ### Nginx 502 Bad Gateway
 ```bash
-# Check app is listening on 5600
-curl http://127.0.0.1:5600/
+# Check app is listening on 5601
+curl http://127.0.0.1:5601/
 
 # Check Nginx upstream
 nginx -t

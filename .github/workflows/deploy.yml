@@ -74,5 +74,5 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            curl -sf http://127.0.0.1:5600/api/health && echo "OK" || (echo "FAIL" && exit 1)
+            curl -sf http://127.0.0.1:5601/api/health && echo "OK" || (echo "FAIL" && exit 1)
             docker ps --filter "name=pipsnote-" --format "table {{.Names}}\t{{.Status}}"

@@ -4,19 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**PIPSNOTE** — Forex/Crypto affiliate blog targeting EU/US traders. Next.js 14 (App Router) + TypeScript + MySQL + Redis + Meilisearch stack.
+**PIPSNOTE** — Forex/Crypto affiliate blog targeting EU/US traders. Next.js 16 (App Router) + TypeScript + MySQL + Redis + Meilisearch stack.
 
-**Current Status (2026-07-30):** Infrastructure scaffold complete (`docs/`, `scripts/`, `db/changelog/`), but **NO app code yet** — only `index.html` design prototype. This is a greenfield project awaiting implementation via `/build` skill.
+**Current Status (2026-07-31):** Follow the roadmap in `task.md` (sections 0–9). Done: project init, DB schema (`db/changelog/001`–`004`), design tokens (`app/globals.css`, `tailwind.config.ts`), logging infra (`lib/logger.ts`/`logSink.ts`/`withApiHandler.ts`), security (rate-limit + login-guard wired in `middleware.ts`), admin auth (`app/api/admin/auth/*`) and admin settings API/page. **Not yet built:** homepage/content UI (`app/page.tsx` is still a placeholder), `components/` (empty), `/admin/logs` UI, affiliate `go/[slug]` redirect, any business features (posts, brokers, reviews) from `task.md` §7, and Meilisearch integration (documented in `docs/`/`spec (1).md`/deploy scripts, but no `lib/meilisearch.ts` or app code references it yet).
 
-**Port:** 5600 (internal), proxied via shared-nginx on VPS.
+**Port:** `docker-compose.prod.yml` maps host `5601` → container `3000` (changed from 5600 in the latest commit to avoid a conflict with `ava-agent`). Note: `DEPLOY.md`, `scripts/deploy.sh`, `scripts/quick-deploy.sh`, and `scripts/vps-deploy.sh` still hard-code `5600` for health checks/nginx upstream — this is a known inconsistency post-port-change, not yet reconciled. Check `docker-compose.prod.yml` for the source of truth before assuming either number.
 
 ## Tech Stack
 
-- **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS, React Server Components
+- **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, React Server Components
 - **Backend:** Next.js Route Handlers, Pino logger, Zod validation
-- **Database:** MySQL 8 (shared `shared-mysql` container, dedicated `pipsnote` database)
-- **Cache/Session:** Redis (dedicated `pipsnote-redis` container, internal-only)
-- **Search:** Meilisearch (dedicated `pipsnote-meilisearch` container, internal-only)
+- **Database:** MySQL 8 (shared `shared-mysql` container, dedicated `pipsnote` database), `mysql2` driver (no ORM)
+- **Cache/Session:** Redis (`ioredis`, dedicated `pipsnote-redis` container, internal-only)
+- **Search:** Meilisearch (dedicated `pipsnote-meilisearch` container, internal-only) — **planned, not yet wired into app code**
 - **Deploy:** Docker Compose, GitHub Actions CI/CD, Ubuntu VPS (shared infrastructure)
 - **Backup:** Cloudflare R2 + openssl AES-256-CBC encryption
 
@@ -79,29 +79,41 @@ E:\DEVELOP\PDHOAN\
 └── docker-compose.prod.yml  # Production containers
 ```
 
-**When app exists (post-`/build`):**
+**Current app code** (`components/` exists but is still empty — no shared UI extracted from `index.html` yet):
 ```
-app/                     # Next.js App Router
-├── layout.tsx           # Root layout (injects runtime CSS vars from site_settings)
-├── admin/               # Admin dashboard
+app/
+├── layout.tsx                          # Root layout
+├── page.tsx                            # Homepage — still placeholder, not built out
+├── globals.css                         # Design tokens (CSS vars, copied from index.html)
+├── admin/
 │   ├── login/page.tsx
-│   ├── logs/page.tsx    # View system_logs (superadmin only)
-│   └── settings/page.tsx # Edit site_settings (superadmin only)
-├── go/[slug]/route.ts   # Affiliate redirect tracking
-└── api/admin/settings/route.ts  # GET/PATCH site_settings
+│   └── settings/page.tsx               # Edit site_settings (superadmin only)
+└── api/
+    ├── health/route.ts                 # Used by deploy.sh health check
+    └── admin/
+        ├── auth/login/route.ts
+        ├── auth/logout/route.ts
+        ├── settings/route.ts           # GET/PATCH site_settings
+        └── settings/preset/route.ts    # Switch color preset
 
 lib/
-├── logger.ts            # Pino instance + createRequestLogger()
-├── logSink.ts           # persistLog() → system_logs table
-├── withApiHandler.ts    # HOF wrapper for all route handlers
-├── settings.ts          # getSiteSettings() + invalidateSiteSettingsCache()
+├── logger.ts            # Pino instance
+├── logSink.ts            # persistLog() → system_logs table
+├── withApiHandler.ts     # HOF wrapper — every app/api/**/route.ts must use this
+├── auth.ts               # verifyToken(), AdminUser type, session token logic
+├── getAdminUser.ts       # getAdminUser() / requireAdmin(allowedRoles) — read admin_token cookie
+├── settings.ts           # getSiteSettings() + invalidateSiteSettingsCache() (Redis cache-aside 300s)
+├── settingsPresets.ts    # 3 built-in color presets
+├── redis.ts              # ioredis client
 └── security/
-    ├── rateLimiter.ts   # checkRateLimit() — Redis sliding window
-    └── loginGuard.ts    # recordLoginFailure() + isIpBlocked()
+    ├── rateLimiter.ts    # checkRateLimit(ip, pathname) — Redis sliding window
+    └── loginGuard.ts     # recordLoginFailure() + isIpBlocked()
 
-middleware.ts            # Edge checks: IP block, rate-limit per route
-tailwind.config.ts       # Maps design tokens to Tailwind (theme.extend.colors)
+middleware.ts             # Edge checks on /api/:path* and /admin/:path*: isIpBlocked() first, then checkRateLimit() for /api/admin/*
+tailwind.config.ts        # Maps design tokens to Tailwind (theme.extend.colors)
 ```
+
+**Still to build** (see `task.md` §7 for order): homepage/article/category pages, `components/` (Header, TickerStrip, etc. — port from `index.html`, keep Tailwind token classes, don't hardcode new colors), `/admin/logs` UI, `app/go/[slug]/route.ts` affiliate redirect + click tracking, Meilisearch client + indexing.
 
 ## Common Commands
 
@@ -222,10 +234,10 @@ Run `bash scripts/restore-mysql.sh latest` on non-prod environment. Log results 
 
 ## Notes for Claude Code
 
-### When Starting `/build` (App Doesn't Exist Yet)
-1. Review `task.md` roadmap (sections 0–9) — implementation order already decided
-2. Follow scaffolding standards in `docs/` — don't reinvent patterns
-3. `withApiHandler()`, `getSiteSettings()`, `recordLoginFailure()` — code samples in docs are canonical patterns, not suggestions
+### Continuing `/build` (Sections 0–6 Done, 3/7 Partial)
+1. Review `task.md` roadmap (sections 0–9) — implementation order already decided; §3 (component extraction) and §7 (business features) are next
+2. Follow scaffolding standards in `docs/` — don't reinvent patterns already implemented in `lib/`
+3. `withApiHandler()`, `getSiteSettings()`, `recordLoginFailure()` — code samples in docs are canonical patterns, already implemented; reuse them, don't re-derive
 4. Test logging/security locally BEFORE first deploy (easy to miss wrapper on new routes)
 
 ### When Adding Features (Post-Init)

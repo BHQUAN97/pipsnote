@@ -4,7 +4,7 @@
 # Redis + Meilisearch la container RIENG cua pipsnote (khong nam trong shared-infra),
 # internal-only — khong bao gio lo ra ngoai (dung nguyen tac §10.2 spec).
 #
-# shared-nginx proxy vao pipsnote-app qua 127.0.0.1:5600 (vhost config nam ngoai repo nay,
+# shared-nginx proxy vao pipsnote-app qua 127.0.0.1:5601 (vhost config nam ngoai repo nay,
 # cau hinh tren VPS — xem DEPLOY.md).
 
 services:

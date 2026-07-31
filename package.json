@@ -6,12 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "autoprefixer": "^10.5.4",
     "bcryptjs": "^3.0.3",
     "ioredis": "^5.11.1",
+    "jsonwebtoken": "^9.0.3",
+    "meilisearch": "^0.56.0",
     "mysql2": "^3.23.2",
     "next": "16.2.12",
     "pino": "^10.3.1",

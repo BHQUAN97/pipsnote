@@ -8,34 +8,35 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-space-grotesk)", "sans-serif"],
+        display: ["var(--font-archivo-black)", "sans-serif"],
+        mono: ["var(--font-ibm-plex-mono)", "ui-monospace", "monospace"],
+      },
       colors: {
         // Core design tokens
         bg: "var(--bg)",
         ink: "var(--ink)",
         "surface-dark": "var(--surface-dark)",
 
-        // Brand colors (Editorial Red default)
+        // Accent / CTA (aliased to --red per docs/DESIGN_SYSTEM.md §5)
         brand: {
-          DEFAULT: "var(--brand)",
-          dark: "var(--brand-dark)",
+          DEFAULT: "var(--red)",
+          dark: "var(--red-dark)",
         },
-
-        // Accent
-        accent: {
-          DEFAULT: "var(--accent)",
-          dark: "var(--accent-dark)",
-        },
-
-        // Market indicators
-        up: "var(--up)",
-        down: "var(--down)",
-        neutral: "var(--neutral)",
-
-        // Red shades
         red: {
           DEFAULT: "var(--red)",
           dark: "var(--red-dark)",
         },
+
+        // Secondary grays
+        "gray-bg": "var(--gray-bg)",
+        "gray-line": "var(--gray-line)",
+        "gray-mid": "var(--gray-mid)",
+
+        // Market indicators
+        up: "var(--up)",
+        down: "var(--down)",
       },
     },
   },

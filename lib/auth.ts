@@ -1,4 +1,7 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { query } from './db';
+import type { RowDataPacket } from 'mysql2';
 
 export interface AdminUser {
   id: number;
@@ -13,45 +16,59 @@ export interface LoginResult {
   error?: string;
 }
 
-// TODO: Thay bằng DB query khi có mysql2 pool
-const MOCK_ADMIN: AdminUser = {
-  id: 1,
-  username: 'admin',
-  email: 'admin@pipsnote.local',
-  role: 'superadmin',
-};
+interface AdminUserRow extends RowDataPacket {
+  id: number;
+  username: string;
+  email: string;
+  password_hash: string;
+  role: 'superadmin' | 'editor' | 'author';
+  is_active: number;
+}
 
-const MOCK_PASSWORD_HASH = bcrypt.hashSync('admin123', 10); // Default password
+const TOKEN_TTL = '24h';
+
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  return secret;
+}
 
 export async function verifyLogin(
   username: string,
   password: string
 ): Promise<LoginResult> {
-  // TODO: Query từ admin_users table
-  // const [rows] = await pool.query('SELECT * FROM admin_users WHERE username = ?', [username]);
+  const rows = await query<AdminUserRow[]>(
+    'SELECT id, username, email, password_hash, role, is_active FROM admin_users WHERE username = ? LIMIT 1',
+    [username]
+  );
+  const row = rows[0];
 
-  if (username !== MOCK_ADMIN.username) {
+  if (!row || !row.is_active) {
     return { success: false, error: 'Invalid username or password' };
   }
 
-  const isValid = await bcrypt.compare(password, MOCK_PASSWORD_HASH);
+  const isValid = await bcrypt.compare(password, row.password_hash);
   if (!isValid) {
     return { success: false, error: 'Invalid username or password' };
   }
 
-  return { success: true, user: MOCK_ADMIN };
+  await query('UPDATE admin_users SET last_login_at = NOW() WHERE id = ?', [row.id]);
+
+  return {
+    success: true,
+    user: { id: row.id, username: row.username, email: row.email, role: row.role },
+  };
 }
 
 export function generateToken(user: AdminUser): string {
-  // TODO: Implement JWT khi có JWT_SECRET
-  // Tạm dùng simple base64
-  return Buffer.from(JSON.stringify(user)).toString('base64');
+  return jwt.sign(user, getJwtSecret(), { expiresIn: TOKEN_TTL });
 }
 
 export function verifyToken(token: string): AdminUser | null {
   try {
-    const decoded = Buffer.from(token, 'base64').toString('utf-8');
-    return JSON.parse(decoded) as AdminUser;
+    return jwt.verify(token, getJwtSecret()) as AdminUser;
   } catch {
     return null;
   }

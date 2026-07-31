@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRequestLogger } from './logger';
 import { persistLog } from './logSink';
+import { HttpError } from './httpError';
 
 type ApiHandler = (req: NextRequest) => Promise<NextResponse> | NextResponse;
 
@@ -29,6 +30,19 @@ export function withApiHandler(
       return response;
 
     } catch (error) {
+      if (error instanceof HttpError) {
+        logger.warn({
+          requestId,
+          error: error.message,
+          statusCode: error.statusCode,
+        }, 'Request rejected');
+
+        return NextResponse.json(
+          { error: error.message, requestId },
+          { status: error.statusCode }
+        );
+      }
+
       const message = error instanceof Error ? error.message : 'Unknown error';
       const stacktrace = error instanceof Error ? error.stack : undefined;
 

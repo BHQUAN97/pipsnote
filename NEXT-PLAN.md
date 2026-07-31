@@ -1,424 +1,108 @@
 # PIPSNOTE - Next Steps Plan
 
-> Session tiếp theo bắt đầu từ đây. Port: 5600 (dev), 5601 (prod preview)
+> Session tiếp theo bắt đầu từ đây. Port: **5601** (prod, đã đồng bộ toàn bộ scripts + docs). Roadmap đầy đủ: `task.md` §0-9.
 
-## ✅ DONE (Session 1)
+## ✅ DONE (Session 1-3)
 
 ### Infrastructure & Architecture
-- [x] Task 1-8: Core setup (package.json, Tailwind v4, globals.css, layout, logger, Redis singleton, error handler)
-- [x] Task 10: Design system - 3 color presets (Editorial Red, Fintech Blue, Crypto Neon)
-- [x] Task 12: Auth system - mock admin/admin123, login/logout API, getAdminUser()
-- [x] Task 11: Admin settings UI - full form wired với preset buttons, save/logout, real-time preview
+- Task 1-8: Core setup (package.json, Tailwind v4, globals.css, layout, logger, Redis singleton, error handler)
+- Task 10: Design system - 3 color presets (Editorial Red, Fintech Blue, Crypto Neon) — flat `theme.*`/`layout.*` key-value model
+- Task 12: Auth system thật — MySQL `admin_users` + bcrypt + JWT (`jsonwebtoken`, HS256, 24h)
+- Task 11: Admin settings UI — full form wired với preset buttons, save/logout, real-time preview
 
-### Database Schema
-- [x] SQL migrations viết xong trong `db/changelog/`:
-  - `001_init/` - core tables: categories, admin_users, posts, tags, post_tags, brokers, affiliate_clicks
-  - `002_logging/` - system_logs table (technical errors)
-  - `003_audit/` - admin_audit_log table (business/security audit)
+### Database Connection
+- `lib/db.ts`, `lib/auth.ts`, `lib/logSink.ts`, `lib/settings.ts`+`lib/settingsPresets.ts` — tất cả query DB thật, không còn mock
+- `app/api/admin/settings/route.ts` + `preset/route.ts` — UPSERT DB thật, cache invalidate, `admin_audit_log` diff log
+- `lib/security/loginGuard.ts` — Redis-backed (`login-fail:{ip}`, `blocked_ips:{ip}`), đúng `docs/SECURITY_DETECTION.md`
+- `db/changelog/005_seed_admin/` — seed admin/admin123 (bcrypt hash)
 
-### Code Quality
-- [x] Build pass clean (no TypeScript errors)
-- [x] All API routes use withApiHandler() wrapper
-- [x] Zod validation tại mọi boundary
-- [x] Pino structured logging
-- [x] Redis singleton với graceful fallback
-- [x] Anti-FOUC dark mode
+### §3: Component extraction (HOÀN THÀNH)
+`components/` đã port đầy đủ từ `index.html`: `Header`, `TickerStrip`, `Hero`, `BrokerCard`/`BrokerGrid`, `PostCard`/`BlogGrid`, `CategoryFilter`, `Newsletter`, `Footer`, `RiskDisclaimer`, `ThemeToggle` + `components/admin/PostForm.tsx`, `components/admin/BrokerForm.tsx`. `app/page.tsx` không còn là placeholder — dùng `getSiteSettings()` + query DB thật, render qua các component trên.
 
-### Files Structure
-```
-E:\DEVELOP\PDHOAN\
-├── app/
-│   ├── layout.tsx          ← Runtime CSS injection từ getSiteSettings()
-│   ├── globals.css         ← CSS variables, theme presets
-│   ├── admin/
-│   │   ├── login/page.tsx  ← Login form với rate-limit warning
-│   │   └── settings/page.tsx ← Full admin settings UI (color picker, presets, layout)
-│   └── api/
-│       └── admin/
-│           ├── auth/       ← login.ts, logout.ts (mock bcrypt)
-│           └── settings/   ← route.ts (GET/PATCH), preset/route.ts (POST)
-├── lib/
-│   ├── redis.ts           ← Singleton pattern, null in non-production
-│   ├── logger.ts          ← Pino với dev pretty-print
-│   ├── withApiHandler.ts  ← HOF wrapper cho error handling
-│   ├── auth.ts            ← Mock verifyLogin, admin/admin123
-│   ├── getAdminUser.ts    ← requireAdmin(), getAdminUser()
-│   ├── settings.ts        ← getSiteSettings(), invalidateSiteSettingsCache()
-│   └── settingsPresets.ts ← PRESETS map (red/blue/neon)
-├── db/
-│   └── changelog/         ← Flyway-style SQL migrations
-└── tailwind.config.ts     ← Maps CSS vars → Tailwind utilities
-```
+### §7: Tính năng nghiệp vụ chính (HOÀN THÀNH phần core)
+- **Posts**: `app/api/admin/posts/*` (CRUD, Zod, audit log) + `app/admin/posts/{page,new,[id]/edit}.tsx` (client components, `PostForm` dùng chung create/edit) + public `app/blog/page.tsx` + `app/blog/[slug]/page.tsx`
+- **Brokers**: `app/api/admin/brokers/*` (CRUD, Zod, audit log, `ER_DUP_ENTRY`→409) + `app/admin/brokers/{page,new,[id]/edit}.tsx` + public `app/brokers/page.tsx` + `app/brokers/[slug]/page.tsx`
+- **Affiliate redirect**: `app/go/[slug]/route.ts` tồn tại (redirect + click tracking)
+- **Categories**: `app/api/admin/categories/route.ts` (GET, dùng cho dropdown trong PostForm)
+- **Admin logs UI**: `app/admin/logs/page.tsx` — filter theo level/module/message/khoảng thời gian, click row để xem chi tiết JSON inline (đã verify Playwright: không lỗi console, key-prop dùng `Fragment` đúng cách)
+- **SEO**: `app/robots.ts`, `app/sitemap.ts` đã có
+- **Newsletter**: `app/api/subscribe/route.ts` + `db/changelog/006_business/002_create_subscribers.sql`
 
----
+### Known Issues cũ — TẤT CẢ ĐÃ FIX
+1. ~~Port inconsistency 5600/5601~~ → grep xác nhận toàn bộ `scripts/*.sh` + `DEPLOY.md` + `docker-compose.prod.yml` đều dùng `5601` nhất quán.
+2. ~~`npm run lint` không chạy được~~ → `eslint.config.js` đã tồn tại, `npm run lint` → "No issues found".
+3. ~~`middleware.ts` convention cũ~~ → đã rename thành `proxy.ts` (Next.js 16 convention mới).
+4. ~~Không có `type-check` script~~ → `package.json` đã có `"type-check": "tsc --noEmit"`.
 
-## 🔴 PENDING (Chưa xong)
+### Bug fix quan trọng — Session 3 (double UTF-8 encoding)
+- **Phát hiện qua Playwright**: screenshot mobile homepage cho thấy toàn bộ text tiếng Việt từ DB (title bài viết, tên category, badge broker) hiển thị mojibake (vd `"HÆ°á»›ng dáº«n"` thay vì `"Hướng dẫn"`), trong khi text tĩnh trong component (nav, footer) vẫn đúng.
+- **Root cause**: `scripts/db-changelog.sh` gọi `mysql` CLI không có flag `--default-character-set=utf8mb4` → client mặc định dùng `latin1` cho `character_set_client`/`connection`/`results` → mọi byte UTF-8 trong các file seed (`006_business/003_seed_content.sql`...) bị double-encode khi INSERT. Xác nhận bằng `HEX()` byte-level và 2 script Node.js test round-trip (chứng minh `lib/db.ts`/mysql2 — dùng bởi toàn bộ app runtime — KHÔNG bị ảnh hưởng, chỉ dữ liệu seed qua shell script mới bị).
+- **Fix đã áp dụng**:
+  - `scripts/db-changelog.sh`: thêm `--default-character-set=utf8mb4` vào cả `mysql_exec()` và `mysql_exec_file()` — ngăn tái diễn ở mọi migration/deploy sau này (script này được `deploy.sh` gọi as fatal gate mỗi lần deploy).
+  - `db/changelog/007_fix_encoding/001_fix_double_utf8.sql` — migration mới (không sửa file cũ, đúng convention) dùng `CONVERT(CAST(CONVERT(col USING latin1) AS BINARY) USING utf8mb4)` để sửa `categories.{name,description}`, `posts.{title,excerpt,content,seo_title,seo_desc}`, `brokers.{name,description,badge}`.
+  - Đã chạy `bash scripts/db-changelog.sh` local — PASS. Verify lại qua Playwright: homepage + toàn bộ trang admin (posts list/new/edit, brokers list/new/edit, logs) hiển thị tiếng Việt đúng, 0 console error/warning.
 
-### Task #9: CDN Configuration
-**Cần khi có VPS + domain**
+### Code Quality (verify lại session 3)
+- `npm run build` — PASS, 30 routes (`○` static, `ƒ` dynamic) — xem output đầy đủ lúc build
+- `npm run lint` — PASS, "No issues found"
+- Migrations: 9 batch đã applied + `007_fix_encoding` mới applied, tổng SUMMARY `PASS=1 SKIP=9 FAIL=0` ở lần chạy gần nhất
+- Playwright mobile 375px: homepage + `/admin/login` → `/admin/posts` (list/new/edit) → `/admin/brokers` (list/new/edit) → `/admin/logs` (kể cả expand row) — tất cả PASS, không console error/warning
 
-```typescript
-// Tạo: lib/cdn.ts
-export function getCDNUrl(path: string): string {
-  const cdnBase = process.env.NEXT_PUBLIC_CDN_BASE || '';
-  if (!cdnBase) return path; // fallback local
-  return `${cdnBase}${path}`;
-}
+### Meilisearch — HOÀN THÀNH (Session 4)
+`lib/meilisearch.ts` (mới) — client wrapper theo pattern graceful-degradation giống `lib/redis.ts` (`getMeiliClient()` trả `null` nếu thiếu `MEILI_HOST`, không throw):
+- `syncPostSearchIndex(id)` — hook vào `app/api/admin/posts/route.ts` (POST) và `app/api/admin/posts/[id]/route.ts` (PATCH): upsert doc nếu `status === 'published'`, xoá khỏi index nếu draft/archived. Lỗi chỉ log `logger.warn`, không throw — index sync không bao giờ làm fail post CRUD.
+- `removePostFromIndex(id)` — hook vào `deleteHandler` của `[id]/route.ts`.
+- `searchPosts(q, {categorySlug, limit, offset})` — dùng Meili nếu có, **fallback MySQL FULLTEXT** (`MATCH() AGAINST() IN NATURAL LANGUAGE MODE` trên `idx_search`) nếu Meili down/lỗi/chưa config — search không bao giờ 500 vì thiếu Meili.
+- `app/api/search/route.ts` (mới) — public GET endpoint, Zod validate `q`/`cat`/`page`/`pageSize`, wrap `withApiHandler`.
+- `components/SearchBox.tsx` (mới) — client component, đặt trong `/blog` (không phải global Header, theo quyết định đã chốt), navigate `/blog?q=...`.
+- `app/blog/page.tsx` — đọc `q` từ `searchParams`, dùng `searchPosts()` thay vì query trực tiếp khi có `q`; pagination giữ nguyên `q`.
+- **Verify thật (không chỉ code review)**: publish → search thấy ngay; chuyển draft → biến mất khỏi search; dừng container Meilisearch → search vẫn trả kết quả đúng qua MySQL FULLTEXT fallback, không lỗi 500; khởi động lại Meili → hoạt động lại bình thường. Playwright mobile 375px trên `/blog`: gõ "nến" vào search box → submit → đúng 1 kết quả khớp hiển thị, URL thành `/blog?q=n%E1%BA%BFn`.
+- Local dev: thêm `MEILI_HOST=http://localhost:7700` + `MEILI_MASTER_KEY` vào `.env.local`, chạy container dev `pipsnote-meilisearch-dev` (`docker run getmeili/meilisearch:v1.6`, image pin khớp prod) — không phải container tồn tại lâu dài, cần tự chạy lại nếu máy restart (`docker start pipsnote-meilisearch-dev` nếu container cũ vẫn còn, hoặc `docker run` lại nếu đã bị xoá).
+- `npm run build`/`lint`/`type-check` đều PASS sau khi thêm.
 
-// Sử dụng:
-<Image src={getCDNUrl('/uploads/broker-logo.png')} ... />
-```
+### §8: Test & verify trước deploy (còn thiếu)
+- Dark mode toggle — `components/ThemeToggle.tsx` đã tồn tại nhưng chưa test thật qua Playwright (chỉ mới verify field `theme.dark_default` lưu đúng ở session trước) — cần test toggle thật + `--surface-dark` không vỡ dark mode
+- Rate-limit test 11 lần login sai → 403 — đã verify login lockout ghi vào Redis + `system_logs` (thấy log thật trong `/admin/logs`), nhưng chưa test lại từ session này với data mới
 
-**Config cần:**
-- Cloudflare R2 bucket cho uploads
-- `NEXT_PUBLIC_CDN_BASE` trong .env
-- Nginx reverse proxy cho `/uploads` → R2
-- Image optimization với Next.js Image component
+### §9: Deploy (chưa bắt đầu)
+- Set GitHub Secrets theo `DEPLOY.md`
+- Chạy `setup-server.sh` trên VPS thật lần đầu
+- Deploy thủ công qua SSH trước khi bật CI tự động
+- Test `backup-mysql.sh` chạy tay + decrypt thử trước khi tin cron
+- **Lưu ý riêng cho lần deploy đầu tiên**: đảm bảo VPS chạy `db-changelog.sh` bản đã fix charset (không phải bản cũ thiếu `--default-character-set=utf8mb4`) — nếu không sẽ tái diễn corruption khi seed data lần đầu trên production.
 
 ---
 
-## 🟡 TODO: Database Connection
+## 🔑 Environment Variables (dev, `.env.local` thật)
 
-**Tất cả API routes có `// TODO: ...` comments cần implement**
-
-### Step 1: Tạo mysql2 pool
-
-```typescript
-// lib/db.ts
-import mysql from 'mysql2/promise';
-
-let pool: mysql.Pool | null = null;
-
-export function getDB(): mysql.Pool {
-  if (!pool) {
-    pool = mysql.createPool({
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT || '3306'),
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      connectionLimit: 10,
-      waitForConnections: true,
-      queueLimit: 0,
-    });
-  }
-  return pool;
-}
-```
-
-### Step 2: Replace TODO comments
-
-**File locations với TODO:**
-
-1. **lib/settings.ts:58**
-   ```typescript
-   // TODO: Query từ DB site_settings table
-   const [rows] = await db.query('SELECT * FROM site_settings WHERE id = 1');
-   const dbSettings = rows[0] || DEFAULT_SETTINGS;
-   ```
-
-2. **app/api/admin/settings/route.ts:45**
-   ```typescript
-   // TODO: Update DB site_settings table
-   const db = getDB();
-   await db.query(
-     'UPDATE site_settings SET ? WHERE id = 1',
-     [parsed.data]
-   );
-   ```
-
-3. **app/api/admin/settings/preset/route.ts:35**
-   ```typescript
-   // TODO: Batch update DB
-   const db = getDB();
-   await db.query(
-     'UPDATE site_settings SET ? WHERE id = 1',
-     [presetValues]
-   );
-   ```
-
-4. **lib/withApiHandler.ts:35**
-   ```typescript
-   // TODO: Ghi vào DB system_logs table
-   const db = getDB();
-   await db.query(
-     'INSERT INTO system_logs SET ?',
-     [logEntry]
-   );
-   ```
-
-5. **lib/auth.ts** (toàn bộ mock logic)
-   - `verifyLogin()` → query admin_users table
-   - Check bcrypt password hash từ DB
-   - Return real user data
-
-6. **lib/getAdminUser.ts** (cookies-based auth)
-   - Parse session token từ cookies
-   - Query admin_users table với session validation
-   - Check expiry, role
-
-### Step 3: Migrations
-
-**Chạy migrations (manual, không ORM):**
-
-```bash
-# Local dev
-mysql -u root -p pipsnote < db/changelog/001_init/001_create_core_tables.sql
-mysql -u root -p pipsnote < db/changelog/002_logging/001_create_system_logs.sql
-mysql -u root -p pipsnote < db/changelog/003_audit/001_create_admin_audit_log.sql
-
-# VPS production
-mysql -h <VPS_IP> -u pipsnote -p pipsnote < db/changelog/*.sql
-```
-
-**Seed data:**
-
-```sql
--- Tạo admin user đầu tiên
-INSERT INTO admin_users (username, password_hash, email, role) VALUES
-('admin', '$2a$10$...bcrypt_hash...', 'admin@pipsnote.local', 'superadmin');
-
--- Tạo site_settings row đầu tiên (Editorial Red preset)
-INSERT INTO site_settings SET
-  bg = '#ffffff',
-  ink = '#1a1a1a',
-  surfaceDark = '#1a1a1a',
-  brand = '#dc2626',
-  brandDark = '#991b1b',
-  -- ... rest of defaults
-  headerSticky = 1,
-  showDarkModeToggle = 1;
-```
-
----
-
-## 🟢 TODO: Content Management
-
-### Posts CRUD
-Tạo admin UI cho:
-- `/admin/posts` - list posts, filter by category/tag/status
-- `/admin/posts/new` - create post (TinyMCE/Tiptap editor)
-- `/admin/posts/[id]/edit` - edit post
-- API routes: `/api/admin/posts` (GET/POST/PATCH/DELETE)
-
-### Brokers CRUD
-- `/admin/brokers` - list brokers
-- `/admin/brokers/new` - add broker (logo upload → CDN)
-- `/admin/brokers/[id]/edit` - edit broker, affiliate link
-- API routes: `/api/admin/brokers`
-
-### Categories & Tags
-- `/admin/categories` - manage categories (CRUD)
-- `/admin/tags` - manage tags (CRUD)
-
----
-
-## 🔵 TODO: Public Frontend
-
-### Homepage
-- Hero section với latest posts
-- Featured brokers
-- Market news ticker (optional, external API)
-
-### Post Detail Page
-- `/posts/[slug]`
-- SEO meta tags
-- Related posts
-- Broker affiliate CTA
-
-### Broker Review Page
-- `/brokers/[slug]`
-- Ratings, pros/cons
-- Affiliate click tracking
-
-### Category/Tag Pages
-- `/category/[slug]`
-- `/tag/[slug]`
-
----
-
-## 🟣 TODO: VPS Deployment
-
-### Prerequisites
-- VPS IP: `___.___.___.__` (điền khi có)
-- Domain: `pipsnote.com` (điền khi có)
-- SSH key: `~/.ssh/id_ed25519` đã setup chưa? (test: `ssh -i ~/.ssh/id_ed25519 user@vps`)
-
-### VPS Setup Steps
-
-**1. Install dependencies:**
-```bash
-ssh user@vps
-sudo apt update && sudo apt install -y nodejs npm nginx mysql-server redis-server certbot python3-certbot-nginx
-```
-
-**2. Setup MySQL:**
-```bash
-sudo mysql_secure_installation
-sudo mysql -e "CREATE DATABASE pipsnote CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-sudo mysql -e "CREATE USER 'pipsnote'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';"
-sudo mysql -e "GRANT ALL ON pipsnote.* TO 'pipsnote'@'localhost';"
-```
-
-**3. Clone repo:**
-```bash
-mkdir -p /var/www/pipsnote
-cd /var/www/pipsnote
-git clone https://github.com/BHQUAN97/pipsnote.git .
-```
-
-**4. Environment variables:**
-```bash
-cat > .env.production.local <<EOF
-NODE_ENV=production
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=pipsnote
-DB_PASSWORD=STRONG_PASSWORD
-DB_NAME=pipsnote
-
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-NEXT_PUBLIC_SITE_URL=https://pipsnote.com
-NEXT_PUBLIC_CDN_BASE=https://cdn.pipsnote.com
-
-SESSION_SECRET=RANDOM_64_CHAR_STRING
-EOF
-```
-
-**5. Build:**
-```bash
-npm install --production
-npm run build
-```
-
-**6. PM2:**
-```bash
-sudo npm install -g pm2
-pm2 start npm --name "pipsnote" -- start
-pm2 save
-pm2 startup
-```
-
-**7. Nginx:**
-```nginx
-# /etc/nginx/sites-available/pipsnote
-server {
-    listen 80;
-    server_name pipsnote.com www.pipsnote.com;
-
-    location / {
-        proxy_pass http://localhost:5601;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-```
-
-```bash
-sudo ln -s /etc/nginx/sites-available/pipsnote /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-**8. SSL (Certbot):**
-```bash
-sudo certbot --nginx -d pipsnote.com -d www.pipsnote.com
-```
-
-**9. Auto-renew cron:**
-```bash
-sudo crontab -e
-# Add:
-0 3 * * * certbot renew --quiet
-```
-
----
-
-## 📋 Checklist Trước Khi Bàn Giao
-
-- [ ] Database connection hoạt động (test login thật)
-- [ ] Settings UI save → DB → cache invalidate → reload UI
-- [ ] Preset buttons apply ngay lập tức
-- [ ] Admin audit log ghi lại mọi thay đổi settings
-- [ ] System logs ghi error vào DB
-- [ ] CDN config cho uploads
-- [ ] At least 5 sample posts + 3 sample brokers
-- [ ] SEO meta tags cho public pages
-- [ ] Mobile responsive (test 375px, 768px, 1024px)
-- [ ] Dark mode toggle hoạt động
-- [ ] Rate limiting test (10 login failures → block)
-- [ ] SSL certificate valid
-- [ ] PM2 auto-restart on crash
-- [ ] Daily backup script cho MySQL
-
----
-
-## 🔑 Environment Variables Cần Có
-
-**Development (.env.local):**
+`.env.local` đã tồn tại và hoạt động, trỏ vào container `shared-mysql`/`shared-redis` local:
 ```env
-NODE_ENV=development
 DB_HOST=localhost
 DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=
+DB_USER=pipsnote_app
 DB_NAME=pipsnote
-
 REDIS_HOST=localhost
 REDIS_PORT=6379
-
-NEXT_PUBLIC_SITE_URL=http://localhost:5600
+JWT_SECRET=<đã generate, xem file thật>
 ```
+File `.env.local` bị gitignore — không commit, không cần re-tạo ở session sau trừ khi bị mất.
 
-**Production (.env.production.local trên VPS):**
-```env
-NODE_ENV=production
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=pipsnote
-DB_PASSWORD=___FILL_ME___
-DB_NAME=pipsnote
-
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-NEXT_PUBLIC_SITE_URL=https://pipsnote.com
-NEXT_PUBLIC_CDN_BASE=https://cdn.pipsnote.com
-
-SESSION_SECRET=___64_CHAR_RANDOM___
+Khi chạy `scripts/db-changelog.sh` cục bộ (không phải qua `deploy.sh` trên VPS), cần set `ENV_FILE` trỏ về `.env.local` (mặc định script tìm `/opt/pipsnote/.env` — chỉ đúng trên VPS):
+```bash
+ENV_FILE="$(pwd)/.env.local" bash scripts/db-changelog.sh
 ```
-
----
-
-## 🚨 Known Issues & Workarounds
-
-### 1. Redis không available khi build
-**Solved** - lib/redis.ts returns null in non-production, all Redis consumers check null first
-
-### 2. Tailwind CSS v4 PostCSS plugin
-**Solved** - Use `@tailwindcss/postcss` thay vì `tailwindcss` trong postcss.config.mjs
-
-### 3. Windows file lock khi rm -rf node_modules
-**Workaround** - Dùng PowerShell: `Remove-Item -Recurse -Force node_modules`
 
 ---
 
 ## 📝 Notes
 
-- **Default login**: username=`admin`, password=`admin123` (THAY ĐỔI khi deploy production!)
-- **Port mapping**: 5600 (dev), 5601 (prod preview), 3310 (MySQL local)
-- **Redis TTL**: site_settings cache 300s (5 phút)
-- **Rate limit**: `/api/admin/login` max 10 requests/10min → block 1h
-- **Logger**: Pino với pretty-print trong dev, JSON trong prod
-- **Stack**: Next.js 16, React 19, Tailwind v4, MySQL 8, Redis 7, Pino, Zod, bcryptjs
+- **Default login**: `admin` / `admin123` (đổi khi deploy production!)
+- **Port mapping**: 5601 (prod), 3306 (MySQL local qua `shared-mysql`), 6379 (Redis local qua `shared-redis`)
+- **Redis TTL**: `site_settings` cache 300s
+- **Stack**: Next.js 16, React 19, Tailwind v4, MySQL 8, Redis 7, Pino, Zod, bcryptjs, jsonwebtoken
 
 ---
 
-Session sau bắt đầu từ **TODO: Database Connection** → implement mysql2 pool → replace TODO comments → test real login flow.
+**Meilisearch wiring đã HOÀN THÀNH và verify thật** (Session 4, xem §7 ở trên) — bao gồm test Playwright mobile 375px trên `/blog`: gõ "nến" lọc đúng từ 6 posts xuống còn 1 post khớp. `is_featured` của post id=2 (dùng để test featured badge) đã revert về `0` sau khi test xong.
+
+Session sau bắt đầu từ **§8 còn lại**: dark mode toggle Playwright test (`components/ThemeToggle.tsx` + `--surface-dark`) và rate-limit retest (11 lần login sai → 403) với data mới. Không còn Known Issue nào chặn — có thể tiến tới **§9 deploy thật** bất cứ lúc nào sau khi hoàn tất §8, hoặc bỏ qua §8 tạm để deploy MVP trước nếu ưu tiên lên production sớm.

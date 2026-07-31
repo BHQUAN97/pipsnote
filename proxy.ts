@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from './lib/security/rateLimiter';
 import { isIpBlocked } from './lib/security/loginGuard';
 
-export async function middleware(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ||
+export async function proxy(req: NextRequest) {
+  const ip = req.headers.get('cf-connecting-ip') ||
+             req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
              req.headers.get('x-real-ip') ||
              'unknown';
 

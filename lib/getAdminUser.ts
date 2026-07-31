@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { verifyToken, AdminUser } from './auth';
+import { HttpError } from './httpError';
 
 export async function getAdminUser(): Promise<AdminUser | null> {
   const cookieStore = await cookies();
@@ -13,10 +14,10 @@ export async function requireAdmin(
 ): Promise<AdminUser> {
   const user = await getAdminUser();
   if (!user) {
-    throw new Error('Unauthorized');
+    throw new HttpError(401, 'Unauthorized');
   }
   if (!allowedRoles.includes(user.role)) {
-    throw new Error('Forbidden');
+    throw new HttpError(403, 'Forbidden');
   }
   return user;
 }

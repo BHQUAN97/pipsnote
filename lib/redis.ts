@@ -3,8 +3,8 @@ import { Redis } from 'ioredis';
 let redisInstance: Redis | null = null;
 
 export function getRedis(): Redis | null {
-  // Skip Redis nếu không phải production hoặc không có config
-  if (process.env.NODE_ENV !== 'production' || !process.env.REDIS_HOST) {
+  // Skip Redis nếu không có config (cho phép dev opt-in bằng cách set REDIS_HOST)
+  if (!process.env.REDIS_HOST) {
     return null;
   }
 

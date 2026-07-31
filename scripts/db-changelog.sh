@@ -34,13 +34,16 @@ if [[ -z "${DB_PASSWORD:-}" ]]; then
 fi
 
 mysql_exec() {
-  docker exec -i -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
-    mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" "$DB_NAME" "$@"
+  # KHONG dung -i o day: docker exec -i giu stdin mo va se ke thua stdin cua
+  # vong while (process substitution) dang goi ham nay, lam vong lap doc het
+  # sau 1 file trong moi batch. Chi mysql_exec_file (pipe .sql vao) can -i.
+  docker exec -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
+    mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" --default-character-set=utf8mb4 "$DB_NAME" "$@"
 }
 
 mysql_exec_file() {
   docker exec -i -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
-    mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" "$DB_NAME" < "$1"
+    mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" --default-character-set=utf8mb4 "$DB_NAME" < "$1"
 }
 
 # 1. Dam bao bang tracking ton tai

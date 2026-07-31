@@ -1,68 +1,43 @@
 import { getRedis } from './redis';
+import { query } from './db';
+import type { RowDataPacket } from 'mysql2';
 
-const CACHE_KEY = 'site_settings';
-const CACHE_TTL = 300; // 5 phút
+export type SiteSettings = Record<string, string>;
 
-export interface SiteSettings {
-  // Theme colors (CSS variables)
-  bg: string;
-  ink: string;
-  surfaceDark: string;
-  brand: string;
-  brandDark: string;
-  accent: string;
-  accentDark: string;
-  up: string;
-  down: string;
-  neutral: string;
-  red: string;
-  redDark: string;
+const CACHE_KEY = 'site_settings:v1';
+const CACHE_TTL = 300; // 5 phút — invalidate ngay khi admin save, TTL chỉ là fallback an toàn
 
-  // Layout
-  headerSticky: boolean;
-  showDarkModeToggle: boolean;
-  footerText?: string;
+interface SettingRow extends RowDataPacket {
+  setting_key: string;
+  setting_value: string;
 }
-
-const DEFAULT_SETTINGS: SiteSettings = {
-  // Editorial Red preset (default)
-  bg: '#ffffff',
-  ink: '#1a1a1a',
-  surfaceDark: '#1a1a1a',
-  brand: '#dc2626',
-  brandDark: '#991b1b',
-  accent: '#3b82f6',
-  accentDark: '#1e40af',
-  up: '#10b981',
-  down: '#dc2626',
-  neutral: '#6b7280',
-  red: '#dc2626',
-  redDark: '#991b1b',
-
-  headerSticky: true,
-  showDarkModeToggle: true,
-};
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   const redis = getRedis();
-  if (!redis) {
-    return DEFAULT_SETTINGS;
-  }
 
-  try {
-    const cached = await redis.get(CACHE_KEY);
-    if (cached) {
-      return JSON.parse(cached);
+  if (redis) {
+    try {
+      const cached = await redis.get(CACHE_KEY);
+      if (cached) return JSON.parse(cached);
+    } catch (err) {
+      console.error('getSiteSettings cache read failed:', err);
     }
-
-    // TODO: Query từ DB site_settings table
-    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(DEFAULT_SETTINGS));
-    return DEFAULT_SETTINGS;
-
-  } catch (err) {
-    console.error('getSiteSettings failed:', err);
-    return DEFAULT_SETTINGS;
   }
+
+  const rows = await query<SettingRow[]>(
+    'SELECT setting_key, setting_value FROM site_settings'
+  );
+  const map = Object.fromEntries(rows.map((r) => [r.setting_key, r.setting_value]));
+
+  if (redis) {
+    try {
+      await redis.set(CACHE_KEY, JSON.stringify(map), 'EX', CACHE_TTL);
+    } catch (err) {
+      console.error('getSiteSettings cache write failed:', err);
+    }
+  }
+
+  return map;
 }
 
 export async function invalidateSiteSettingsCache(): Promise<void> {

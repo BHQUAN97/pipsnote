@@ -124,7 +124,7 @@ sleep 10
 
 RETRIES=0
 MAX_RETRIES=30
-until ssh_exec "curl -sf http://127.0.0.1:5600/api/health > /dev/null 2>&1" || [ ${RETRIES} -ge ${MAX_RETRIES} ]; do
+until ssh_exec "curl -sf http://127.0.0.1:5601/api/health > /dev/null 2>&1" || [ ${RETRIES} -ge ${MAX_RETRIES} ]; do
     RETRIES=$((RETRIES + 1))
     echo -n "."
     sleep 2
@@ -146,7 +146,7 @@ if [ "$NGINX_EXISTS" = "no" ]; then
     warn "Nginx config not found. Creating..."
     ssh_exec "cat > ${NGINX_CONF} << 'EOFNGINX'
 upstream pipsnote_upstream {
-    server 127.0.0.1:5600;
+    server 127.0.0.1:5601;
     keepalive 32;
 }
 

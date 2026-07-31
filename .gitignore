@@ -39,3 +39,6 @@ db/changelog/**/.applied
 
 # Logs
 *.log
+
+# Playwright MCP test artifacts
+.playwright-mcp/
