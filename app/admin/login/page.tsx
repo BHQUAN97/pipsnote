@@ -87,7 +87,6 @@ export default function AdminLoginPage() {
           <ul className="text-xs space-y-1">
             <li>• Max 10 attempts/10min</li>
             <li>• Auto-block 1h after threshold</li>
-            <li>• Default: admin / admin123</li>
           </ul>
         </div>
       </div>

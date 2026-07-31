@@ -104,6 +104,45 @@ export async function syncPostSearchIndex(id: number): Promise<void> {
   }
 }
 
+export async function reindexAllPosts(): Promise<number> {
+  const client = await ensurePostsIndex();
+  if (!client) return 0;
+
+  const rows = await query<
+    Array<{
+      id: number;
+      title: string;
+      slug: string;
+      excerpt: string | null;
+      read_time: number | null;
+      published_at: string | null;
+      category_name: string | null;
+      category_slug: string | null;
+    }>
+  >(
+    `SELECT p.id, p.title, p.slug, p.excerpt, p.read_time, p.published_at,
+            c.name AS category_name, c.slug AS category_slug
+     FROM posts p
+     LEFT JOIN categories c ON c.id = p.category_id
+     WHERE p.status = 'published'`
+  );
+
+  const docs: PostSearchDoc[] = rows.map((post) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    category_name: post.category_name,
+    category_slug: post.category_slug,
+    read_time: post.read_time,
+    published_at: post.published_at,
+  }));
+
+  await client.index(POSTS_INDEX_UID).addDocuments(docs);
+
+  return docs.length;
+}
+
 export async function removePostFromIndex(id: number): Promise<void> {
   try {
     const client = await ensurePostsIndex();
