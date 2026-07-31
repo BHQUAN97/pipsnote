@@ -59,7 +59,7 @@ jobs:
                 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES ON pipsnote.* TO 'pipsnote_app'@'%';
                 CREATE USER IF NOT EXISTS 'pipsnote_backup'@'%' IDENTIFIED BY '${{ secrets.MYSQL_BACKUP_PASSWORD }}';
                 ALTER USER 'pipsnote_backup'@'%' IDENTIFIED BY '${{ secrets.MYSQL_BACKUP_PASSWORD }}';
-                GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, TRIGGER, PROCESS ON pipsnote.* TO 'pipsnote_backup'@'%';
+                GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, TRIGGER ON pipsnote.* TO 'pipsnote_backup'@'%';
                 FLUSH PRIVILEGES;
               " 2>&1 || echo "::warning::shared-mysql chua chay hoac ensure-user that bai, kiem tra thu cong"
 

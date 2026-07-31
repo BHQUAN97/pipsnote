@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: Readonly<{
