@@ -29,14 +29,14 @@ log_info "2/6 docker compose build ${APP_SERVICE}"
 docker compose -f "$COMPOSE_FILE" build "$APP_SERVICE"
 
 log_info "3/7 db-changelog (FATAL neu that bai — day la nguon migration duy nhat)"
-if ! "${SCRIPT_DIR}/db-changelog.sh"; then
+if ! bash "${SCRIPT_DIR}/db-changelog.sh"; then
   log_error "db-changelog that bai — DUNG DEPLOY, container cu van dang chay binh thuong"
   exit 1
 fi
 
 log_info "4/7 db-dataseed (optional, chi chay neu SEED_DEMO_DATA=true)"
 # Dataseed fail KHONG block deploy (khac voi migration)
-"${SCRIPT_DIR}/db-dataseed.sh" || log_warn "db-dataseed fail — tiep tuc deploy (demo data khong critical)"
+bash "${SCRIPT_DIR}/db-dataseed.sh" || log_warn "db-dataseed fail — tiep tuc deploy (demo data khong critical)"
 
 log_info "5/7 dam bao network pipsnote_internal ton tai"
 docker network create pipsnote_internal 2>/dev/null || true
