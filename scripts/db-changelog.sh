@@ -47,7 +47,11 @@ mysql_exec_file() {
 }
 
 # 1. Dam bao bang tracking ton tai
-mysql_exec <<'SQL'
+# QUAN TRONG: dung -e (khong dung heredoc/stdin) — mysql_exec goi docker exec
+# KHONG co -i (co y, xem comment tren ham mysql_exec), nen bat ky lenh nao dua
+# SQL qua stdin/heredoc se bi bo qua lang le (stdin rong, mysql thoat 0 ma
+# khong chay gi), khien bang schema_changelog khong bao gio duoc tao.
+mysql_exec -e "
 CREATE TABLE IF NOT EXISTS schema_changelog (
   version      VARCHAR(50)  NOT NULL,
   filename     VARCHAR(255) NOT NULL,
@@ -57,7 +61,7 @@ CREATE TABLE IF NOT EXISTS schema_changelog (
   applied_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (version, filename)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-SQL
+"
 
 if [[ ! -d "$CHANGELOG_DIR" ]]; then
   log_warn "Khong co thu muc ${CHANGELOG_DIR} — bo qua (chua co migration nao)"

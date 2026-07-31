@@ -39,8 +39,12 @@ if [[ -z "${DB_PASSWORD:-}" ]]; then
   exit 1
 fi
 
+# KHONG dung -i o day: mysql_exec duoc goi ben trong while-loop doc tu
+# process substitution (< <(find ...)); docker exec -i se chiem stdin cua
+# loop va lam loop dung sau file dau tien. Chi mysql_exec_file (pipe .sql
+# vao qua stdin) can -i.
 mysql_exec() {
-  docker exec -i -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
+  docker exec -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
     mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" "$DB_NAME" "$@"
 }
 
@@ -49,8 +53,9 @@ mysql_exec_file() {
     mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" "$DB_NAME" < "$1"
 }
 
-# 1. Dam bao bang tracking ton tai
-mysql_exec <<'SQL'
+# 1. Dam bao bang tracking ton tai (dung -e, khong dung heredoc/stdin — xem
+# comment tren ham mysql_exec, khong co -i nen heredoc se bi bo qua lang le)
+mysql_exec -e "
 CREATE TABLE IF NOT EXISTS dataseed_version (
   version      VARCHAR(50)  NOT NULL,
   filename     VARCHAR(255) NOT NULL,
@@ -60,7 +65,7 @@ CREATE TABLE IF NOT EXISTS dataseed_version (
   applied_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (version, filename)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-SQL
+"
 
 if [[ ! -d "$DATASEED_DIR" ]]; then
   log_warn "Khong co thu muc ${DATASEED_DIR} — bo qua (chua co dataseed nao)"
