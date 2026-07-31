@@ -22,10 +22,13 @@ HEALTH_INTERVAL="${HEALTH_INTERVAL:-5}"
 
 cd "$APP_DIR"
 
-log_info "1/6 git pull"
+log_info "1/7 git pull"
 git pull origin main
 
-log_info "2/6 docker compose build ${APP_SERVICE}"
+log_info "chuan hoa quyen scripts/ (tranh Permission denied do trang thai cu tren VPS)"
+chmod -R u+rwX,go+rX "${SCRIPT_DIR}"
+
+log_info "2/7 docker compose build ${APP_SERVICE}"
 docker compose -f "$COMPOSE_FILE" build "$APP_SERVICE"
 
 log_info "3/7 db-changelog (FATAL neu that bai — day la nguon migration duy nhat)"
