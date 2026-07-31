@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: 'Phân tích thị trường, hướng dẫn giao dịch và đánh giá sàn forex/crypto.',
 };
 
+export const dynamic = 'force-dynamic';
+
 const PAGE_SIZE = 12;
 
 export default async function BlogPage({

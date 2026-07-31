@@ -9,6 +9,8 @@ import PostCard from '@/components/PostCard';
 import RiskDisclaimer from '@/components/RiskDisclaimer';
 import Footer from '@/components/Footer';
 
+export const dynamic = 'force-dynamic';
+
 function formatDate(dateString: string | null): string {
   if (!dateString) return '';
   const d = new Date(dateString);

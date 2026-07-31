@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: 'Bảng so sánh đầy đủ các sàn forex/crypto được đánh giá.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function BrokersPage() {
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';

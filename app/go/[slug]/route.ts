@@ -10,6 +10,8 @@ interface BrokerRow extends RowDataPacket {
   affiliate_url: string | null;
 }
 
+export const dynamic = 'force-dynamic';
+
 async function goHandler(req: NextRequest) {
   const match = req.nextUrl.pathname.match(/^\/go\/([^/]+)/);
   const slug = match ? decodeURIComponent(match[1]) : '';

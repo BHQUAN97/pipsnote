@@ -10,6 +10,8 @@ const SearchQuerySchema = z.object({
   pageSize: z.coerce.number().int().positive().max(50).default(12),
 });
 
+export const dynamic = 'force-dynamic';
+
 async function getHandler(req: NextRequest) {
   const params = req.nextUrl.searchParams;
   const parsed = SearchQuerySchema.safeParse({

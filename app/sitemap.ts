@@ -3,6 +3,8 @@ import { query } from '@/lib/db';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pipsnote.com';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [posts, brokers] = await Promise.all([
     query<{ slug: string; published_at: string | null }[]>(

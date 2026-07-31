@@ -7,6 +7,8 @@ import Header from '@/components/Header';
 import RiskDisclaimer from '@/components/RiskDisclaimer';
 import Footer from '@/components/Footer';
 
+export const dynamic = 'force-dynamic';
+
 async function getBroker(slug: string): Promise<Broker | null> {
   const rows = await query<Broker[]>(
     'SELECT * FROM brokers WHERE slug = ? AND is_active = 1 LIMIT 1',

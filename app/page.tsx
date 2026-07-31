@@ -10,6 +10,8 @@ import BlogGrid from '@/components/BlogGrid';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
