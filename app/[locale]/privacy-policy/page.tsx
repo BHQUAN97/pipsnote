@@ -5,11 +5,14 @@ import { getSiteSettings } from '@/lib/settings';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | PIPSNOTE',
-  description: 'How PIPSNOTE collects, uses, and protects your personal data.',
-  alternates: { languages: { en: '/privacy-policy', vi: '/vi/privacy-policy' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('privacyPolicy');
+  return {
+    title: `${t('title')} | PIPSNOTE`,
+    description: 'How PIPSNOTE collects, uses, and protects your personal data.',
+    alternates: { languages: { en: '/privacy-policy', vi: '/vi/privacy-policy' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 

@@ -6,11 +6,14 @@ import { Link } from '@/i18n/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Terms & Conditions | PIPSNOTE',
-  description: 'Terms and conditions for using the PIPSNOTE website.',
-  alternates: { languages: { en: '/terms', vi: '/vi/terms' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('terms');
+  return {
+    title: `${t('title')} | PIPSNOTE`,
+    description: 'Terms and conditions for using the PIPSNOTE website.',
+    alternates: { languages: { en: '/terms', vi: '/vi/terms' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 

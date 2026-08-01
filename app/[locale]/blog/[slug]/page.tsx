@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
@@ -62,6 +63,7 @@ export default async function BlogDetailPage({
 
   await query('UPDATE posts SET view_count = view_count + 1 WHERE id = ?', [post.id]);
 
+  const t = await getTranslations('blogDetail');
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
 
@@ -118,7 +120,7 @@ export default async function BlogDetailPage({
       {related.length > 0 && (
         <section className="border-t border-gray-line bg-gray-bg py-16 md:py-[72px]">
           <div className="mx-auto max-w-[1180px] px-7">
-            <h2 className="mb-9 text-h2 md:text-h2-lg">Related posts</h2>
+            <h2 className="mb-9 text-h2 md:text-h2-lg">{t('relatedPosts')}</h2>
             <div className="grid grid-cols-1 gap-7 md:grid-cols-3">
               {related.map((p) => (
                 <PostCard key={p.id} post={p} />

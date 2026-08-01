@@ -5,11 +5,14 @@ import { getSiteSettings } from '@/lib/settings';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Affiliate Disclosure | PIPSNOTE',
-  description: 'How PIPSNOTE earns affiliate commissions from broker partners.',
-  alternates: { languages: { en: '/affiliate-disclosure', vi: '/vi/affiliate-disclosure' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('affiliateDisclosure');
+  return {
+    title: `${t('title')} | PIPSNOTE`,
+    description: 'How PIPSNOTE earns affiliate commissions from broker partners.',
+    alternates: { languages: { en: '/affiliate-disclosure', vi: '/vi/affiliate-disclosure' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 

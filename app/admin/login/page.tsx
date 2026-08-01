@@ -58,6 +58,7 @@ export default function AdminLoginPage() {
               onChange={(e) => setUsername(e.target.value)}
               className="w-full"
               placeholder="admin"
+              autoComplete="username"
               disabled={loading}
               required
             />
@@ -70,6 +71,7 @@ export default function AdminLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full"
               placeholder="••••••••"
+              autoComplete="current-password"
               disabled={loading}
               required
             />

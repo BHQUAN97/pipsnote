@@ -6,11 +6,14 @@ import { Link } from '@/i18n/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Risk Disclosure | PIPSNOTE',
-  description: 'Risk warning for forex and CFD trading content on PIPSNOTE.',
-  alternates: { languages: { en: '/risk-disclosure', vi: '/vi/risk-disclosure' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('riskDisclosure');
+  return {
+    title: `${t('title')} | PIPSNOTE`,
+    description: 'Risk warning for forex and CFD trading content on PIPSNOTE.',
+    alternates: { languages: { en: '/risk-disclosure', vi: '/vi/risk-disclosure' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 

@@ -126,5 +126,8 @@
     "intro": "Bạn có câu hỏi, phản hồi hoặc muốn báo lỗi nội dung trên {siteName}? Chúng tôi rất muốn lắng nghe bạn.",
     "emailHeading": "Email",
     "responseNote": "Chúng tôi cố gắng phản hồi mọi yêu cầu trong vòng vài ngày làm việc."
+  },
+  "blogDetail": {
+    "relatedPosts": "Bài viết liên quan"
   }
 }

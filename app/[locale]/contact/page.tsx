@@ -5,11 +5,14 @@ import { getSiteSettings } from '@/lib/settings';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Contact | PIPSNOTE',
-  description: 'Get in touch with the PIPSNOTE team.',
-  alternates: { languages: { en: '/contact', vi: '/vi/contact' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('contact');
+  return {
+    title: `${t('title')} | PIPSNOTE`,
+    description: 'Get in touch with the PIPSNOTE team.',
+    alternates: { languages: { en: '/contact', vi: '/vi/contact' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 
