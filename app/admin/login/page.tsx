@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Input from '@/components/ui/Input';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -39,11 +40,11 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg">
-      <div className="w-full max-w-md p-8 border rounded-lg">
+      <div className="w-full max-w-md p-8 border rounded-sm">
         <h1 className="text-2xl font-bold mb-6">Admin Login</h1>
         
         {error && (
-          <div className="mb-4 p-3 bg-red text-white rounded">
+          <div className="mb-4 p-3 bg-red text-white rounded-sm">
             {error}
           </div>
         )}
@@ -51,11 +52,11 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm mb-2">Username</label>
-            <input
+            <Input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full min-h-[44px] px-4 py-2 border rounded"
+              className="w-full"
               placeholder="admin"
               disabled={loading}
               required
@@ -63,11 +64,11 @@ export default function AdminLoginPage() {
           </div>
           <div>
             <label className="block text-sm mb-2">Password</label>
-            <input
+            <Input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full min-h-[44px] px-4 py-2 border rounded"
+              className="w-full"
               placeholder="••••••••"
               disabled={loading}
               required
@@ -76,13 +77,13 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full min-h-[44px] py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
+            className="w-full min-h-[44px] py-2 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        <div className="mt-4 p-3 bg-gray-bg rounded text-sm">
+        <div className="mt-4 p-3 bg-gray-bg rounded-sm text-sm">
           <p className="font-semibold mb-1">⚠️ Security:</p>
           <ul className="text-xs space-y-1">
             <li>• Max 10 attempts/10min</li>

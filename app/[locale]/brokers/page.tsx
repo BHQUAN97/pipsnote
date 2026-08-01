@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
 import type { Broker } from '@/lib/types';
@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 export const metadata: Metadata = {
   title: 'Compare Brokers | PIPSNOTE',
   description: 'Full comparison table of rated forex/crypto brokers.',
+  alternates: { languages: { en: '/brokers', vi: '/vi/brokers' } },
 };
 
 export const dynamic = 'force-dynamic';
@@ -54,7 +55,7 @@ export default async function BrokersPage({
           <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
             Trading partners
           </span>
-          <h1 className="mt-1 mb-9 text-[26px] md:text-[30px]">All Brokers</h1>
+          <h1 className="mt-1 mb-9 text-h2 md:text-h2-lg">All Brokers</h1>
 
           {brokers.length === 0 ? (
             <p className="text-sm text-gray-mid">No brokers yet.</p>

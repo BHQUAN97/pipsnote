@@ -64,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm font-medium ${
+                  className={`flex min-h-[44px] items-center rounded-sm px-3 py-2 text-sm font-medium ${
                     pathname.startsWith(item.href)
                       ? 'bg-surface-dark text-white'
                       : 'hover:bg-gray-bg'
@@ -81,7 +81,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </span>
             <button
               onClick={handleLogout}
-              className="min-h-[44px] rounded border border-gray-line px-4 py-2 text-sm hover:bg-gray-bg"
+              className="min-h-[44px] rounded-sm border border-gray-line px-4 py-2 text-sm hover:bg-gray-bg"
             >
               Logout
             </button>
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             onClick={() => setDrawerOpen((open) => !open)}
             aria-label={drawerOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={drawerOpen}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded border border-gray-line text-lg md:hidden"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gray-line text-lg md:hidden"
           >
             {drawerOpen ? '✕' : '☰'}
           </button>
@@ -104,7 +104,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   key={item.href}
                   href={item.href}
                   onClick={() => setDrawerOpen(false)}
-                  className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm font-medium ${
+                  className={`flex min-h-[44px] items-center rounded-sm px-3 py-2 text-sm font-medium ${
                     pathname.startsWith(item.href)
                       ? 'bg-surface-dark text-white'
                       : 'hover:bg-gray-bg'
@@ -120,7 +120,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </span>
               <button
                 onClick={handleLogout}
-                className="min-h-[44px] rounded border border-gray-line px-4 py-2 text-sm hover:bg-gray-bg"
+                className="min-h-[44px] rounded-sm border border-gray-line px-4 py-2 text-sm hover:bg-gray-bg"
               >
                 Logout
               </button>

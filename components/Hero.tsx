@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 const HERO_STATS: Array<[pair: string, value: string, direction: 'up' | 'down']> = [
   ['EUR/USD', '1.0842', 'up'],
@@ -9,34 +10,35 @@ const HERO_STATS: Array<[pair: string, value: string, direction: 'up' | 'down']>
 ];
 
 export default function Hero() {
+  const t = useTranslations('hero');
+
   return (
     <section className="border-b border-gray-line py-16 md:py-[88px]">
       <div className="mx-auto grid max-w-[1180px] gap-12 px-7 md:grid-cols-[1.15fr_0.85fr] md:items-end md:gap-16">
         <div>
           <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-            Market intelligence, without the noise
+            {t('eyebrow')}
           </span>
-          <h1 className="mt-3 mb-5 text-[38px] md:text-[58px]">
-            Read the market.
+          <h1 className="mt-3 mb-5 text-display md:text-display-lg">
+            {t('headlineLine1')}
             <br />
-            Trade with clarity.
+            {t('headlineLine2')}
           </h1>
-          <p className="mb-7 max-w-[460px] text-[17px] leading-relaxed text-gray-mid">
-            Forex analysis, trading strategies, and unbiased broker reviews — helping you decide
-            based on data, not emotion.
+          <p className="mb-7 max-w-[460px] text-body-lg leading-relaxed text-gray-mid">
+            {t('subtitle')}
           </p>
           <div className="flex flex-wrap gap-3.5">
             <Link
               href="/blog"
               className="rounded-sm border border-brand bg-brand px-6 py-4 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
             >
-              Read latest post
+              {t('readLatest')}
             </Link>
             <Link
               href="/brokers"
               className="rounded-sm border border-ink px-6 py-4 text-sm font-semibold transition-colors hover:bg-surface-dark hover:text-white"
             >
-              View Top Brokers
+              {t('viewTopBrokers')}
             </Link>
           </div>
         </div>

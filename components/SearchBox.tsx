@@ -1,10 +1,14 @@
 'use client';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { useState } from 'react';
 import { routes } from '@/lib/routes';
+import Input from '@/components/ui/Input';
 
 export default function SearchBox() {
+  const t = useTranslations('search');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -26,18 +30,18 @@ export default function SearchBox() {
 
   return (
     <form onSubmit={submit} className="mb-9 flex gap-3">
-      <input
+      <Input
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Search posts..."
-        className="h-11 flex-1 rounded-sm border border-gray-line px-4 text-sm outline-none transition-colors focus:border-brand"
+        placeholder={t('placeholder')}
+        className="flex-1"
       />
       <button
         type="submit"
         className="h-11 min-w-11 rounded-sm border border-surface-dark bg-surface-dark px-4.5 text-sm font-medium text-white transition-colors hover:bg-brand hover:border-brand"
       >
-        Search
+        {t('button')}
       </button>
     </form>
   );

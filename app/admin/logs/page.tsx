@@ -88,7 +88,7 @@ export default function AdminLogsPage() {
         <select
           value={level}
           onChange={(e) => setLevel(e.target.value)}
-          className="min-h-[44px] px-3 py-2 border border-gray-line rounded text-sm"
+          className="min-h-[44px] px-3 py-2 border border-gray-line rounded-sm text-sm"
         >
           {LEVELS.map((l) => (
             <option key={l} value={l}>
@@ -102,7 +102,7 @@ export default function AdminLogsPage() {
           placeholder="Module"
           value={moduleName}
           onChange={(e) => setModuleName(e.target.value)}
-          className="min-h-[44px] px-3 py-2 border border-gray-line rounded text-sm"
+          className="min-h-[44px] px-3 py-2 border border-gray-line rounded-sm text-sm"
         />
 
         <input
@@ -110,26 +110,26 @@ export default function AdminLogsPage() {
           placeholder="Search message..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          className="min-h-[44px] px-3 py-2 border border-gray-line rounded text-sm flex-1 min-w-[160px]"
+          className="min-h-[44px] px-3 py-2 border border-gray-line rounded-sm text-sm flex-1 min-w-[160px]"
         />
 
         <input
           type="datetime-local"
           value={from}
           onChange={(e) => setFrom(e.target.value)}
-          className="min-h-[44px] px-3 py-2 border border-gray-line rounded text-sm"
+          className="min-h-[44px] px-3 py-2 border border-gray-line rounded-sm text-sm"
         />
 
         <input
           type="datetime-local"
           value={to}
           onChange={(e) => setTo(e.target.value)}
-          className="min-h-[44px] px-3 py-2 border border-gray-line rounded text-sm"
+          className="min-h-[44px] px-3 py-2 border border-gray-line rounded-sm text-sm"
         />
 
         <button
           type="submit"
-          className="min-h-[44px] px-5 py-2 bg-brand text-white rounded text-sm font-semibold hover:bg-brand-dark"
+          className="min-h-[44px] px-5 py-2 bg-brand text-white rounded-sm text-sm font-semibold hover:bg-brand-dark"
         >
           Filter
         </button>
@@ -160,7 +160,7 @@ export default function AdminLogsPage() {
                     className="border-b border-gray-line last:border-0 cursor-pointer hover:bg-gray-bg"
                   >
                     <td className="p-3">
-                      <span className={`rounded px-2 py-1 font-mono text-xs ${LEVEL_COLOR[log.level]}`}>
+                      <span className={`rounded-sm px-2 py-1 font-mono text-xs ${LEVEL_COLOR[log.level]}`}>
                         {log.level}
                       </span>
                     </td>

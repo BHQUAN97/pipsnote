@@ -113,7 +113,7 @@ export default function AdminBrokersPage() {
         <h1 className="text-2xl font-bold sm:text-3xl">Brokers</h1>
         <Link
           href="/admin/brokers/new"
-          className="min-h-[44px] rounded bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
+          className="min-h-[44px] rounded-sm bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
         >
           + New broker
         </Link>
@@ -147,7 +147,7 @@ export default function AdminBrokersPage() {
                   <td className="p-3 font-medium">
                     {broker.name}
                     {broker.badge && (
-                      <span className="ml-2 rounded bg-gray-bg px-2 py-0.5 text-xs font-normal">
+                      <span className="ml-2 rounded-sm bg-gray-bg px-2 py-0.5 text-xs font-normal">
                         {broker.badge}
                       </span>
                     )}
@@ -156,7 +156,7 @@ export default function AdminBrokersPage() {
                   <td className="p-3 text-gray-mid">{broker.rating ?? '—'}</td>
                   <td className="p-3">
                     <span
-                      className={`rounded px-2 py-1 font-mono text-xs ${
+                      className={`rounded-sm px-2 py-1 font-mono text-xs ${
                         broker.is_active ? 'bg-up text-white' : 'bg-gray-bg'
                       }`}
                     >

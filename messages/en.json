@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "instruction": "Instruction",
+    "topBroker": "Top Broker",
+    "aboutUs": "About Us",
+    "compareBrokers": "Compare Brokers"
+  },
+  "footer": {
+    "tagline": "An independent forex blog — providing market analysis, trading guides, and broker reviews to help traders make smarter decisions.",
+    "navigation": "Navigation",
+    "policies": "Policies",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "termsConditions": "Terms & Conditions",
+    "riskDisclosure": "Risk Disclosure",
+    "affiliateDisclosure": "Affiliate Disclosure",
+    "sendFeedback": "Send feedback",
+    "copyright": "© 2026 {siteName}. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "sitemap": "Sitemap"
+  },
+  "riskDisclaimer": {
+    "label": "Risk warning:",
+    "body": "Leveraged forex and CFD trading carries a high risk of capital loss and may not be suitable for all investors. Content on {siteName} is for informational purposes only and is not investment advice. {siteName} may receive affiliate commissions from some of the brokers listed on this site."
+  },
+  "hero": {
+    "eyebrow": "Market intelligence, without the noise",
+    "headlineLine1": "Read the market.",
+    "headlineLine2": "Trade with clarity.",
+    "subtitle": "Forex analysis, trading strategies, and unbiased broker reviews — helping you decide based on data, not emotion.",
+    "readLatest": "Read latest post",
+    "viewTopBrokers": "View Top Brokers"
+  },
+  "newsletter": {
+    "heading": "Get weekly market analysis",
+    "subtext": "No spam. Unsubscribe anytime.",
+    "emailPlaceholder": "Your email",
+    "subscribe": "Subscribe",
+    "success": "Subscribed successfully, thank you!",
+    "error": "Something went wrong, please try again."
+  },
+  "search": {
+    "placeholder": "Search posts...",
+    "button": "Search"
+  },
+  "categoryFilter": {
+    "all": "All"
+  },
+  "home": {
+    "tradingPartners": "Trading partners",
+    "topRatedBrokers": "Top rated brokers",
+    "viewFullComparison": "View full comparison →",
+    "insightsAnalysis": "Insights & analysis",
+    "latestPosts": "Latest posts",
+    "viewAll": "View all →"
+  },
+  "terms": {
+    "title": "Terms & Conditions",
+    "lastUpdated": "Last updated: August 1, 2026",
+    "intro": "These Terms & Conditions govern your use of {siteName} (the \"Site\"). By accessing or using the Site, you agree to be bound by these terms. If you do not agree, please do not use the Site.",
+    "section1Title": "1. Informational purpose only",
+    "section1Body": "Content on the Site — including articles, broker reviews, comparisons, and market commentary — is provided for general informational purposes only and does not constitute financial, investment, legal, or tax advice. You should consult a licensed professional before making any trading or investment decision.",
+    "section2Title": "2. No warranty",
+    "section2Body": "The Site is provided \"as is\" without warranties of any kind, express or implied. We do not guarantee the accuracy, completeness, or timeliness of any content, including broker information, ratings, or market data, which may change without notice.",
+    "section3Title": "3. Third-party links and brokers",
+    "section3Body": "The Site contains links to third-party broker websites. We do not control and are not responsible for the content, products, services, or practices of any third party. Some links are affiliate links — see our <link>Affiliate Disclosure</link> for details.",
+    "section4Title": "4. Limitation of liability",
+    "section4Body": "To the fullest extent permitted by law, {siteName} and its operators shall not be liable for any direct, indirect, incidental, or consequential loss or damage arising from your use of the Site or reliance on any content published on it, including trading losses.",
+    "section5Title": "5. Changes to these terms",
+    "section5Body": "We may update these terms from time to time. Continued use of the Site after changes are posted constitutes acceptance of the updated terms.",
+    "section6Title": "6. Contact",
+    "section6Body": "Questions about these terms can be sent to <email>hello@pipsnote.com</email>."
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: August 1, 2026",
+    "intro": "This Privacy Policy explains how {siteName} (\"we\", \"us\") collects, uses, and protects information when you visit the Site. We aim to comply with the EU General Data Protection Regulation (GDPR) and similar regional privacy laws.",
+    "section1Title": "1. Data we collect",
+    "section1Body": "We may collect: (a) information you voluntarily submit, such as your email address when subscribing to our newsletter or contacting us; (b) technical data collected automatically, such as IP address, browser type, device type, and pages visited, via cookies and similar technologies; and (c) aggregated analytics data used to understand how the Site is used.",
+    "section2Title": "2. Cookies & analytics",
+    "section2Body": "We use cookies and third-party analytics tools to measure traffic and improve the Site. You can control or disable cookies through your browser settings. Disabling cookies may affect some site functionality.",
+    "section3Title": "3. How we use your data",
+    "section3Body": "We use collected data to operate and improve the Site, send newsletters you have opted into, respond to inquiries, and measure the performance of content and affiliate partnerships. We do not sell your personal data to third parties.",
+    "section4Title": "4. Legal basis & your rights (GDPR)",
+    "section4Body": "If you are located in the EEA/UK, our legal basis for processing your data is typically consent (e.g. newsletter sign-up) or legitimate interest (e.g. site analytics). You have the right to access, correct, delete, or export your personal data, and to withdraw consent at any time by contacting us at <email>hello@pipsnote.com</email>.",
+    "section5Title": "5. Data retention & security",
+    "section5Body": "We retain personal data only as long as necessary for the purposes described above and apply reasonable technical and organizational measures to protect it against unauthorized access, loss, or misuse.",
+    "section6Title": "6. Third-party links",
+    "section6Body": "The Site links to third-party broker websites with their own privacy practices. We are not responsible for the privacy practices of external sites.",
+    "section7Title": "7. Changes to this policy",
+    "section7Body": "We may update this Privacy Policy periodically. Material changes will be reflected by updating the \"Last updated\" date above.",
+    "section8Title": "8. Contact",
+    "section8Body": "For privacy-related questions or requests, contact <email>hello@pipsnote.com</email>."
+  },
+  "riskDisclosure": {
+    "title": "Risk Disclosure",
+    "lastUpdated": "Last updated: August 1, 2026",
+    "warningLabel": "Risk warning:",
+    "intro": "Leveraged forex and CFD trading carries a high risk of capital loss and may not be suitable for all investors. You could lose more than your initial deposit. Before trading, you should carefully consider your investment objectives, level of experience, and risk appetite, and seek independent financial advice if necessary.",
+    "section1Title": "Leverage risk",
+    "section1Body": "Leverage can amplify both gains and losses. Small market movements can result in losses that exceed your initial investment when trading on margin.",
+    "section2Title": "Market volatility",
+    "section2Body": "Forex and crypto markets can be highly volatile. Prices can move rapidly against your position due to economic events, news, or low liquidity, and past performance is not indicative of future results.",
+    "section3Title": "Not investment advice",
+    "section3Body": "Content on {siteName} — including articles, market commentary, and broker comparisons — is for informational purposes only and does not constitute investment advice or a recommendation to buy, sell, or hold any financial instrument. {siteName} may receive affiliate commissions from some of the brokers listed on this site — see our <link>Affiliate Disclosure</link> for details.",
+    "section4Title": "Seek independent advice",
+    "section4Body": "Only trade with money you can afford to lose. If you are unsure about the risks involved, consult a licensed financial advisor before making any trading decision."
+  },
+  "affiliateDisclosure": {
+    "title": "Affiliate Disclosure",
+    "lastUpdated": "Last updated: August 1, 2026",
+    "intro": "{siteName} is an independent content site. To keep the Site free to use, we participate in affiliate partnerships with some of the forex and crypto brokers featured in our articles, reviews, and comparison tables.",
+    "section1Title": "How it works",
+    "section1Body": "When you click certain links to a broker's website and open an account or take a qualifying action, we may receive a commission from that broker. This comes at no additional cost to you and does not affect the price, terms, or conditions you receive from the broker.",
+    "section2Title": "Editorial independence",
+    "section2Body": "Affiliate relationships do not determine which brokers we cover or how we rate them. Our reviews and comparisons are based on our own research and publicly available information. However, because affiliate revenue supports the Site, you should be aware of this potential conflict of interest when reading broker content.",
+    "section3Title": "Not financial advice",
+    "section3Body": "Broker reviews and rankings are provided for informational purposes only and are not a recommendation or solicitation to open an account with any specific broker. Always do your own research before choosing a broker.",
+    "section4Title": "Questions",
+    "section4Body": "If you have questions about our affiliate relationships, contact us at <email>hello@pipsnote.com</email>."
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "Have a question, feedback, or a correction to report on {siteName}? We'd like to hear from you.",
+    "emailHeading": "Email",
+    "responseNote": "We aim to respond to all inquiries within a few business days."
+  }
+}

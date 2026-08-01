@@ -19,7 +19,7 @@ export default function EditBrokerPage({ params }: { params: Promise<{ id: strin
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Edit broker</h1>
-      {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
+      {error && <div className="p-3 bg-red text-white rounded-sm text-sm">{error}</div>}
       {!error && !broker && <p className="text-sm text-gray-mid">Loading...</p>}
       {broker && <BrokerForm brokerId={broker.id} initialBroker={broker} />}
     </div>

@@ -9,10 +9,10 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
       className="card-elevated group flex flex-col gap-4 border border-gray-line bg-bg p-6 hover:-translate-y-1 hover:border-ink"
     >
       <div className="flex items-start justify-between">
-        <span className="font-display text-[19px]">{broker.name}</span>
+        <span className="font-display text-card-title">{broker.name}</span>
         {broker.badge && (
           <span
-            className={`font-mono text-[10.5px] uppercase tracking-[0.06em] px-2 py-1 text-white ${
+            className={`font-mono text-badge uppercase tracking-[0.06em] px-2 py-1 text-white ${
               broker.badge === 'Hot' ? 'bg-brand' : 'bg-surface-dark'
             }`}
           >
@@ -21,7 +21,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5 border-t border-gray-line pt-4 text-[12.5px] text-gray-mid">
+      <div className="grid grid-cols-2 gap-2.5 border-t border-gray-line pt-4 text-meta text-gray-mid">
         <div>
           Spread from
           <b className="mt-0.5 block font-mono text-sm font-medium text-ink">
@@ -46,7 +46,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         </div>
       </div>
 
-      <span className="mt-auto flex items-center justify-between rounded-sm bg-brand px-4 py-3.5 text-[13.5px] font-semibold text-white transition-colors group-hover:bg-brand-dark">
+      <span className="mt-auto flex items-center justify-between rounded-sm bg-brand px-4 py-3.5 text-nav font-semibold text-white transition-colors group-hover:bg-brand-dark">
         Open account <span aria-hidden>→</span>
       </span>
     </a>

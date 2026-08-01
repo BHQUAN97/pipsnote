@@ -113,7 +113,7 @@ export default function AdminPostsPage() {
         <h1 className="text-2xl font-bold sm:text-3xl">Posts</h1>
         <Link
           href="/admin/posts/new"
-          className="min-h-[44px] rounded bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
+          className="min-h-[44px] rounded-sm bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
         >
           + New post
         </Link>
@@ -127,7 +127,7 @@ export default function AdminPostsPage() {
               setStatus(s);
               setPage(1);
             }}
-            className={`min-h-[44px] rounded border px-4 py-2 text-sm ${
+            className={`min-h-[44px] rounded-sm border px-4 py-2 text-sm ${
               status === s ? 'bg-surface-dark text-white' : 'hover:bg-gray-bg'
             }`}
           >
@@ -164,7 +164,7 @@ export default function AdminPostsPage() {
                   <td className="p-3 font-medium">{post.title}</td>
                   <td className="p-3 text-gray-mid">{post.category_name ?? '—'}</td>
                   <td className="p-3">
-                    <span className="rounded bg-gray-bg px-2 py-1 font-mono text-xs">
+                    <span className="rounded-sm bg-gray-bg px-2 py-1 font-mono text-xs">
                       {post.status}
                     </span>
                   </td>

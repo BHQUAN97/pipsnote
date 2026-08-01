@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Category, Post } from '@/lib/types';
+import Input from '@/components/ui/Input';
 
 interface PostFormValues {
   title: string;
@@ -109,18 +110,18 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-3xl">
-      {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
+      {error && <div className="p-3 bg-red text-white rounded-sm text-sm">{error}</div>}
 
       <div>
         <label className="block text-sm mb-2 font-medium">Title</label>
-        <input
+        <Input
           type="text"
           value={values.title}
           onChange={(e) => {
             update('title', e.target.value);
             if (!slugTouched) update('slug', slugify(e.target.value));
           }}
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+          className="w-full"
           disabled={saving}
           required
         />
@@ -128,7 +129,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
       <div>
         <label className="block text-sm mb-2 font-medium">Slug</label>
-        <input
+        <Input
           type="text"
           value={values.slug}
           onChange={(e) => {
@@ -136,7 +137,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
             update('slug', e.target.value);
           }}
           pattern="^[a-z0-9]+(-[a-z0-9]+)*$"
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded font-mono text-sm"
+          className="w-full font-mono"
           disabled={saving}
           required
         />
@@ -148,7 +149,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           value={values.excerpt}
           onChange={(e) => update('excerpt', e.target.value)}
           rows={3}
-          className="w-full px-4 py-2 border border-gray-line rounded"
+          className="w-full px-4 py-2 border border-gray-line rounded-sm"
           disabled={saving}
         />
       </div>
@@ -159,7 +160,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           value={values.content}
           onChange={(e) => update('content', e.target.value)}
           rows={12}
-          className="w-full px-4 py-2 border border-gray-line rounded font-mono text-sm"
+          className="w-full px-4 py-2 border border-gray-line rounded-sm font-mono text-sm"
           disabled={saving}
           required
         />
@@ -167,11 +168,11 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
       <div>
         <label className="block text-sm mb-2 font-medium">Featured image (URL)</label>
-        <input
+        <Input
           type="text"
           value={values.featured_image}
           onChange={(e) => update('featured_image', e.target.value)}
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+          className="w-full"
           disabled={saving}
         />
       </div>
@@ -182,7 +183,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           <select
             value={values.category_id}
             onChange={(e) => update('category_id', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded-sm"
             disabled={saving}
           >
             <option value="">— None —</option>
@@ -199,7 +200,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           <select
             value={values.status}
             onChange={(e) => update('status', e.target.value as PostFormValues['status'])}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded-sm"
             disabled={saving}
           >
             <option value="draft">Draft</option>
@@ -210,12 +211,12 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
         <div>
           <label className="block text-sm mb-2 font-medium">Read time (min)</label>
-          <input
+          <Input
             type="number"
             min={0}
             value={values.read_time}
             onChange={(e) => update('read_time', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full"
             disabled={saving}
           />
         </div>
@@ -237,11 +238,11 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
       <div>
         <label className="block text-sm mb-2 font-medium">SEO Title</label>
-        <input
+        <Input
           type="text"
           value={values.seo_title}
           onChange={(e) => update('seo_title', e.target.value)}
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+          className="w-full"
           disabled={saving}
         />
       </div>
@@ -252,7 +253,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           value={values.seo_desc}
           onChange={(e) => update('seo_desc', e.target.value)}
           rows={2}
-          className="w-full px-4 py-2 border border-gray-line rounded"
+          className="w-full px-4 py-2 border border-gray-line rounded-sm"
           disabled={saving}
         />
       </div>
@@ -261,7 +262,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
         <button
           type="submit"
           disabled={saving}
-          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
+          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save post'}
         </button>
@@ -269,7 +270,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           type="button"
           onClick={() => router.push('/admin/posts')}
           disabled={saving}
-          className="min-h-[44px] px-6 py-2 border border-gray-line rounded hover:bg-gray-bg disabled:opacity-50"
+          className="min-h-[44px] px-6 py-2 border border-gray-line rounded-sm hover:bg-gray-bg disabled:opacity-50"
         >
           Cancel
         </button>

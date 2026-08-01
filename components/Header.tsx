@@ -1,21 +1,24 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import ThemeToggle from './ThemeToggle';
-
-const NAV_LINKS = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/#instruction', label: 'Instruction' },
-  { href: '/brokers', label: 'Top Broker' },
-  { href: '/#about', label: 'About Us' },
-];
+import LocaleSwitcher from './LocaleSwitcher';
 
 export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string }) {
+  const t = useTranslations('nav');
   const brand = siteName.slice(0, 4).toUpperCase();
   const rest = siteName.slice(4).toUpperCase();
+
+  const NAV_LINKS = [
+    { href: '/blog', label: t('blog') },
+    { href: '/#instruction', label: t('instruction') },
+    { href: '/brokers', label: t('topBroker') },
+    { href: '/#about', label: t('aboutUs') },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-line bg-bg">
       <div className="mx-auto flex h-[76px] max-w-[1180px] items-center justify-between gap-4 px-7">
-        <Link href="/" className="font-display text-[22px] tracking-tight">
+        <Link href="/" className="font-display text-wordmark tracking-tight">
           {brand}
           <span className="text-brand">{rest}</span>
         </Link>
@@ -36,10 +39,11 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/brokers"
-            className="rounded-sm bg-brand px-5 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-brand-dark"
+            className="rounded-sm bg-brand px-5 py-2.5 text-nav font-semibold text-white transition-colors hover:bg-brand-dark"
           >
-            Compare Brokers
+            {t('compareBrokers')}
           </Link>
+          <LocaleSwitcher />
           <ThemeToggle />
         </div>
 
@@ -61,9 +65,10 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
               href="/brokers"
               className="mt-1 rounded-sm bg-brand px-3 py-2.5 text-center text-sm font-semibold text-white"
             >
-              Compare Brokers
+              {t('compareBrokers')}
             </Link>
-            <div className="mt-1 flex justify-center">
+            <div className="mt-1 flex items-center justify-center gap-2">
+              <LocaleSwitcher />
               <ThemeToggle />
             </div>
           </div>

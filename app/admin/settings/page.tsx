@@ -109,33 +109,33 @@ export default function AdminSettingsPage() {
       <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Site Settings</h1>
 
       {message && (
-          <div className="mb-4 p-4 border rounded bg-gray-bg">
+          <div className="mb-4 p-4 border rounded-sm bg-gray-bg">
             {message}
           </div>
         )}
 
         {/* Presets */}
-        <section className="mb-8 p-4 sm:p-6 border rounded-lg">
+        <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Quick Presets</h2>
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => handlePreset('red')}
               disabled={saving}
-              className="min-h-[44px] px-6 py-3 border-2 border-red rounded hover:bg-red/10 disabled:opacity-50"
+              className="min-h-[44px] px-6 py-3 border-2 border-red rounded-sm hover:bg-red/10 disabled:opacity-50"
             >
               🔴 Editorial Red (Default)
             </button>
             <button
               onClick={() => handlePreset('blue')}
               disabled={saving}
-              className="min-h-[44px] px-6 py-3 border-2 border-blue-600 rounded hover:bg-blue-600/10 disabled:opacity-50"
+              className="min-h-[44px] px-6 py-3 border-2 border-blue-600 rounded-sm hover:bg-blue-600/10 disabled:opacity-50"
             >
               🔵 Fintech Blue
             </button>
             <button
               onClick={() => handlePreset('neon')}
               disabled={saving}
-              className="min-h-[44px] px-6 py-3 border-2 border-green-500 rounded hover:bg-green-500/10 disabled:opacity-50"
+              className="min-h-[44px] px-6 py-3 border-2 border-green-500 rounded-sm hover:bg-green-500/10 disabled:opacity-50"
             >
               💚 Crypto Neon
             </button>
@@ -143,7 +143,7 @@ export default function AdminSettingsPage() {
         </section>
 
         {/* Theme Colors */}
-        <section className="mb-8 p-4 sm:p-6 border rounded-lg">
+        <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Theme Colors</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {COLOR_KEYS.map((key) => (
@@ -154,13 +154,13 @@ export default function AdminSettingsPage() {
                     type="color"
                     value={settings[key] ?? '#000000'}
                     onChange={(e) => setKey(key, e.target.value)}
-                    className="w-16 h-11 border rounded cursor-pointer"
+                    className="w-16 h-11 border rounded-sm cursor-pointer"
                   />
                   <input
                     type="text"
                     value={settings[key] ?? ''}
                     onChange={(e) => setKey(key, e.target.value)}
-                    className="flex-1 min-h-[44px] px-3 py-2 border rounded text-sm font-mono"
+                    className="flex-1 min-h-[44px] px-3 py-2 border rounded-sm text-sm font-mono"
                     pattern="^#[0-9A-Fa-f]{6}$"
                   />
                 </div>
@@ -179,7 +179,7 @@ export default function AdminSettingsPage() {
         </section>
 
         {/* Layout Options */}
-        <section className="mb-8 p-4 sm:p-6 border rounded-lg">
+        <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Layout Options</h2>
           <div className="space-y-3">
             <label className="flex items-center gap-2 cursor-pointer min-h-[44px]">
@@ -198,7 +198,7 @@ export default function AdminSettingsPage() {
               <select
                 value={settings['layout.hero_variant'] ?? 'editorial'}
                 onChange={(e) => setKey('layout.hero_variant', e.target.value)}
-                className="w-full min-h-[44px] px-4 py-2 border rounded"
+                className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
               >
                 {HERO_VARIANTS.map((v) => (
                   <option key={v} value={v}>
@@ -213,7 +213,7 @@ export default function AdminSettingsPage() {
                 type="text"
                 value={settings['layout.site_name'] ?? ''}
                 onChange={(e) => setKey('layout.site_name', e.target.value)}
-                className="w-full min-h-[44px] px-4 py-2 border rounded"
+                className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
                 placeholder="PIPSNOTE"
                 maxLength={100}
               />
@@ -226,13 +226,13 @@ export default function AdminSettingsPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="min-h-[44px] px-8 py-3 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50 font-semibold"
+            className="min-h-[44px] px-8 py-3 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50 font-semibold"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="min-h-[44px] px-6 py-3 border rounded hover:bg-gray-bg"
+            className="min-h-[44px] px-6 py-3 border rounded-sm hover:bg-gray-bg"
           >
             Reset
           </button>

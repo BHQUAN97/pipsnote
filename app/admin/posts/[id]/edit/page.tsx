@@ -19,7 +19,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Edit post</h1>
-      {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
+      {error && <div className="p-3 bg-red text-white rounded-sm text-sm">{error}</div>}
       {!error && !post && <p className="text-sm text-gray-mid">Loading...</p>}
       {post && <PostForm postId={post.id} initialPost={post} />}
     </div>

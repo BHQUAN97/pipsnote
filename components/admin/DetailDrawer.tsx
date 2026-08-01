@@ -43,7 +43,7 @@ export default function DetailDrawer({ open, title, loading, fields, editHref, o
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded border border-gray-line text-lg"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gray-line text-lg"
           >
             ✕
           </button>
@@ -55,7 +55,7 @@ export default function DetailDrawer({ open, title, loading, fields, editHref, o
           <div className="flex flex-col gap-4">
             {fields.map((field) => (
               <div key={field.label}>
-                <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.06em] text-gray-mid">
+                <div className="mb-1 font-mono text-label uppercase tracking-[0.06em] text-gray-mid">
                   {field.label}
                 </div>
                 <div className="text-sm leading-relaxed break-words">{field.value}</div>
@@ -67,7 +67,7 @@ export default function DetailDrawer({ open, title, loading, fields, editHref, o
         {editHref && (
           <a
             href={editHref}
-            className="mt-8 flex min-h-[44px] items-center justify-center rounded bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-dark"
+            className="mt-8 flex min-h-[44px] items-center justify-center rounded-sm bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-dark"
           >
             Edit
           </a>

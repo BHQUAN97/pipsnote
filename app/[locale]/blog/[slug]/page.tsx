@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
 import { routes } from '@/lib/routes';
@@ -45,6 +45,9 @@ export async function generateMetadata({
   return {
     title: post.seo_title || post.title,
     description: post.seo_desc || post.excerpt || undefined,
+    alternates: {
+      languages: { en: `/blog/${slug}`, vi: `/vi/blog/${slug}` },
+    },
   };
 }
 
@@ -83,13 +86,13 @@ export default async function BlogDetailPage({
           {post.category_name && (
             <Link
               href={routes.blogCategory(post.category_slug!)}
-              className="mb-3 inline-block font-mono text-[11px] uppercase tracking-[0.06em] text-brand"
+              className="mb-3 inline-block font-mono text-label uppercase tracking-[0.06em] text-brand"
             >
               {post.category_name}
             </Link>
           )}
-          <h1 className="mb-4 text-[28px] leading-tight md:text-[36px]">{post.title}</h1>
-          <div className="mb-9 flex flex-wrap items-center gap-3 text-[12.5px] text-gray-mid">
+          <h1 className="mb-4 text-h1 leading-tight md:text-h1-lg">{post.title}</h1>
+          <div className="mb-9 flex flex-wrap items-center gap-3 text-meta text-gray-mid">
             {post.author_name && <span>{post.author_name}</span>}
             {post.author_name && <span>·</span>}
             <span>{formatDate(post.published_at)}</span>
@@ -115,7 +118,7 @@ export default async function BlogDetailPage({
       {related.length > 0 && (
         <section className="border-t border-gray-line bg-gray-bg py-16 md:py-[72px]">
           <div className="mx-auto max-w-[1180px] px-7">
-            <h2 className="mb-9 text-[26px] md:text-[30px]">Related posts</h2>
+            <h2 className="mb-9 text-h2 md:text-h2-lg">Related posts</h2>
             <div className="grid grid-cols-1 gap-7 md:grid-cols-3">
               {related.map((p) => (
                 <PostCard key={p.id} post={p} />

@@ -15,8 +15,8 @@ interface DashboardData {
 
 function StatCard({ label, value, alert }: { label: string; value: number; alert?: boolean }) {
   return (
-    <div className="card-elevated rounded border border-gray-line bg-gray-bg p-5">
-      <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.06em] text-gray-mid">{label}</div>
+    <div className="card-elevated rounded-sm border border-gray-line bg-gray-bg p-5">
+      <div className="mb-1 font-mono text-label uppercase tracking-[0.06em] text-gray-mid">{label}</div>
       <div className={`font-mono text-2xl font-semibold ${alert && value > 0 ? 'text-down' : ''}`}>{value}</div>
     </div>
   );
@@ -55,7 +55,7 @@ export default function AdminDashboardPage() {
         <StatCard label="Errors (24h)" value={data.recentErrorCount} alert />
       </div>
 
-      <div className="mb-8 card-elevated rounded border border-gray-line bg-gray-bg p-5">
+      <div className="mb-8 card-elevated rounded-sm border border-gray-line bg-gray-bg p-5">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-gray-mid">
           Affiliate clicks — last 30 days
         </h2>
@@ -63,7 +63,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="card-elevated rounded border border-gray-line bg-gray-bg p-5">
+        <div className="card-elevated rounded-sm border border-gray-line bg-gray-bg p-5">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-gray-mid">
             Top posts by views
           </h2>
@@ -83,7 +83,7 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        <div className="card-elevated rounded border border-gray-line bg-gray-bg p-5">
+        <div className="card-elevated rounded-sm border border-gray-line bg-gray-bg p-5">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-gray-mid">
             Top brokers by clicks
           </h2>

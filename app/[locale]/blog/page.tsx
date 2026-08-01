@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
+import { getLocale } from 'next-intl/server';
+import { redirect } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
 import { getPublishedPosts } from '@/lib/posts';
@@ -13,6 +14,7 @@ import Footer from '@/components/Footer';
 export const metadata: Metadata = {
   title: 'Blog | PIPSNOTE',
   description: 'Market analysis, trading guides, and forex/crypto broker reviews.',
+  alternates: { languages: { en: '/blog', vi: '/vi/blog' } },
 };
 
 export const dynamic = 'force-dynamic';
@@ -31,7 +33,8 @@ export default async function BlogPage({
     if (q) rest.set('q', q);
     if (page) rest.set('page', page);
     const qs = rest.toString();
-    redirect(`${routes.blogCategory(cat)}${qs ? `?${qs}` : ''}`);
+    const locale = await getLocale();
+    redirect({ href: `${routes.blogCategory(cat)}${qs ? `?${qs}` : ''}`, locale });
   }
 
   const currentPage = Math.max(1, Number(page) || 1);

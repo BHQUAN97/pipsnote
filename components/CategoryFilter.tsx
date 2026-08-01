@@ -1,10 +1,13 @@
 'use client';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { routes } from '@/lib/routes';
 import type { Category } from '@/lib/types';
 
 export default function CategoryFilter({ categories }: { categories: Category[] }) {
+  const t = useTranslations('categoryFilter');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -29,7 +32,7 @@ export default function CategoryFilter({ categories }: { categories: Category[] 
             : 'border-gray-line hover:border-ink'
         }`}
       >
-        All
+        {t('all')}
       </button>
       {categories.map((cat) => (
         <button

@@ -32,6 +32,12 @@ export async function generateMetadata({
     description:
       category.description ||
       `${category.name} articles — market analysis, trading guides, and broker reviews.`,
+    alternates: {
+      languages: {
+        en: `/blog/category/${slug}`,
+        vi: `/vi/blog/category/${slug}`,
+      },
+    },
   };
 }
 

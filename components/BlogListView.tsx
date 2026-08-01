@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type { Category, Post } from '@/lib/types';
 import CategoryFilter from './CategoryFilter';
 import SearchBox from './SearchBox';
@@ -29,7 +29,7 @@ export default function BlogListView({
         <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
           {eyebrow}
         </span>
-        <h1 className="mt-1 mb-9 text-[26px] md:text-[30px]">{title}</h1>
+        <h1 className="mt-1 mb-9 text-h2 md:text-h2-lg">{title}</h1>
 
         <SearchBox />
         <CategoryFilter categories={categories} />

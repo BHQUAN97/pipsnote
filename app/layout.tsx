@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { Archivo_Black, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 import { getSiteSettings } from "@/lib/settings";
 
@@ -23,8 +24,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pipsnote.com"),
   title: "PIPSNOTE - Forex & Crypto Trading Insights",
   description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
+  alternates: {
+    languages: { en: "/", vi: "/vi" },
+  },
 };
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +39,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSiteSettings();
+  const [settings, locale] = await Promise.all([getSiteSettings(), getLocale()]);
   const themeVars = Object.entries(settings)
     .filter(([k]) => k.startsWith('theme.') && k !== 'theme.dark_default')
     .map(([k, v]) => `--${k.replace('theme.', '').replace(/_/g, '-')}: ${v};`)
@@ -43,14 +48,17 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="vi"
+      lang={locale}
       data-theme={darkDefault ? 'dark' : undefined}
       suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${archivoBlack.variable} ${ibmPlexMono.variable}`}
     >
       <head>
-        {/* Runtime CSS variables từ site_settings — ghi đè :root, [data-theme="dark"] vẫn tĩnh trong globals.css */}
-        <style id="theme-vars" dangerouslySetInnerHTML={{ __html: `:root{${themeVars}}` }} />
+        {/* Runtime CSS variables từ site_settings — ghi đè :root/[data-theme="dark"].
+            :not([data-theme="light"]) bắt buộc phải có: :root và [data-theme="light"] có cùng
+            specificity (0,1,0), nên nếu không loại trừ, rule này (đứng sau globals.css trong
+            <head>) sẽ luôn thắng theo source-order và đè luôn cả light theme. */}
+        <style id="theme-vars" dangerouslySetInnerHTML={{ __html: `:root:not([data-theme="light"]){${themeVars}}` }} />
         <script
           dangerouslySetInnerHTML={{
             __html: `

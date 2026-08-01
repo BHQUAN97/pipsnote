@@ -21,7 +21,7 @@ public pagination, double-UTF8 encoding fix, xoá credential mặc định khỏ
 - Đã có screenshot verify: `admin-dashboard-desktop.png`, `admin-dashboard-mobile.png` (không
   commit — file ảnh debug, đã thêm `/*.png` vào `.gitignore`).
 
-### Session này (routing + SEO + legal pages + i18n sweep)
+### Session N-1 (routing + SEO + legal pages + i18n sweep)
 1. **`lib/routes.ts`** — config tập trung mọi path builder (`home`, `blog`, `blogCategory(slug)`,
    `post(slug)`, `brokers`, `broker(slug)`, `go(slug)`, `terms`, `privacyPolicy`, `contact`,
    `affiliateDisclosure`, `riskDisclosure`). Áp dụng vào `Footer.tsx`, `CategoryFilter.tsx`,
@@ -46,6 +46,56 @@ public pagination, double-UTF8 encoding fix, xoá credential mặc định khỏ
    mobile 375px + desktop — category nav, redirect link cũ, related-post category link, cả 5
    trang pháp lý, 404 thật cho slug sai — 0 console error.
 
+### Session này (design system polish + dark/light verify + i18n end-user EN/VI)
+Plan file: `sorted-booping-glacier.md` (đã hoàn tất toàn bộ 3 phase).
+
+1. **Design system polish (Phase 1)**:
+   - `tailwind.config.ts` — thêm `fontSize` scale đặt tên (`display/h1-h4/body-lg/md/sm/label`)
+     và `borderRadius` scale (`sm/DEFAULT/lg/full`), derive từ giá trị đang dùng thật (không đổi
+     visual), sweep các arbitrary value (`text-[26px]`...) sang class có tên.
+   - `components/ui/Input.tsx` — wrapper chuẩn hoá border/focus-ring/radius, áp dụng vào admin
+     login, `PostForm`, `BrokerForm`, `SearchBox`, `Newsletter` — xoá `border rounded` trơn
+     không đồng bộ ở admin login.
+   - Dark/light toggle — verify thật bằng Playwright (trước đó chỉ code, chưa test):
+     `data-theme` đổi đúng, `--surface-dark` không đổi giữa 2 theme, không FOUC/hydration
+     warning, test cả mobile 375px lẫn desktop. **Kết quả: hoạt động đúng, không có bug** — đóng
+     backlog cũ #5 (phần dark mode).
+2. **i18n end-user thật (Phase 2)** — khác hẳn "i18n sweep" session trước (chỉ sửa 1 dòng log
+   nội bộ): dùng `next-intl`, scope **UI chrome only** (nav/nút/label/footer/legal boilerplate),
+   **không đụng nội dung blog/broker trong MySQL**. Locale: **EN (default, không prefix) + VI
+   (`/vi` prefix)**.
+   - Scaffold `i18n/routing.ts` + `i18n/navigation.ts` + `i18n/request.ts`, `messages/en.json` +
+     `messages/vi.json`, `next.config.ts` wrap `createNextIntlPlugin()`.
+   - `proxy.ts` — compose logic bảo mật cũ (`isIpBlocked`/`checkRateLimit` cho `/api/**` +
+     `/admin/**`) với `createMiddleware(routing)` của next-intl cho phần còn lại — đã verify
+     không cái nào phá cái kia (rate-limit retest + locale routing đều pass).
+   - Move toàn bộ route public (`page.tsx`, `blog/**`, `brokers/**`, `contact/`, 4 trang pháp lý
+     còn lại) vào `app/[locale]/`. **Không di chuyển** `app/admin/**`, `app/api/**`,
+     `app/go/[slug]/**`, `app/sitemap.ts`, `app/robots.ts` (giữ nguyên, không có locale prefix).
+   - Root layout split: `app/layout.tsx` lấy `lang` động qua `getLocale()` (fallback `"en"` cho
+     route ngoài `[locale]` như admin) — sửa bug lang-mismatch cũ (hardcode `lang="vi"` dù UI
+     tiếng Anh). `app/[locale]/layout.tsx` mới wrap `NextIntlClientProvider`.
+   - Dịch UI chrome + cả 5 trang pháp lý (nội dung boilerplate) sang tiếng Việt, dùng
+     `useTranslations`/`getTranslations` theo đúng loại component (client/sync vs async server).
+   - Language switcher trong `Header.tsx`, giữ nguyên path hiện tại khi đổi locale.
+   - `app/sitemap.ts` + `generateMetadata()` (broker/blog/category detail) — thêm
+     `alternates.languages` (hreflang `en`/`vi`) cho toàn bộ URL.
+3. **Gap tự phát hiện khi verify**: `components/RiskDisclaimer.tsx` (hiển thị ở footer mọi
+   trang + trang chi tiết broker/blog) bị bỏ sót hoàn toàn khỏi bước extract string ban đầu —
+   hardcode tiếng Anh (và có câu bị lỗi ngữ pháp/thiếu từ). Đã fix: thêm namespace
+   `riskDisclaimer` vào `messages/en.json` + `vi.json`, sửa component dùng `useTranslations`.
+4. **Verify toàn diện (Phase 3, Playwright)**: EN/VI homepage (content + `<html lang>` đúng),
+   language switcher giữ path, theme toggle không xung đột locale routing, admin routes không có
+   locale prefix + `lang="en"` fallback đúng, rate-limit retest (11 fail → 403, block persist),
+   redirect cũ `/blog?cat=` vẫn hoạt động sau khi route đã nằm trong `[locale]`, `sitemap.xml`
+   có đủ hreflang alternates, mobile 375px + desktop cho toàn bộ 5 trang pháp lý (cả 2 locale) —
+   **0 console error** ở mọi trang đã test. Đóng backlog cũ #5 (phần rate-limit retest).
+
+**Lưu ý hành vi next-intl (không phải bug)**: `localePrefix: 'as-needed'` khiến next-intl set
+cookie `NEXT_LOCALE` sau khi visit `/vi/...` — sau đó visit lại path EN không-prefix (vd `/`)
+trong cùng session browser sẽ tự redirect sang `/vi` tương ứng. Đây là hành vi middleware đúng
+theo thiết kế next-intl, không cần fix.
+
 ---
 
 ## 🔜 Backlog (chưa làm, ưu tiên theo thứ tự đề xuất)
@@ -67,13 +117,19 @@ public pagination, double-UTF8 encoding fix, xoá credential mặc định khỏ
    spec gốc, không chỉ smoke-test. Đã cố tình để riêng (không làm chung session routing/SEO).
 4. **Admin UX audit** — dashboard + mobile drawer nav đã có, nhưng chưa audit toàn diện so với
    `spec (1).md` (đặc biệt UX các form dài trên mobile: `PostForm`, `BrokerForm`).
-5. **§8 còn thiếu**: dark mode toggle Playwright test thật (`components/ThemeToggle.tsx` +
-   `--surface-dark` không vỡ), rate-limit retest (11 lần login sai → 403) với data mới trên
-   trạng thái hiện tại (đã verify trước đó nhưng chưa retest sau các thay đổi gần nhất).
-6. **Tài liệu hoá dự án** — user yêu cầu tổng hợp doc dự án + giải pháp thành file `.md` (mỗi
+5. **Tài liệu hoá dự án** — user yêu cầu tổng hợp doc dự án + giải pháp thành file `.md` (mỗi
    file ≤200 dòng, có thể chia nhiều file) tách biệt/bổ sung cho `docs/` hiện có
    (`ADMIN_SETTINGS.md`, `DESIGN_SYSTEM.md`, `LOGGING_STANDARD.md`, `SECURITY_DETECTION.md`) —
    **chưa làm**, cần session riêng để viết nội dung đầy đủ.
+6. **i18n — gap nhỏ tự phát hiện khi verify Phase 3, chưa fix (không chặn deploy)**:
+   - `<title>` (metadata) của 5 trang pháp lý vẫn tiếng Anh ("Terms & Conditions | PIPSNOTE")
+     dù `/vi/...` — do `generateMetadata()` các trang này chưa dùng `getTranslations()` cho
+     `title`, chỉ mới dịch phần `<body>`. Vốn ngoài scope "UI chrome" chốt ban đầu nhưng nên dịch
+     nốt để nhất quán SEO/tab-title.
+   - Heading `"Related posts"` ở `app/[locale]/blog/[slug]/page.tsx` (section liên quan cuối bài)
+     chưa được extract vào `messages/*.json` — sót lại từ đợt string-extraction Phase 2e.
+   - `app/admin/login/page.tsx` — input password thiếu `autoComplete="current-password"`
+     (Chrome DevTools verbose warning, không phải lỗi, nhưng nên thêm cho a11y/password-manager).
 
 **Quy ước code**: mỗi file doc ≤200 dòng, code nên giữ dưới ~500 dòng (component/route quá dài
 → tách nhỏ).

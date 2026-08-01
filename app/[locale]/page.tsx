@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
 import { routes } from '@/lib/routes';
@@ -14,6 +15,8 @@ import Footer from '@/components/Footer';
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
+  const t = await getTranslations('home');
+  const tCat = await getTranslations('categoryFilter');
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
   const showTicker = settings['layout.show_ticker'] !== 'false';
@@ -30,15 +33,15 @@ export default async function Home() {
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-                Trading partners
+                {t('tradingPartners')}
               </span>
-              <h2 className="mt-1 text-[26px] md:text-[30px]">Top rated brokers</h2>
+              <h2 className="mt-1 text-h2 md:text-h2-lg">{t('topRatedBrokers')}</h2>
             </div>
             <Link
               href={routes.brokers}
-              className="border-b-2 border-brand pb-0.5 text-[13px] font-semibold"
+              className="border-b-2 border-brand pb-0.5 text-nav font-semibold"
             >
-              View full comparison →
+              {t('viewFullComparison')}
             </Link>
           </div>
           <BrokerGrid limit={6} />
@@ -50,15 +53,15 @@ export default async function Home() {
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-                Insights &amp; analysis
+                {t('insightsAnalysis')}
               </span>
-              <h2 className="mt-1 text-[26px] md:text-[30px]">Latest posts</h2>
+              <h2 className="mt-1 text-h2 md:text-h2-lg">{t('latestPosts')}</h2>
             </div>
             <Link
               href={routes.blog}
-              className="border-b-2 border-brand pb-0.5 text-[13px] font-semibold"
+              className="border-b-2 border-brand pb-0.5 text-nav font-semibold"
             >
-              View all →
+              {t('viewAll')}
             </Link>
           </div>
           <div className="mb-11 flex flex-wrap gap-3">
@@ -66,7 +69,7 @@ export default async function Home() {
               href={routes.blog}
               className="border border-surface-dark bg-surface-dark px-4.5 py-2.5 text-sm font-medium text-white"
             >
-              All
+              {tCat('all')}
             </Link>
             {categories.map((cat) => (
               <Link

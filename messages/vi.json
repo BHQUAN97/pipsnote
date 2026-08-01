@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "instruction": "Hướng dẫn",
+    "topBroker": "Sàn hàng đầu",
+    "aboutUs": "Giới thiệu",
+    "compareBrokers": "So sánh sàn"
+  },
+  "footer": {
+    "tagline": "Blog forex độc lập — cung cấp phân tích thị trường, hướng dẫn giao dịch và đánh giá sàn giúp trader ra quyết định thông minh hơn.",
+    "navigation": "Điều hướng",
+    "policies": "Chính sách",
+    "contact": "Liên hệ",
+    "privacyPolicy": "Chính sách bảo mật",
+    "termsConditions": "Điều khoản sử dụng",
+    "riskDisclosure": "Cảnh báo rủi ro",
+    "affiliateDisclosure": "Công bố liên kết",
+    "sendFeedback": "Gửi phản hồi",
+    "copyright": "© 2026 {siteName}. Bảo lưu mọi quyền.",
+    "privacy": "Bảo mật",
+    "terms": "Điều khoản",
+    "sitemap": "Sơ đồ trang"
+  },
+  "riskDisclaimer": {
+    "label": "Cảnh báo rủi ro:",
+    "body": "Giao dịch forex và CFD có đòn bẩy tiềm ẩn rủi ro cao mất vốn và có thể không phù hợp với mọi nhà đầu tư. Nội dung trên {siteName} chỉ mang tính chất thông tin, không phải lời khuyên đầu tư. {siteName} có thể nhận hoa hồng liên kết từ một số sàn giao dịch được liệt kê trên trang này."
+  },
+  "hero": {
+    "eyebrow": "Thông tin thị trường, không nhiễu loạn",
+    "headlineLine1": "Đọc vị thị trường.",
+    "headlineLine2": "Giao dịch rõ ràng.",
+    "subtitle": "Phân tích forex, chiến lược giao dịch và đánh giá sàn khách quan — giúp bạn quyết định dựa trên dữ liệu, không phải cảm xúc.",
+    "readLatest": "Xem bài viết mới nhất",
+    "viewTopBrokers": "Xem sàn hàng đầu"
+  },
+  "newsletter": {
+    "heading": "Nhận phân tích thị trường hàng tuần",
+    "subtext": "Không spam. Hủy đăng ký bất cứ lúc nào.",
+    "emailPlaceholder": "Email của bạn",
+    "subscribe": "Đăng ký",
+    "success": "Đăng ký thành công, cảm ơn bạn!",
+    "error": "Có lỗi xảy ra, vui lòng thử lại."
+  },
+  "search": {
+    "placeholder": "Tìm kiếm bài viết...",
+    "button": "Tìm kiếm"
+  },
+  "categoryFilter": {
+    "all": "Tất cả"
+  },
+  "home": {
+    "tradingPartners": "Đối tác giao dịch",
+    "topRatedBrokers": "Sàn được đánh giá cao",
+    "viewFullComparison": "Xem so sánh đầy đủ →",
+    "insightsAnalysis": "Phân tích chuyên sâu",
+    "latestPosts": "Bài viết mới nhất",
+    "viewAll": "Xem tất cả →"
+  },
+  "terms": {
+    "title": "Điều khoản sử dụng",
+    "lastUpdated": "Cập nhật lần cuối: 1 tháng 8, 2026",
+    "intro": "Điều khoản sử dụng này áp dụng cho việc bạn sử dụng {siteName} (\"Trang web\"). Khi truy cập hoặc sử dụng Trang web, bạn đồng ý tuân theo các điều khoản này. Nếu không đồng ý, vui lòng không sử dụng Trang web.",
+    "section1Title": "1. Chỉ mang tính thông tin",
+    "section1Body": "Nội dung trên Trang web — bao gồm bài viết, đánh giá sàn, so sánh và bình luận thị trường — chỉ nhằm mục đích cung cấp thông tin chung, không phải tư vấn tài chính, đầu tư, pháp lý hay thuế. Bạn nên tham khảo ý kiến chuyên gia được cấp phép trước khi đưa ra quyết định giao dịch hoặc đầu tư.",
+    "section2Title": "2. Không bảo đảm",
+    "section2Body": "Trang web được cung cấp \"nguyên trạng\" mà không có bất kỳ bảo đảm nào, dù rõ ràng hay ngụ ý. Chúng tôi không đảm bảo tính chính xác, đầy đủ hoặc kịp thời của bất kỳ nội dung nào, bao gồm thông tin sàn giao dịch, xếp hạng hoặc dữ liệu thị trường, và các nội dung này có thể thay đổi mà không cần báo trước.",
+    "section3Title": "3. Liên kết bên thứ ba và sàn giao dịch",
+    "section3Body": "Trang web chứa các liên kết đến website của các sàn giao dịch bên thứ ba. Chúng tôi không kiểm soát và không chịu trách nhiệm về nội dung, sản phẩm, dịch vụ hoặc hoạt động của bất kỳ bên thứ ba nào. Một số liên kết là liên kết liên kết (affiliate) — xem <link>Công bố liên kết</link> để biết thêm chi tiết.",
+    "section4Title": "4. Giới hạn trách nhiệm",
+    "section4Body": "Trong phạm vi tối đa được pháp luật cho phép, {siteName} và các nhà điều hành sẽ không chịu trách nhiệm đối với bất kỳ tổn thất hoặc thiệt hại trực tiếp, gián tiếp, ngẫu nhiên hay hệ quả nào phát sinh từ việc bạn sử dụng Trang web hoặc dựa vào bất kỳ nội dung nào được đăng tải, bao gồm cả tổn thất giao dịch.",
+    "section5Title": "5. Thay đổi điều khoản",
+    "section5Body": "Chúng tôi có thể cập nhật các điều khoản này theo thời gian. Việc tiếp tục sử dụng Trang web sau khi các thay đổi được đăng tải đồng nghĩa với việc bạn chấp nhận các điều khoản đã cập nhật.",
+    "section6Title": "6. Liên hệ",
+    "section6Body": "Mọi thắc mắc về các điều khoản này có thể gửi đến <email>hello@pipsnote.com</email>."
+  },
+  "privacyPolicy": {
+    "title": "Chính sách bảo mật",
+    "lastUpdated": "Cập nhật lần cuối: 1 tháng 8, 2026",
+    "intro": "Chính sách bảo mật này giải thích cách {siteName} (\"chúng tôi\") thu thập, sử dụng và bảo vệ thông tin khi bạn truy cập Trang web. Chúng tôi hướng đến việc tuân thủ Quy định bảo vệ dữ liệu chung của EU (GDPR) và các luật bảo mật khu vực tương tự.",
+    "section1Title": "1. Dữ liệu chúng tôi thu thập",
+    "section1Body": "Chúng tôi có thể thu thập: (a) thông tin bạn tự nguyện cung cấp, như địa chỉ email khi đăng ký nhận bản tin hoặc liên hệ với chúng tôi; (b) dữ liệu kỹ thuật được thu thập tự động, như địa chỉ IP, loại trình duyệt, loại thiết bị và các trang đã truy cập, thông qua cookie và công nghệ tương tự; và (c) dữ liệu phân tích tổng hợp dùng để hiểu cách Trang web được sử dụng.",
+    "section2Title": "2. Cookie & phân tích",
+    "section2Body": "Chúng tôi sử dụng cookie và các công cụ phân tích của bên thứ ba để đo lường lưu lượng truy cập và cải thiện Trang web. Bạn có thể kiểm soát hoặc tắt cookie qua cài đặt trình duyệt. Việc tắt cookie có thể ảnh hưởng đến một số chức năng của trang.",
+    "section3Title": "3. Cách chúng tôi sử dụng dữ liệu của bạn",
+    "section3Body": "Chúng tôi sử dụng dữ liệu thu thập được để vận hành và cải thiện Trang web, gửi bản tin mà bạn đã đăng ký nhận, phản hồi các yêu cầu, và đo lường hiệu quả nội dung cũng như quan hệ đối tác liên kết. Chúng tôi không bán dữ liệu cá nhân của bạn cho bên thứ ba.",
+    "section4Title": "4. Cơ sở pháp lý & quyền của bạn (GDPR)",
+    "section4Body": "Nếu bạn ở khu vực EEA/UK, cơ sở pháp lý để chúng tôi xử lý dữ liệu của bạn thường là sự đồng ý (ví dụ: đăng ký bản tin) hoặc lợi ích hợp pháp (ví dụ: phân tích trang web). Bạn có quyền truy cập, chỉnh sửa, xóa hoặc xuất dữ liệu cá nhân của mình, và rút lại sự đồng ý bất cứ lúc nào bằng cách liên hệ với chúng tôi tại <email>hello@pipsnote.com</email>.",
+    "section5Title": "5. Lưu trữ dữ liệu & bảo mật",
+    "section5Body": "Chúng tôi chỉ lưu trữ dữ liệu cá nhân trong thời gian cần thiết cho các mục đích đã nêu ở trên và áp dụng các biện pháp kỹ thuật, tổ chức hợp lý để bảo vệ dữ liệu khỏi truy cập trái phép, mất mát hoặc lạm dụng.",
+    "section6Title": "6. Liên kết bên thứ ba",
+    "section6Body": "Trang web có liên kết đến website của các sàn giao dịch bên thứ ba với chính sách bảo mật riêng của họ. Chúng tôi không chịu trách nhiệm về hoạt động bảo mật của các trang bên ngoài.",
+    "section7Title": "7. Thay đổi chính sách này",
+    "section7Body": "Chúng tôi có thể cập nhật Chính sách bảo mật này theo định kỳ. Các thay đổi quan trọng sẽ được phản ánh qua ngày \"Cập nhật lần cuối\" ở trên.",
+    "section8Title": "8. Liên hệ",
+    "section8Body": "Đối với các câu hỏi hoặc yêu cầu liên quan đến quyền riêng tư, hãy liên hệ <email>hello@pipsnote.com</email>."
+  },
+  "riskDisclosure": {
+    "title": "Cảnh báo rủi ro",
+    "lastUpdated": "Cập nhật lần cuối: 1 tháng 8, 2026",
+    "warningLabel": "Cảnh báo rủi ro:",
+    "intro": "Giao dịch forex và CFD có đòn bẩy tiềm ẩn rủi ro mất vốn cao và có thể không phù hợp với tất cả nhà đầu tư. Bạn có thể mất nhiều hơn số tiền ký quỹ ban đầu. Trước khi giao dịch, bạn nên cân nhắc kỹ mục tiêu đầu tư, mức độ kinh nghiệm và khẩu vị rủi ro, đồng thời tìm kiếm tư vấn tài chính độc lập nếu cần.",
+    "section1Title": "Rủi ro đòn bẩy",
+    "section1Body": "Đòn bẩy có thể khuếch đại cả lợi nhuận lẫn thua lỗ. Những biến động nhỏ của thị trường có thể dẫn đến khoản lỗ vượt quá số vốn đầu tư ban đầu khi giao dịch ký quỹ.",
+    "section2Title": "Biến động thị trường",
+    "section2Body": "Thị trường forex và tiền mã hóa có thể biến động mạnh. Giá có thể di chuyển nhanh ngược lại vị thế của bạn do các sự kiện kinh tế, tin tức hoặc thanh khoản thấp, và hiệu suất trong quá khứ không đảm bảo cho kết quả trong tương lai.",
+    "section3Title": "Không phải tư vấn đầu tư",
+    "section3Body": "Nội dung trên {siteName} — bao gồm bài viết, bình luận thị trường và so sánh sàn giao dịch — chỉ nhằm mục đích cung cấp thông tin, không phải tư vấn đầu tư hay khuyến nghị mua, bán hoặc nắm giữ bất kỳ công cụ tài chính nào. {siteName} có thể nhận hoa hồng liên kết từ một số sàn giao dịch được liệt kê trên trang này — xem <link>Công bố liên kết</link> để biết thêm chi tiết.",
+    "section4Title": "Tìm kiếm tư vấn độc lập",
+    "section4Body": "Chỉ giao dịch với số tiền bạn có thể chấp nhận mất. Nếu không chắc chắn về các rủi ro liên quan, hãy tham khảo ý kiến của cố vấn tài chính được cấp phép trước khi đưa ra bất kỳ quyết định giao dịch nào."
+  },
+  "affiliateDisclosure": {
+    "title": "Công bố liên kết",
+    "lastUpdated": "Cập nhật lần cuối: 1 tháng 8, 2026",
+    "intro": "{siteName} là một trang nội dung độc lập. Để giữ Trang web miễn phí sử dụng, chúng tôi tham gia các quan hệ đối tác liên kết với một số sàn forex và tiền mã hóa được giới thiệu trong bài viết, đánh giá và bảng so sánh của chúng tôi.",
+    "section1Title": "Cách thức hoạt động",
+    "section1Body": "Khi bạn nhấp vào một số liên kết đến website của sàn giao dịch và mở tài khoản hoặc thực hiện hành động đủ điều kiện, chúng tôi có thể nhận được hoa hồng từ sàn đó. Điều này không phát sinh thêm chi phí cho bạn và không ảnh hưởng đến giá, điều khoản hoặc điều kiện bạn nhận được từ sàn giao dịch.",
+    "section2Title": "Tính độc lập biên tập",
+    "section2Body": "Quan hệ liên kết không quyết định việc chúng tôi giới thiệu sàn nào hoặc cách chúng tôi đánh giá chúng. Các đánh giá và so sánh của chúng tôi dựa trên nghiên cứu riêng và thông tin công khai. Tuy nhiên, vì doanh thu liên kết hỗ trợ Trang web, bạn nên lưu ý về xung đột lợi ích tiềm ẩn này khi đọc nội dung về sàn giao dịch.",
+    "section3Title": "Không phải tư vấn tài chính",
+    "section3Body": "Các đánh giá và xếp hạng sàn giao dịch chỉ nhằm mục đích cung cấp thông tin, không phải khuyến nghị hay lời mời mở tài khoản với bất kỳ sàn cụ thể nào. Luôn tự nghiên cứu trước khi lựa chọn sàn giao dịch.",
+    "section4Title": "Câu hỏi",
+    "section4Body": "Nếu có thắc mắc về các quan hệ liên kết của chúng tôi, hãy liên hệ <email>hello@pipsnote.com</email>."
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "intro": "Bạn có câu hỏi, phản hồi hoặc muốn báo lỗi nội dung trên {siteName}? Chúng tôi rất muốn lắng nghe bạn.",
+    "emailHeading": "Email",
+    "responseNote": "Chúng tôi cố gắng phản hồi mọi yêu cầu trong vòng vài ngày làm việc."
+  }
+}

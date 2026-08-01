@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Broker } from '@/lib/types';
+import Input from '@/components/ui/Input';
 
 interface BrokerFormValues {
   name: string;
@@ -107,18 +108,18 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-3xl">
-      {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
+      {error && <div className="p-3 bg-red text-white rounded-sm text-sm">{error}</div>}
 
       <div>
         <label className="block text-sm mb-2 font-medium">Broker name</label>
-        <input
+        <Input
           type="text"
           value={values.name}
           onChange={(e) => {
             update('name', e.target.value);
             if (!slugTouched) update('slug', slugify(e.target.value));
           }}
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+          className="w-full"
           disabled={saving}
           required
         />
@@ -126,7 +127,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
 
       <div>
         <label className="block text-sm mb-2 font-medium">Slug</label>
-        <input
+        <Input
           type="text"
           value={values.slug}
           onChange={(e) => {
@@ -134,7 +135,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
             update('slug', e.target.value);
           }}
           pattern="^[a-z0-9]+(-[a-z0-9]+)*$"
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded font-mono text-sm"
+          className="w-full font-mono"
           disabled={saving}
           required
         />
@@ -146,18 +147,18 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           value={values.description}
           onChange={(e) => update('description', e.target.value)}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-line rounded"
+          className="w-full px-4 py-2 border border-gray-line rounded-sm"
           disabled={saving}
         />
       </div>
 
       <div>
         <label className="block text-sm mb-2 font-medium">Logo (URL)</label>
-        <input
+        <Input
           type="text"
           value={values.logo_url}
           onChange={(e) => update('logo_url', e.target.value)}
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+          className="w-full"
           disabled={saving}
         />
       </div>
@@ -168,7 +169,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           <select
             value={values.type}
             onChange={(e) => update('type', e.target.value as BrokerFormValues['type'])}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded-sm"
             disabled={saving}
           >
             <option value="forex">Forex</option>
@@ -180,58 +181,58 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
 
         <div>
           <label className="block text-sm mb-2 font-medium">Badge</label>
-          <input
+          <Input
             type="text"
             value={values.badge}
             onChange={(e) => update('badge', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full"
             disabled={saving}
           />
         </div>
 
         <div>
           <label className="block text-sm mb-2 font-medium">Min deposit</label>
-          <input
+          <Input
             type="text"
             value={values.min_deposit}
             onChange={(e) => update('min_deposit', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full"
             disabled={saving}
           />
         </div>
 
         <div>
           <label className="block text-sm mb-2 font-medium">Leverage</label>
-          <input
+          <Input
             type="text"
             value={values.leverage}
             onChange={(e) => update('leverage', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full"
             disabled={saving}
           />
         </div>
 
         <div>
           <label className="block text-sm mb-2 font-medium">Spread from</label>
-          <input
+          <Input
             type="text"
             value={values.spread_from}
             onChange={(e) => update('spread_from', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full"
             disabled={saving}
           />
         </div>
 
         <div>
           <label className="block text-sm mb-2 font-medium">Rating (0-5)</label>
-          <input
+          <Input
             type="number"
             min={0}
             max={5}
             step={0.1}
             value={values.rating}
             onChange={(e) => update('rating', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+            className="w-full"
             disabled={saving}
           />
         </div>
@@ -239,11 +240,11 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
 
       <div>
         <label className="block text-sm mb-2 font-medium">Affiliate URL</label>
-        <input
+        <Input
           type="text"
           value={values.affiliate_url}
           onChange={(e) => update('affiliate_url', e.target.value)}
-          className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
+          className="w-full"
           disabled={saving}
         />
       </div>
@@ -282,7 +283,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         <button
           type="submit"
           disabled={saving}
-          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
+          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save broker'}
         </button>
@@ -290,7 +291,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           type="button"
           onClick={() => router.push('/admin/brokers')}
           disabled={saving}
-          className="min-h-[44px] px-6 py-2 border border-gray-line rounded hover:bg-gray-bg disabled:opacity-50"
+          className="min-h-[44px] px-6 py-2 border border-gray-line rounded-sm hover:bg-gray-bg disabled:opacity-50"
         >
           Cancel
         </button>

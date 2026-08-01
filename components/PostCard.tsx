@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type { Post } from '@/lib/types';
 
 function formatDate(dateString: string | null): string {
@@ -19,14 +19,14 @@ export default function PostCard({ post }: { post: Post }) {
         IMG
       </div>
       {post.category_name && (
-        <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.06em] text-brand">
+        <span className="mb-2 block font-mono text-label uppercase tracking-[0.06em] text-brand">
           {post.category_name}
         </span>
       )}
       <h3 className="mb-2 text-lg font-semibold leading-snug transition-colors group-hover:text-brand">
         {post.title}
       </h3>
-      <span className="text-[12.5px] text-gray-mid">
+      <span className="text-meta text-gray-mid">
         {post.read_time ? `${post.read_time} min read · ` : ''}
         {formatDate(post.published_at)}
       </span>

@@ -17,7 +17,7 @@ function TickerItems() {
       {TICKER_DATA.map(([pair, value, direction], i) => (
         <span
           key={`${pair}-${i}`}
-          className="inline-flex items-center gap-2 whitespace-nowrap border-r border-white/10 px-7 py-2.5 font-mono text-[12.5px] text-white"
+          className="inline-flex items-center gap-2 whitespace-nowrap border-r border-white/10 px-7 py-2.5 font-mono text-meta text-white"
         >
           <span className="font-medium">{pair}</span>
           <span className={direction === 'up' ? 'text-up' : 'text-down'}>

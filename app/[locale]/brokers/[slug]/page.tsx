@@ -29,6 +29,9 @@ export async function generateMetadata({
   return {
     title: `${broker.name} Review | PIPSNOTE`,
     description: broker.description || `Detailed review of ${broker.name}.`,
+    alternates: {
+      languages: { en: `/brokers/${slug}`, vi: `/vi/brokers/${slug}` },
+    },
   };
 }
 
@@ -59,7 +62,7 @@ export default async function BrokerDetailPage({
         <div className="mx-auto max-w-[760px] px-7">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-[28px] leading-tight md:text-[36px]">{broker.name}</h1>
+              <h1 className="text-h1 leading-tight md:text-h1-lg">{broker.name}</h1>
               {broker.rating != null && (
                 <span className="mt-1 block font-mono text-sm text-gray-mid">
                   ★ {Number(broker.rating).toFixed(1)} / 5
@@ -68,7 +71,7 @@ export default async function BrokerDetailPage({
             </div>
             {broker.badge && (
               <span
-                className={`font-mono text-[10.5px] uppercase tracking-[0.06em] px-2 py-1 text-white ${
+                className={`font-mono text-badge uppercase tracking-[0.06em] px-2 py-1 text-white ${
                   broker.badge === 'Hot' ? 'bg-brand' : 'bg-surface-dark'
                 }`}
               >
@@ -81,7 +84,7 @@ export default async function BrokerDetailPage({
             <p className="mb-9 leading-relaxed text-gray-mid">{broker.description}</p>
           )}
 
-          <div className="mb-9 grid grid-cols-2 gap-4 border-t border-gray-line pt-6 text-[12.5px] text-gray-mid md:grid-cols-4">
+          <div className="mb-9 grid grid-cols-2 gap-4 border-t border-gray-line pt-6 text-meta text-gray-mid md:grid-cols-4">
             {specs.map((s) => (
               <div key={s.label}>
                 {s.label}
