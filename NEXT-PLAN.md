@@ -96,6 +96,17 @@ cookie `NEXT_LOCALE` sau khi visit `/vi/...` — sau đó visit lại path EN kh
 trong cùng session browser sẽ tự redirect sang `/vi` tương ứng. Đây là hành vi middleware đúng
 theo thiết kế next-intl, không cần fix.
 
+### Session này (dọn nốt i18n gap nhỏ từ Phase 3)
+Commit `e3854aa` (i18n/design polish trước đó, trước session này chưa commit) +
+commit fix gap sau đó. Đã đóng backlog cũ #6 toàn bộ 3 gap:
+- 5 trang pháp lý + contact: `metadata` tĩnh → `generateMetadata()` dùng `getTranslations()`,
+  `<title>` giờ đúng locale (verify bằng curl: `/vi/terms` → "Điều khoản sử dụng | PIPSNOTE",
+  `/terms` → "Terms & Conditions | PIPSNOTE").
+- `app/[locale]/blog/[slug]/page.tsx` heading "Related posts" → namespace `blogDetail` mới
+  trong `messages/en.json`/`vi.json`, verify cả 2 locale bằng curl.
+- `app/admin/login/page.tsx` — thêm `autoComplete="username"`/`"current-password"`.
+- Verify: `npm run lint` + `npm run build` PASS.
+
 ---
 
 ## 🔜 Backlog (chưa làm, ưu tiên theo thứ tự đề xuất)
@@ -111,8 +122,8 @@ theo thiết kế next-intl, không cần fix.
    - Sau deploy lần đầu: gọi `POST /api/admin/search/reindex` 1 lần để sync toàn bộ published
      posts hiện có vào Meilisearch (chưa có cơ chế reindex-on-deploy tự động).
 2. **Legal pages — cần review pháp lý thật** trước khi coi là production-ready (hiện là
-   boilerplate generic, đã đánh dấu comment trong từng file `app/terms|privacy-policy|contact|
-   affiliate-disclosure|risk-disclosure/page.tsx`).
+   boilerplate generic, đã đánh dấu comment trong từng file `app/[locale]/terms|privacy-policy|
+   contact|affiliate-disclosure|risk-disclosure/page.tsx`).
 3. **Security audit toàn diện** (`task.md` §0.2 + `spec (1).md` §16) — đối chiếu từng route với
    spec gốc, không chỉ smoke-test. Đã cố tình để riêng (không làm chung session routing/SEO).
 4. **Admin UX audit** — dashboard + mobile drawer nav đã có, nhưng chưa audit toàn diện so với
@@ -121,15 +132,6 @@ theo thiết kế next-intl, không cần fix.
    file ≤200 dòng, có thể chia nhiều file) tách biệt/bổ sung cho `docs/` hiện có
    (`ADMIN_SETTINGS.md`, `DESIGN_SYSTEM.md`, `LOGGING_STANDARD.md`, `SECURITY_DETECTION.md`) —
    **chưa làm**, cần session riêng để viết nội dung đầy đủ.
-6. **i18n — gap nhỏ tự phát hiện khi verify Phase 3, chưa fix (không chặn deploy)**:
-   - `<title>` (metadata) của 5 trang pháp lý vẫn tiếng Anh ("Terms & Conditions | PIPSNOTE")
-     dù `/vi/...` — do `generateMetadata()` các trang này chưa dùng `getTranslations()` cho
-     `title`, chỉ mới dịch phần `<body>`. Vốn ngoài scope "UI chrome" chốt ban đầu nhưng nên dịch
-     nốt để nhất quán SEO/tab-title.
-   - Heading `"Related posts"` ở `app/[locale]/blog/[slug]/page.tsx` (section liên quan cuối bài)
-     chưa được extract vào `messages/*.json` — sót lại từ đợt string-extraction Phase 2e.
-   - `app/admin/login/page.tsx` — input password thiếu `autoComplete="current-password"`
-     (Chrome DevTools verbose warning, không phải lỗi, nhưng nên thêm cho a11y/password-manager).
 
 **Quy ước code**: mỗi file doc ≤200 dòng, code nên giữ dưới ~500 dòng (component/route quá dài
 → tách nhỏ).
