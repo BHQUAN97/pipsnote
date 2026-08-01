@@ -27,11 +27,16 @@ interface BrokerDetail extends BrokerRow {
   affiliate_url: string | null;
 }
 
+const STATUS_OPTIONS = ['', 'active', 'inactive'];
+const TYPE_OPTIONS = ['', 'forex', 'crypto', 'stock', 'all'];
+
 export default function AdminBrokersPage() {
   const router = useRouter();
   const [items, setItems] = useState<BrokerRow[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [status, setStatus] = useState('');
+  const [type, setType] = useState('');
   const [loading, setLoading] = useState(true);
   const [detailId, setDetailId] = useState<number | null>(null);
   const [detail, setDetail] = useState<BrokerDetail | null>(null);
@@ -41,6 +46,8 @@ export default function AdminBrokersPage() {
 
   const load = useCallback(() => {
     const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
+    if (status) params.set('status', status);
+    if (type) params.set('type', type);
 
     fetch(`/api/admin/brokers?${params.toString()}`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
@@ -50,7 +57,7 @@ export default function AdminBrokersPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [page]);
+  }, [page, status, type]);
 
   useEffect(() => {
     load();
@@ -117,6 +124,40 @@ export default function AdminBrokersPage() {
         >
           + New broker
         </Link>
+      </div>
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        {STATUS_OPTIONS.map((s) => (
+          <button
+            key={s || 'all-status'}
+            onClick={() => {
+              setStatus(s);
+              setPage(1);
+            }}
+            className={`min-h-[44px] rounded-sm border px-4 text-sm font-medium ${
+              status === s ? 'border-surface-dark bg-surface-dark text-white' : 'border-gray-line hover:bg-gray-bg'
+            }`}
+          >
+            {s || 'All statuses'}
+          </button>
+        ))}
+      </div>
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        {TYPE_OPTIONS.map((tOpt) => (
+          <button
+            key={tOpt || 'all-type'}
+            onClick={() => {
+              setType(tOpt);
+              setPage(1);
+            }}
+            className={`min-h-[44px] rounded-sm border px-4 text-sm font-medium ${
+              type === tOpt ? 'border-surface-dark bg-surface-dark text-white' : 'border-gray-line hover:bg-gray-bg'
+            }`}
+          >
+            {tOpt || 'All types'}
+          </button>
+        ))}
       </div>
 
       {loading ? (

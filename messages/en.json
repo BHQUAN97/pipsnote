@@ -129,5 +129,32 @@
   },
   "blogDetail": {
     "relatedPosts": "Related posts"
+  },
+  "about": {
+    "title": "About us",
+    "intro": "{siteName} is an independent forex and crypto blog helping traders cut through the noise with clear market analysis and unbiased broker reviews.",
+    "missionTitle": "Our mission",
+    "missionBody": "We believe traders make better decisions when they have clear, data-driven information instead of hype. {siteName} was built to provide honest broker comparisons, practical trading guides, and timely market analysis — all in one place.",
+    "approachTitle": "How we work",
+    "approachBody": "Our team researches brokers directly, tracks regulatory status, and tests platforms firsthand before publishing a review. Where we earn affiliate commissions, we disclose it clearly — see our Affiliate Disclosure for details."
+  },
+  "instruction": {
+    "title": "How to use this site",
+    "intro": "New to {siteName}? Here's a quick guide to getting the most out of the site.",
+    "step1Title": "Read broker reviews",
+    "step1Body": "Browse our broker comparison table to see regulation, spreads, and platform features side by side. Click into any broker for a full review.",
+    "step2Title": "Follow market analysis",
+    "step2Body": "Check the Blog for daily and weekly market commentary, trading strategies, and educational articles written for both new and experienced traders.",
+    "step3Title": "Open an account safely",
+    "step3Body": "When you're ready, click through to a broker's official site via our links. We only recommend brokers we've reviewed — always verify regulation and terms directly with the broker before depositing funds."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you're looking for doesn't exist or may have been moved.",
+    "backHome": "Back to homepage"
+  },
+  "maintenance": {
+    "title": "Down for maintenance",
+    "body": "{siteName} is currently undergoing scheduled maintenance. We'll be back shortly — thank you for your patience."
   }
 }

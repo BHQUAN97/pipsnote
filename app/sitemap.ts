@@ -29,6 +29,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}${routes.home}`, changeFrequency: 'daily', priority: 1, alternates: alternates(routes.home) },
     { url: `${BASE_URL}${routes.blog}`, changeFrequency: 'daily', priority: 0.8, alternates: alternates(routes.blog) },
     { url: `${BASE_URL}${routes.brokers}`, changeFrequency: 'weekly', priority: 0.8, alternates: alternates(routes.brokers) },
+    { url: `${BASE_URL}${routes.about}`, changeFrequency: 'monthly', priority: 0.5, alternates: alternates(routes.about) },
+    { url: `${BASE_URL}${routes.instruction}`, changeFrequency: 'monthly', priority: 0.5, alternates: alternates(routes.instruction) },
     { url: `${BASE_URL}${routes.terms}`, changeFrequency: 'yearly', priority: 0.2, alternates: alternates(routes.terms) },
     { url: `${BASE_URL}${routes.privacyPolicy}`, changeFrequency: 'yearly', priority: 0.2, alternates: alternates(routes.privacyPolicy) },
     { url: `${BASE_URL}${routes.contact}`, changeFrequency: 'yearly', priority: 0.2, alternates: alternates(routes.contact) },

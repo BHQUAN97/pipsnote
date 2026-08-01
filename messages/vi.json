@@ -129,5 +129,32 @@
   },
   "blogDetail": {
     "relatedPosts": "Bài viết liên quan"
+  },
+  "about": {
+    "title": "Giới thiệu",
+    "intro": "{siteName} là blog forex và tiền mã hóa độc lập, giúp trader lọc bỏ nhiễu loạn thông tin bằng phân tích thị trường rõ ràng và đánh giá sàn khách quan.",
+    "missionTitle": "Sứ mệnh",
+    "missionBody": "Chúng tôi tin rằng trader đưa ra quyết định tốt hơn khi có thông tin rõ ràng, dựa trên dữ liệu thay vì lời quảng cáo. {siteName} được xây dựng để cung cấp so sánh sàn trung thực, hướng dẫn giao dịch thực tế và phân tích thị trường kịp thời — tất cả trong một nơi.",
+    "approachTitle": "Cách chúng tôi làm việc",
+    "approachBody": "Đội ngũ của chúng tôi nghiên cứu trực tiếp từng sàn giao dịch, theo dõi tình trạng cấp phép và tự trải nghiệm nền tảng trước khi đăng đánh giá. Khi nhận hoa hồng liên kết, chúng tôi công bố rõ ràng — xem Công bố liên kết để biết thêm chi tiết."
+  },
+  "instruction": {
+    "title": "Hướng dẫn sử dụng",
+    "intro": "Mới đến với {siteName}? Đây là hướng dẫn nhanh để tận dụng tối đa trang web.",
+    "step1Title": "Đọc đánh giá sàn",
+    "step1Body": "Xem bảng so sánh sàn để đối chiếu giấy phép, spread và tính năng nền tảng. Nhấp vào từng sàn để xem đánh giá đầy đủ.",
+    "step2Title": "Theo dõi phân tích thị trường",
+    "step2Body": "Ghé Blog để xem bình luận thị trường hàng ngày/hàng tuần, chiến lược giao dịch và bài viết giáo dục dành cho cả trader mới lẫn có kinh nghiệm.",
+    "step3Title": "Mở tài khoản an toàn",
+    "step3Body": "Khi đã sẵn sàng, nhấp vào liên kết để đến trang chính thức của sàn. Chúng tôi chỉ giới thiệu các sàn đã được đánh giá — luôn kiểm tra giấy phép và điều khoản trực tiếp với sàn trước khi nạp tiền."
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "body": "Trang bạn tìm không tồn tại hoặc đã được di chuyển.",
+    "backHome": "Về trang chủ"
+  },
+  "maintenance": {
+    "title": "Đang bảo trì",
+    "body": "{siteName} hiện đang bảo trì theo lịch. Chúng tôi sẽ quay lại sớm — cảm ơn bạn đã kiên nhẫn chờ đợi."
   }
 }

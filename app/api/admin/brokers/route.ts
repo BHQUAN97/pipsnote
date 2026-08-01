@@ -46,16 +46,31 @@ async function getHandler(req: NextRequest) {
   const params = req.nextUrl.searchParams;
   const page = Math.max(1, Number(params.get('page')) || 1);
   const pageSize = Math.min(50, Math.max(1, Number(params.get('pageSize')) || 20));
+  const status = params.get('status');
+  const type = params.get('type');
   const offset = (page - 1) * pageSize;
 
+  const conditions: string[] = [];
+  const whereParams: unknown[] = [];
+  if (status === 'active' || status === 'inactive') {
+    conditions.push('is_active = ?');
+    whereParams.push(status === 'active' ? 1 : 0);
+  }
+  if (type && ['forex', 'crypto', 'stock', 'all'].includes(type)) {
+    conditions.push('type = ?');
+    whereParams.push(type);
+  }
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
   const [countRows, items] = await Promise.all([
-    query<{ total: number }[]>('SELECT COUNT(*) AS total FROM brokers'),
+    query<{ total: number }[]>(`SELECT COUNT(*) AS total FROM brokers ${where}`, whereParams),
     query(
       `SELECT id, name, slug, type, badge, rating, is_active, is_featured, click_count, updated_at
        FROM brokers
+       ${where}
        ORDER BY updated_at DESC
        LIMIT ? OFFSET ?`,
-      [pageSize, offset]
+      [...whereParams, pageSize, offset]
     ),
   ]);
 

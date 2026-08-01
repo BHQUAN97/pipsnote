@@ -10,7 +10,7 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
   const rest = siteName.slice(4).toUpperCase();
 
   return (
-    <footer id="about" className="border-t border-gray-line bg-bg pt-16">
+    <footer className="border-t border-gray-line bg-bg pt-16">
       <div className="mx-auto max-w-[1180px] px-7">
         <div className="grid grid-cols-1 gap-10 pb-12 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-10">
           <div>
@@ -41,13 +41,13 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
             <Link href={routes.blog} className="mb-3 block text-sm hover:text-brand">
               {tNav('blog')}
             </Link>
-            <Link href="/#instruction" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.instruction} className="mb-3 block text-sm hover:text-brand">
               {tNav('instruction')}
             </Link>
             <Link href={routes.brokers} className="mb-3 block text-sm hover:text-brand">
               {tNav('topBroker')}
             </Link>
-            <Link href="/#about" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.about} className="mb-3 block text-sm hover:text-brand">
               {tNav('aboutUs')}
             </Link>
           </div>

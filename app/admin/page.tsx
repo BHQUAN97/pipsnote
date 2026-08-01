@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import TrendChart from '@/components/admin/TrendChart';
 
@@ -25,13 +25,31 @@ function StatCard({ label, value, alert }: { label: string; value: number; alert
 export default function AdminDashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     fetch('/api/admin/dashboard')
       .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((d: DashboardData) => setData(d))
-      .finally(() => setLoading(false));
+      .then((d: DashboardData) => {
+        setData(d);
+        setLastUpdated(new Date());
+      })
+      .catch(() => setData((prev) => prev ?? null))
+      .finally(() => {
+        setLoading(false);
+        setRefreshing(false);
+      });
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    load();
+  }, [load]);
 
   if (loading) {
     return <p className="text-sm text-gray-mid">Loading...</p>;
@@ -45,7 +63,24 @@ export default function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Dashboard</h1>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold sm:text-3xl">Dashboard</h1>
+        <div className="flex items-center gap-3">
+          {lastUpdated && (
+            <span className="font-mono text-xs text-gray-mid">
+              Last updated: {lastUpdated.toLocaleTimeString('en-US')}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="min-h-[44px] rounded-sm border border-gray-line px-4 text-sm font-medium hover:bg-gray-bg disabled:opacity-50"
+          >
+            {refreshing ? 'Refreshing…' : 'Refresh'}
+          </button>
+        </div>
+      </div>
 
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <StatCard label="Total posts" value={totalPosts} />

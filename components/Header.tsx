@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import { routes } from '@/lib/routes';
 import ThemeToggle from './ThemeToggle';
 import LocaleSwitcher from './LocaleSwitcher';
 
@@ -10,9 +11,9 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
 
   const NAV_LINKS = [
     { href: '/blog', label: t('blog') },
-    { href: '/#instruction', label: t('instruction') },
+    { href: routes.instruction, label: t('instruction') },
     { href: '/brokers', label: t('topBroker') },
-    { href: '/#about', label: t('aboutUs') },
+    { href: routes.about, label: t('aboutUs') },
   ];
 
   return (
