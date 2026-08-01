@@ -174,7 +174,7 @@ export default function AdminSettingsPage() {
               onChange={(e) => setKey('theme.dark_default', e.target.checked ? 'true' : 'false')}
               className="w-5 h-5"
             />
-            <span>Dark mode mặc định cho khách mới (chưa có localStorage)</span>
+            <span>Default dark mode for new visitors (no localStorage yet)</span>
           </label>
         </section>
 

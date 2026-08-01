@@ -1,48 +1,50 @@
 import type { SiteSettings } from './settings';
 
-// 3 preset mau — gia tri hex khop chinh xac docs/DESIGN_SYSTEM.md §4.
+// 3 preset mau — gia tri hex khop chinh xac docs/DESIGN_SYSTEM.md.
 // Chi chua theme.* (khong dung layout.*) — preset chi doi "vibe" mau, khong doi bo cuc.
+// Keys (red/blue/neon) giu nguyen de tuong thich nguoc voi site_settings da luu trong DB;
+// gia tri va ten mood duoc thiet ke lai theo huong "financial dashboard" dark-first.
 export const PRESETS: Record<string, Partial<SiteSettings>> = {
   red: {
-    // Editorial Red (mac dinh) — DESIGN_SYSTEM.md §2
-    'theme.bg': '#FFFFFF',
-    'theme.ink': '#0A0A0A',
-    'theme.surface_dark': '#0A0A0A',
-    'theme.red': '#E10600',
-    'theme.red_dark': '#B00500',
-    'theme.gray_bg': '#F5F4F1',
-    'theme.gray_line': '#E4E2DC',
-    'theme.gray_mid': '#6E6C66',
-    'theme.up': '#1a9e46',
-    'theme.down': '#E10600',
-    'theme.dark_default': 'false',
+    // Signal (mac dinh) — dark terminal, amber accent — DESIGN_SYSTEM.md §2
+    'theme.bg': '#0B0E14',
+    'theme.ink': '#E8EBF2',
+    'theme.surface_dark': '#05070A',
+    'theme.red': '#FFB020',
+    'theme.red_dark': '#D68F0C',
+    'theme.gray_bg': '#131721',
+    'theme.gray_line': '#232A38',
+    'theme.gray_mid': '#8891A6',
+    'theme.up': '#17C879',
+    'theme.down': '#F0455C',
+    'theme.dark_default': 'true',
   },
   blue: {
-    // Fintech Trust Blue — DESIGN_SYSTEM.md §4 Preset A
-    'theme.bg': '#FFFFFF',
-    'theme.ink': '#0A0E17',
-    'theme.surface_dark': '#0A0E17',
-    'theme.red': '#1657FF',
-    'theme.red_dark': '#0D3FC7',
-    'theme.gray_bg': '#F3F5F9',
-    'theme.gray_line': '#E1E5EC',
-    'theme.gray_mid': '#616B7A',
-    'theme.up': '#1a9e46',
-    'theme.down': '#D93025',
-    'theme.dark_default': 'false',
+    // Ledger — dark terminal, electric-blue accent — DESIGN_SYSTEM.md §4 Preset A
+    'theme.bg': '#0A0F1A',
+    'theme.ink': '#E6EEF7',
+    'theme.surface_dark': '#05080F',
+    'theme.red': '#2E8BFF',
+    'theme.red_dark': '#1D63C9',
+    'theme.gray_bg': '#111826',
+    'theme.gray_line': '#22304A',
+    'theme.gray_mid': '#7C8BA8',
+    'theme.up': '#22C55E',
+    'theme.down': '#EF4444',
+    'theme.dark_default': 'true',
   },
   neon: {
-    // Crypto Neon Dark-first — DESIGN_SYSTEM.md §4 Preset B
-    'theme.bg': '#0D0F14',
-    'theme.ink': '#EDEFF3',
-    'theme.surface_dark': '#000000',
-    'theme.red': '#00E5A0',
-    'theme.red_dark': '#00B37F',
-    'theme.gray_bg': '#161922',
-    'theme.gray_line': '#262B38',
-    'theme.gray_mid': '#8A90A3',
-    'theme.up': '#00E5A0',
-    'theme.down': '#FF3B5C',
+    // Pulse — dark terminal, violet-neon accent — DESIGN_SYSTEM.md §4 Preset B
+    'theme.bg': '#0C0A14',
+    'theme.ink': '#F1EEFB',
+    'theme.surface_dark': '#050307',
+    'theme.red': '#B14EFF',
+    'theme.red_dark': '#8F2FE0',
+    'theme.gray_bg': '#171325',
+    'theme.gray_line': '#2C2440',
+    'theme.gray_mid': '#9089AC',
+    'theme.up': '#14E8A0',
+    'theme.down': '#FF3D6E',
     'theme.dark_default': 'true',
   },
 };

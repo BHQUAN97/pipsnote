@@ -93,13 +93,13 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data.error || 'Lưu broker thất bại');
+        setError(data.error || 'Failed to save broker');
         return;
       }
 
       router.push('/admin/brokers');
     } catch {
-      setError('Lỗi kết nối mạng');
+      setError('Network connection error');
     } finally {
       setSaving(false);
     }
@@ -110,7 +110,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
       {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
 
       <div>
-        <label className="block text-sm mb-2 font-medium">Tên broker</label>
+        <label className="block text-sm mb-2 font-medium">Broker name</label>
         <input
           type="text"
           value={values.name}
@@ -141,7 +141,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
       </div>
 
       <div>
-        <label className="block text-sm mb-2 font-medium">Mô tả</label>
+        <label className="block text-sm mb-2 font-medium">Description</label>
         <textarea
           value={values.description}
           onChange={(e) => update('description', e.target.value)}
@@ -164,7 +164,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm mb-2 font-medium">Loại</label>
+          <label className="block text-sm mb-2 font-medium">Type</label>
           <select
             value={values.type}
             onChange={(e) => update('type', e.target.value as BrokerFormValues['type'])}
@@ -190,7 +190,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         </div>
 
         <div>
-          <label className="block text-sm mb-2 font-medium">Nạp tối thiểu</label>
+          <label className="block text-sm mb-2 font-medium">Min deposit</label>
           <input
             type="text"
             value={values.min_deposit}
@@ -201,7 +201,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         </div>
 
         <div>
-          <label className="block text-sm mb-2 font-medium">Đòn bẩy</label>
+          <label className="block text-sm mb-2 font-medium">Leverage</label>
           <input
             type="text"
             value={values.leverage}
@@ -212,7 +212,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         </div>
 
         <div>
-          <label className="block text-sm mb-2 font-medium">Spread từ</label>
+          <label className="block text-sm mb-2 font-medium">Spread from</label>
           <input
             type="text"
             value={values.spread_from}
@@ -223,7 +223,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         </div>
 
         <div>
-          <label className="block text-sm mb-2 font-medium">Đánh giá (0-5)</label>
+          <label className="block text-sm mb-2 font-medium">Rating (0-5)</label>
           <input
             type="number"
             min={0}
@@ -259,7 +259,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
             disabled={saving}
           />
           <label htmlFor="is_active" className="text-sm font-medium">
-            Đang hoạt động
+            Active
           </label>
         </div>
 
@@ -273,7 +273,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
             disabled={saving}
           />
           <label htmlFor="is_featured" className="text-sm font-medium">
-            Nổi bật
+            Featured
           </label>
         </div>
       </div>
@@ -284,7 +284,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           disabled={saving}
           className="min-h-[44px] px-6 py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
         >
-          {saving ? 'Đang lưu...' : 'Lưu broker'}
+          {saving ? 'Saving...' : 'Save broker'}
         </button>
         <button
           type="button"
@@ -292,7 +292,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           disabled={saving}
           className="min-h-[44px] px-6 py-2 border border-gray-line rounded hover:bg-gray-bg disabled:opacity-50"
         >
-          Hủy
+          Cancel
         </button>
       </div>
     </form>

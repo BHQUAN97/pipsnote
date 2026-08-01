@@ -13,14 +13,14 @@ export default function EditBrokerPage({ params }: { params: Promise<{ id: strin
     fetch(`/api/admin/brokers/${id}`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data: Broker) => setBroker(data))
-      .catch(() => setError('Không tìm thấy broker'));
+      .catch(() => setError('Broker not found'));
   }, [id]);
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Sửa broker</h1>
+      <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Edit broker</h1>
       {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
-      {!error && !broker && <p className="text-sm text-gray-mid">Đang tải...</p>}
+      {!error && !broker && <p className="text-sm text-gray-mid">Loading...</p>}
       {broker && <BrokerForm brokerId={broker.id} initialBroker={broker} />}
     </div>
   );

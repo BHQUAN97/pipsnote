@@ -95,13 +95,13 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data.error || 'Lưu bài viết thất bại');
+        setError(data.error || 'Failed to save post');
         return;
       }
 
       router.push('/admin/posts');
     } catch {
-      setError('Lỗi kết nối mạng');
+      setError('Network connection error');
     } finally {
       setSaving(false);
     }
@@ -112,7 +112,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       {error && <div className="p-3 bg-red text-white rounded text-sm">{error}</div>}
 
       <div>
-        <label className="block text-sm mb-2 font-medium">Tiêu đề</label>
+        <label className="block text-sm mb-2 font-medium">Title</label>
         <input
           type="text"
           value={values.title}
@@ -143,7 +143,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       </div>
 
       <div>
-        <label className="block text-sm mb-2 font-medium">Tóm tắt</label>
+        <label className="block text-sm mb-2 font-medium">Excerpt</label>
         <textarea
           value={values.excerpt}
           onChange={(e) => update('excerpt', e.target.value)}
@@ -154,7 +154,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       </div>
 
       <div>
-        <label className="block text-sm mb-2 font-medium">Nội dung</label>
+        <label className="block text-sm mb-2 font-medium">Content</label>
         <textarea
           value={values.content}
           onChange={(e) => update('content', e.target.value)}
@@ -166,7 +166,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       </div>
 
       <div>
-        <label className="block text-sm mb-2 font-medium">Ảnh đại diện (URL)</label>
+        <label className="block text-sm mb-2 font-medium">Featured image (URL)</label>
         <input
           type="text"
           value={values.featured_image}
@@ -178,14 +178,14 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm mb-2 font-medium">Danh mục</label>
+          <label className="block text-sm mb-2 font-medium">Category</label>
           <select
             value={values.category_id}
             onChange={(e) => update('category_id', e.target.value)}
             className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded"
             disabled={saving}
           >
-            <option value="">— Không có —</option>
+            <option value="">— None —</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -195,7 +195,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
         </div>
 
         <div>
-          <label className="block text-sm mb-2 font-medium">Trạng thái</label>
+          <label className="block text-sm mb-2 font-medium">Status</label>
           <select
             value={values.status}
             onChange={(e) => update('status', e.target.value as PostFormValues['status'])}
@@ -209,7 +209,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
         </div>
 
         <div>
-          <label className="block text-sm mb-2 font-medium">Thời gian đọc (phút)</label>
+          <label className="block text-sm mb-2 font-medium">Read time (min)</label>
           <input
             type="number"
             min={0}
@@ -230,7 +230,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
             disabled={saving}
           />
           <label htmlFor="is_featured" className="text-sm font-medium">
-            Bài nổi bật
+            Featured post
           </label>
         </div>
       </div>
@@ -263,7 +263,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           disabled={saving}
           className="min-h-[44px] px-6 py-2 bg-brand text-white rounded hover:bg-brand-dark disabled:opacity-50"
         >
-          {saving ? 'Đang lưu...' : 'Lưu bài viết'}
+          {saving ? 'Saving...' : 'Save post'}
         </button>
         <button
           type="button"
@@ -271,7 +271,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           disabled={saving}
           className="min-h-[44px] px-6 py-2 border border-gray-line rounded hover:bg-gray-bg disabled:opacity-50"
         >
-          Hủy
+          Cancel
         </button>
       </div>
     </form>

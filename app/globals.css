@@ -1,30 +1,51 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
+/* "Signal" — dark-first financial terminal identity (docs/DESIGN_SYSTEM.md) */
 :root {
-  --bg: #ffffff;
-  --ink: #0a0a0a;
-  --surface-dark: #0a0a0a;
-  --red: #e10600;
-  --red-dark: #b00500;
-  --gray-bg: #f5f4f1;
-  --gray-line: #e4e2dc;
-  --gray-mid: #6e6c66;
-  --up: #1a9e46;
-  --down: #e10600;
+  --bg: #0b0e14;
+  --ink: #e8ebf2;
+  --surface-dark: #05070a;
+  --red: #ffb020;
+  --red-dark: #d68f0c;
+  --gray-bg: #131721;
+  --gray-line: #232a38;
+  --gray-mid: #8891a6;
+  --up: #17c879;
+  --down: #f0455c;
+  --shadow-elevated: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-glow-up: 0 0 0 1px rgba(23, 200, 121, 0.25);
+  --shadow-glow-down: 0 0 0 1px rgba(240, 69, 92, 0.25);
 }
 
 [data-theme="dark"] {
-  --bg: #0b0c0e;
-  --ink: #f2f1ed;
-  --surface-dark: #0a0a0a;
-  --red: #ff4438;
-  --red-dark: #e10600;
-  --gray-bg: #16181c;
-  --gray-line: #2a2d33;
-  --gray-mid: #8b8d93;
-  --up: #39d353;
-  --down: #ff4438;
+  --bg: #0b0e14;
+  --ink: #e8ebf2;
+  --surface-dark: #05070a;
+  --red: #ffb020;
+  --red-dark: #d68f0c;
+  --gray-bg: #131721;
+  --gray-line: #232a38;
+  --gray-mid: #8891a6;
+  --up: #17c879;
+  --down: #f0455c;
+}
+
+/* Manual light toggle (ThemeToggle) — crisp dashboard-light alternative */
+[data-theme="light"] {
+  --bg: #f6f7fa;
+  --ink: #0b0e14;
+  --surface-dark: #0b0e14;
+  --red: #c97f00;
+  --red-dark: #a66900;
+  --gray-bg: #eef1f5;
+  --gray-line: #dce1e8;
+  --gray-mid: #5b6472;
+  --up: #0fa968;
+  --down: #d6303b;
+  --shadow-elevated: 0 1px 2px rgba(11, 14, 20, 0.06), 0 8px 24px -8px rgba(11, 14, 20, 0.18);
+  --shadow-glow-up: 0 0 0 1px rgba(15, 169, 104, 0.18);
+  --shadow-glow-down: 0 0 0 1px rgba(214, 48, 59, 0.18);
 }
 
 body {
@@ -46,6 +67,20 @@ h1, h2, h3 {
 
 .animate-ticker-scroll {
   animation: ticker-scroll 32s linear infinite;
+}
+
+.card-elevated {
+  box-shadow: var(--shadow-elevated);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.card-elevated:hover {
+  transform: translateY(-2px);
+  border-color: var(--gray-mid);
+}
+
+.shadow-elevated-static {
+  box-shadow: var(--shadow-elevated);
 }
 
 .article-content {

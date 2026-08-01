@@ -1,10 +1,12 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { routes } from '@/lib/routes';
 
 export default function SearchBox() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(searchParams.get('q') ?? '');
 
@@ -17,7 +19,9 @@ export default function SearchBox() {
     } else {
       params.delete('q');
     }
-    router.push(`/blog${params.toString() ? `?${params.toString()}` : ''}`);
+    const categorySlug = pathname.startsWith('/blog/category/') ? pathname.split('/')[3] : '';
+    const base = categorySlug ? routes.blogCategory(categorySlug) : routes.blog;
+    router.push(`${base}${params.toString() ? `?${params.toString()}` : ''}`);
   }
 
   return (
@@ -26,14 +30,14 @@ export default function SearchBox() {
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Tìm kiếm bài viết..."
-        className="h-11 flex-1 border border-gray-line px-4 text-sm outline-none focus:border-surface-dark"
+        placeholder="Search posts..."
+        className="h-11 flex-1 rounded-sm border border-gray-line px-4 text-sm outline-none transition-colors focus:border-brand"
       />
       <button
         type="submit"
-        className="h-11 min-w-11 border border-surface-dark bg-surface-dark px-4.5 text-sm font-medium text-white"
+        className="h-11 min-w-11 rounded-sm border border-surface-dark bg-surface-dark px-4.5 text-sm font-medium text-white transition-colors hover:bg-brand hover:border-brand"
       >
-        Tìm
+        Search
       </button>
     </form>
   );

@@ -36,7 +36,7 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/brokers"
-            className="rounded-sm bg-brand px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-brand-dark"
+            className="rounded-sm bg-brand px-5 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-brand-dark"
           >
             Compare Brokers
           </Link>

@@ -11,7 +11,10 @@ function formatDate(dateString: string | null): string {
 
 export default function PostCard({ post }: { post: Post }) {
   return (
-    <Link href={`/blog/${post.slug}`} className="block">
+    <Link
+      href={`/blog/${post.slug}`}
+      className="card-elevated group block border border-gray-line bg-bg p-4 hover:border-ink"
+    >
       <div className="mb-4 flex aspect-[4/3] items-center justify-center border border-gray-line bg-gray-bg font-mono text-xs text-gray-mid">
         IMG
       </div>
@@ -20,9 +23,11 @@ export default function PostCard({ post }: { post: Post }) {
           {post.category_name}
         </span>
       )}
-      <h3 className="mb-2 text-lg font-semibold leading-snug">{post.title}</h3>
+      <h3 className="mb-2 text-lg font-semibold leading-snug transition-colors group-hover:text-brand">
+        {post.title}
+      </h3>
       <span className="text-[12.5px] text-gray-mid">
-        {post.read_time ? `${post.read_time} phút đọc · ` : ''}
+        {post.read_time ? `${post.read_time} min read · ` : ''}
         {formatDate(post.published_at)}
       </span>
     </Link>

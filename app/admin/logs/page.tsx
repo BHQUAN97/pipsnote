@@ -92,7 +92,7 @@ export default function AdminLogsPage() {
         >
           {LEVELS.map((l) => (
             <option key={l} value={l}>
-              {l || 'Tất cả level'}
+              {l || 'All levels'}
             </option>
           ))}
         </select>
@@ -107,7 +107,7 @@ export default function AdminLogsPage() {
 
         <input
           type="text"
-          placeholder="Tìm message..."
+          placeholder="Search message..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
           className="min-h-[44px] px-3 py-2 border border-gray-line rounded text-sm flex-1 min-w-[160px]"
@@ -131,14 +131,14 @@ export default function AdminLogsPage() {
           type="submit"
           className="min-h-[44px] px-5 py-2 bg-brand text-white rounded text-sm font-semibold hover:bg-brand-dark"
         >
-          Lọc
+          Filter
         </button>
       </form>
 
       {loading ? (
-        <p className="text-sm text-gray-mid">Đang tải...</p>
+        <p className="text-sm text-gray-mid">Loading...</p>
       ) : items.length === 0 ? (
-        <p className="text-sm text-gray-mid">Không có log nào.</p>
+        <p className="text-sm text-gray-mid">No logs found.</p>
       ) : (
         <div className="overflow-x-auto border border-gray-line">
           <table className="w-full min-w-[720px] text-sm">
@@ -148,7 +148,7 @@ export default function AdminLogsPage() {
                 <th className="p-3">Message</th>
                 <th className="p-3">Module</th>
                 <th className="p-3">Status</th>
-                <th className="p-3">Thời gian</th>
+                <th className="p-3">Time</th>
               </tr>
             </thead>
             <tbody>
@@ -168,7 +168,7 @@ export default function AdminLogsPage() {
                     <td className="p-3 text-gray-mid">{log.module ?? '—'}</td>
                     <td className="p-3 text-gray-mid">{log.status_code ?? '—'}</td>
                     <td className="p-3 text-gray-mid whitespace-nowrap">
-                      {new Date(log.created_at).toLocaleString('vi-VN')}
+                      {new Date(log.created_at).toLocaleString('en-US')}
                     </td>
                   </tr>
                   {expandedId === log.id && (
@@ -179,7 +179,7 @@ export default function AdminLogsPage() {
                             {JSON.stringify(detail, null, 2)}
                           </pre>
                         ) : (
-                          <p className="text-xs text-gray-mid">Đang tải chi tiết...</p>
+                          <p className="text-xs text-gray-mid">Loading details...</p>
                         )}
                       </td>
                     </tr>

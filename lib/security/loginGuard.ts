@@ -21,7 +21,7 @@ export async function recordLoginFailure(ip: string, username?: string): Promise
       await persistLog({
         level: 'error',
         module: 'security.login-guard',
-        message: `IP ${ip} bị auto-block sau ${fails} lần đăng nhập sai (username: ${username ?? 'unknown'})`,
+        message: `IP ${ip} auto-blocked after ${fails} failed login attempts (username: ${username ?? 'unknown'})`,
         metadata: { ip, username, fails },
       });
 

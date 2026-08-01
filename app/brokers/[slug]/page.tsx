@@ -28,7 +28,7 @@ export async function generateMetadata({
 
   return {
     title: `${broker.name} Review | PIPSNOTE`,
-    description: broker.description || `Đánh giá chi tiết sàn ${broker.name}.`,
+    description: broker.description || `Detailed review of ${broker.name}.`,
   };
 }
 
@@ -45,10 +45,10 @@ export default async function BrokerDetailPage({
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
 
   const specs = [
-    { label: 'Spread từ', value: broker.spread_from },
-    { label: 'Đòn bẩy', value: broker.leverage },
-    { label: 'Nạp tối thiểu', value: broker.min_deposit },
-    { label: 'Loại', value: broker.type },
+    { label: 'Spread from', value: broker.spread_from },
+    { label: 'Leverage', value: broker.leverage },
+    { label: 'Min deposit', value: broker.min_deposit },
+    { label: 'Type', value: broker.type },
   ];
 
   return (
@@ -98,7 +98,7 @@ export default async function BrokerDetailPage({
             rel="nofollow noopener"
             className="mb-9 inline-flex items-center justify-center rounded-sm bg-brand px-6 py-3.5 text-sm font-semibold text-white hover:bg-brand-dark"
           >
-            Mở tài khoản tại {broker.name} →
+            Open account at {broker.name} →
           </a>
 
           <div className="border-t border-gray-line pt-6">

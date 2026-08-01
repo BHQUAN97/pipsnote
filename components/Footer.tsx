@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { routes } from '@/lib/routes';
 import RiskDisclaimer from './RiskDisclaimer';
 
 export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string }) {
@@ -15,15 +16,15 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
               <span className="text-brand">{rest}</span>
             </div>
             <p className="mb-5 max-w-[280px] text-sm leading-relaxed text-gray-mid">
-              Trang blog độc lập về forex — cung cấp phân tích thị trường, hướng dẫn giao dịch và
-              đánh giá sàn để hỗ trợ nhà đầu tư ra quyết định sáng suốt hơn.
+              An independent forex blog — providing market analysis, trading guides, and broker
+              reviews to help traders make smarter decisions.
             </p>
             <div className="flex gap-3">
               {['FB', 'TG', 'YT', 'X'].map((s) => (
                 <a
                   key={s}
                   href="#"
-                  className="flex h-[34px] w-[34px] items-center justify-center border border-gray-line font-mono text-[13px] hover:bg-surface-dark hover:text-white"
+                  className="flex h-[34px] w-[34px] items-center justify-center border border-gray-line font-mono text-[13px] transition-colors hover:bg-surface-dark hover:text-white"
                 >
                   {s}
                 </a>
@@ -33,15 +34,15 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
 
           <div>
             <h4 className="mb-4 font-mono text-[12.5px] uppercase tracking-[0.08em] text-gray-mid">
-              Điều hướng
+              Navigation
             </h4>
-            <Link href="/blog" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.blog} className="mb-3 block text-sm hover:text-brand">
               Blog
             </Link>
             <Link href="/#instruction" className="mb-3 block text-sm hover:text-brand">
               Instruction
             </Link>
-            <Link href="/brokers" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.brokers} className="mb-3 block text-sm hover:text-brand">
               Top Broker
             </Link>
             <Link href="/#about" className="mb-3 block text-sm hover:text-brand">
@@ -51,31 +52,31 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
 
           <div>
             <h4 className="mb-4 font-mono text-[12.5px] uppercase tracking-[0.08em] text-gray-mid">
-              Chính sách
+              Policies
             </h4>
-            <Link href="/privacy-policy" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.privacyPolicy} className="mb-3 block text-sm hover:text-brand">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.terms} className="mb-3 block text-sm hover:text-brand">
               Terms &amp; Conditions
             </Link>
-            <Link href="/risk-disclosure" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.riskDisclosure} className="mb-3 block text-sm hover:text-brand">
               Risk Disclosure
             </Link>
-            <Link href="/affiliate-disclosure" className="mb-3 block text-sm hover:text-brand">
+            <Link href={routes.affiliateDisclosure} className="mb-3 block text-sm hover:text-brand">
               Affiliate Disclosure
             </Link>
           </div>
 
           <div>
             <h4 className="mb-4 font-mono text-[12.5px] uppercase tracking-[0.08em] text-gray-mid">
-              Liên hệ
+              Contact
             </h4>
             <a href="mailto:hello@pipsnote.com" className="mb-3 block text-sm hover:text-brand">
               hello@pipsnote.com
             </a>
-            <Link href="/contact" className="mb-3 block text-sm hover:text-brand">
-              Gửi phản hồi
+            <Link href={routes.contact} className="mb-3 block text-sm hover:text-brand">
+              Send feedback
             </Link>
           </div>
         </div>
@@ -87,10 +88,10 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
         <div className="flex flex-col gap-3 border-t border-gray-line py-5 text-[12.5px] text-gray-mid sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 {siteName}. All rights reserved.</span>
           <div className="flex gap-5">
-            <Link href="/privacy-policy" className="hover:text-brand">
+            <Link href={routes.privacyPolicy} className="hover:text-brand">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-brand">
+            <Link href={routes.terms} className="hover:text-brand">
               Terms
             </Link>
             <Link href="/sitemap.xml" className="hover:text-brand">

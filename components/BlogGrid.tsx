@@ -1,5 +1,4 @@
-import { query } from '@/lib/db';
-import type { Post } from '@/lib/types';
+import { getPublishedPosts } from '@/lib/posts';
 import PostCard from './PostCard';
 
 export default async function BlogGrid({
@@ -9,23 +8,10 @@ export default async function BlogGrid({
   limit?: number;
   categorySlug?: string;
 }) {
-  const where = categorySlug
-    ? 'WHERE p.status = "published" AND c.slug = ?'
-    : 'WHERE p.status = "published"';
-  const params = categorySlug ? [categorySlug, limit] : [limit];
-
-  const posts = await query<Post[]>(
-    `SELECT p.*, c.name AS category_name, c.slug AS category_slug
-     FROM posts p
-     LEFT JOIN categories c ON c.id = p.category_id
-     ${where}
-     ORDER BY p.is_featured DESC, p.published_at DESC
-     LIMIT ?`,
-    params
-  );
+  const { items: posts } = await getPublishedPosts({ categorySlug, limit });
 
   if (posts.length === 0) {
-    return <p className="text-sm text-gray-mid">Chưa có bài viết nào.</p>;
+    return <p className="text-sm text-gray-mid">No posts yet.</p>;
   }
 
   return (

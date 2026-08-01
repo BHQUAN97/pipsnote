@@ -22,26 +22,26 @@ export default function Hero() {
             Trade with clarity.
           </h1>
           <p className="mb-7 max-w-[460px] text-[17px] leading-relaxed text-gray-mid">
-            Phân tích forex, chiến lược giao dịch và đánh giá sàn khách quan — giúp bạn ra quyết
-            định dựa trên dữ liệu, không phải cảm tính.
+            Forex analysis, trading strategies, and unbiased broker reviews — helping you decide
+            based on data, not emotion.
           </p>
           <div className="flex flex-wrap gap-3.5">
             <Link
               href="/blog"
-              className="rounded-sm border border-brand bg-brand px-6 py-4 text-sm font-semibold text-white hover:bg-brand-dark"
+              className="rounded-sm border border-brand bg-brand px-6 py-4 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
             >
-              Đọc bài mới nhất
+              Read latest post
             </Link>
             <Link
               href="/brokers"
-              className="rounded-sm border border-ink px-6 py-4 text-sm font-semibold hover:bg-surface-dark hover:text-white"
+              className="rounded-sm border border-ink px-6 py-4 text-sm font-semibold transition-colors hover:bg-surface-dark hover:text-white"
             >
-              Xem Top Broker
+              View Top Brokers
             </Link>
           </div>
         </div>
 
-        <div className="border border-gray-line bg-gray-bg p-6">
+        <div className="shadow-elevated-static border border-gray-line bg-gray-bg p-6">
           {HERO_STATS.map(([pair, value, direction]) => (
             <div
               key={pair}

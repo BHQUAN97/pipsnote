@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
+import { routes } from '@/lib/routes';
 import type { Post } from '@/lib/types';
 import Header from '@/components/Header';
 import PostCard from '@/components/PostCard';
@@ -81,7 +82,7 @@ export default async function BlogDetailPage({
         <div className="mx-auto max-w-[760px] px-7">
           {post.category_name && (
             <Link
-              href={`/blog?cat=${post.category_slug}`}
+              href={routes.blogCategory(post.category_slug!)}
               className="mb-3 inline-block font-mono text-[11px] uppercase tracking-[0.06em] text-brand"
             >
               {post.category_name}
@@ -95,7 +96,7 @@ export default async function BlogDetailPage({
             {post.read_time && (
               <>
                 <span>·</span>
-                <span>{post.read_time} phút đọc</span>
+                <span>{post.read_time} min read</span>
               </>
             )}
           </div>
@@ -114,7 +115,7 @@ export default async function BlogDetailPage({
       {related.length > 0 && (
         <section className="border-t border-gray-line bg-gray-bg py-16 md:py-[72px]">
           <div className="mx-auto max-w-[1180px] px-7">
-            <h2 className="mb-9 text-[26px] md:text-[30px]">Bài viết liên quan</h2>
+            <h2 className="mb-9 text-[26px] md:text-[30px]">Related posts</h2>
             <div className="grid grid-cols-1 gap-7 md:grid-cols-3">
               {related.map((p) => (
                 <PostCard key={p.id} post={p} />

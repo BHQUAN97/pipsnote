@@ -42,3 +42,6 @@ db/changelog/**/.applied
 
 # Playwright MCP test artifacts
 .playwright-mcp/
+
+# Ad-hoc verification screenshots (Playwright, root-level)
+/*.png

@@ -30,7 +30,7 @@ export default function ThemeToggle() {
       document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
     }
     window.dispatchEvent(new Event(THEME_EVENT));
@@ -40,7 +40,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label="Đổi giao diện sáng/tối"
+      aria-label="Toggle light/dark theme"
       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gray-line text-base"
     >
       {isDark ? '☀️' : '🌙'}

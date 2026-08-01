@@ -29,9 +29,9 @@ export default function Newsletter() {
     <div className="flex flex-col items-start gap-10 bg-surface-dark p-8 text-white md:flex-row md:items-center md:justify-between md:p-14">
       <div>
         <h2 className="mb-2 max-w-[380px] text-2xl text-white">
-          Nhận phân tích thị trường mỗi tuần
+          Get weekly market analysis
         </h2>
-        <p className="text-sm text-[#aaa]">Không spam. Huỷ đăng ký bất cứ lúc nào.</p>
+        <p className="text-sm text-white/60">No spam. Unsubscribe anytime.</p>
       </div>
 
       <div className="w-full md:min-w-[360px] md:max-w-[360px]">
@@ -42,22 +42,22 @@ export default function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === 'loading'}
-            placeholder="Email của bạn"
-            className="min-w-0 flex-1 border border-[#444] bg-transparent px-4 py-4 text-sm text-white placeholder:text-[#888] disabled:opacity-60"
+            placeholder="Your email"
+            className="min-w-0 flex-1 border border-white/20 bg-transparent px-4 py-4 text-sm text-white placeholder:text-white/40 transition-colors focus:border-brand focus:outline-none disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="shrink-0 bg-brand px-6 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+            className="shrink-0 bg-brand px-6 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
           >
-            {status === 'loading' ? '...' : 'Đăng ký'}
+            {status === 'loading' ? '...' : 'Subscribe'}
           </button>
         </form>
         {status === 'success' && (
-          <p className="mt-2 text-xs text-up">Đăng ký thành công, cảm ơn bạn!</p>
+          <p className="mt-2 text-xs text-up">Subscribed successfully, thank you!</p>
         )}
         {status === 'error' && (
-          <p className="mt-2 text-xs text-down">Có lỗi xảy ra, vui lòng thử lại.</p>
+          <p className="mt-2 text-xs text-down">Something went wrong, please try again.</p>
         )}
       </div>
     </div>

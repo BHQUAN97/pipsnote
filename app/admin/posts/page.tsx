@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import DetailDrawer, { type DetailField } from '@/components/admin/DetailDrawer';
 
 interface PostRow {
   id: number;
@@ -15,14 +17,27 @@ interface PostRow {
   updated_at: string;
 }
 
+interface PostDetail extends PostRow {
+  excerpt: string | null;
+  content: string;
+  seo_title: string | null;
+  seo_desc: string | null;
+  read_time: number | null;
+}
+
 const STATUS_OPTIONS = ['', 'draft', 'published', 'archived'];
 
 export default function AdminPostsPage() {
+  const router = useRouter();
   const [items, setItems] = useState<PostRow[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(true);
+  const [detailId, setDetailId] = useState<number | null>(null);
+  const [detail, setDetail] = useState<PostDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pageSize = 20;
 
   const load = useCallback(() => {
@@ -44,10 +59,51 @@ export default function AdminPostsPage() {
   }, [load]);
 
   async function handleDelete(id: number, title: string) {
-    if (!window.confirm(`Xoá bài viết "${title}"?`)) return;
+    if (!window.confirm(`Delete post "${title}"?`)) return;
     const res = await fetch(`/api/admin/posts/${id}`, { method: 'DELETE' });
     if (res.ok) load();
   }
+
+  function openDetail(id: number) {
+    setDetailId(id);
+    setDetail(null);
+    setDetailLoading(true);
+    fetch(`/api/admin/posts/${id}`)
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data: PostDetail) => setDetail(data))
+      .finally(() => setDetailLoading(false));
+  }
+
+  function handleRowClick(id: number) {
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    clickTimer.current = setTimeout(() => {
+      openDetail(id);
+      clickTimer.current = null;
+    }, 220);
+  }
+
+  function handleRowDoubleClick(id: number) {
+    if (clickTimer.current) {
+      clearTimeout(clickTimer.current);
+      clickTimer.current = null;
+    }
+    router.push(`/admin/posts/${id}/edit`);
+  }
+
+  const detailFields: DetailField[] = detail
+    ? [
+        { label: 'Title', value: detail.title },
+        { label: 'Slug', value: detail.slug },
+        { label: 'Category', value: detail.category_name ?? '—' },
+        { label: 'Status', value: detail.status },
+        { label: 'Views', value: detail.view_count },
+        { label: 'Read time', value: detail.read_time ? `${detail.read_time} min` : '—' },
+        { label: 'Excerpt', value: detail.excerpt ?? '—' },
+        { label: 'SEO title', value: detail.seo_title ?? '—' },
+        { label: 'SEO description', value: detail.seo_desc ?? '—' },
+        { label: 'Published at', value: detail.published_at ? new Date(detail.published_at).toLocaleDateString('vi-VN') : '—' },
+      ]
+    : [];
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -59,7 +115,7 @@ export default function AdminPostsPage() {
           href="/admin/posts/new"
           className="min-h-[44px] rounded bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
         >
-          + Bài viết mới
+          + New post
         </Link>
       </div>
 
@@ -75,31 +131,36 @@ export default function AdminPostsPage() {
               status === s ? 'bg-surface-dark text-white' : 'hover:bg-gray-bg'
             }`}
           >
-            {s || 'Tất cả'}
+            {s || 'All'}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-mid">Đang tải...</p>
+        <p className="text-sm text-gray-mid">Loading...</p>
       ) : items.length === 0 ? (
-        <p className="text-sm text-gray-mid">Chưa có bài viết nào.</p>
+        <p className="text-sm text-gray-mid">No posts yet.</p>
       ) : (
         <div className="overflow-x-auto border border-gray-line">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="border-b border-gray-line bg-gray-bg text-left">
-                <th className="p-3">Tiêu đề</th>
-                <th className="p-3">Danh mục</th>
-                <th className="p-3">Trạng thái</th>
+                <th className="p-3">Title</th>
+                <th className="p-3">Category</th>
+                <th className="p-3">Status</th>
                 <th className="p-3">Views</th>
-                <th className="p-3">Cập nhật</th>
+                <th className="p-3">Updated</th>
                 <th className="p-3"></th>
               </tr>
             </thead>
             <tbody>
               {items.map((post) => (
-                <tr key={post.id} className="border-b border-gray-line last:border-0">
+                <tr
+                  key={post.id}
+                  onClick={() => handleRowClick(post.id)}
+                  onDoubleClick={() => handleRowDoubleClick(post.id)}
+                  className="cursor-pointer border-b border-gray-line last:border-0 hover:bg-gray-bg"
+                >
                   <td className="p-3 font-medium">{post.title}</td>
                   <td className="p-3 text-gray-mid">{post.category_name ?? '—'}</td>
                   <td className="p-3">
@@ -109,18 +170,18 @@ export default function AdminPostsPage() {
                   </td>
                   <td className="p-3 text-gray-mid">{post.view_count}</td>
                   <td className="p-3 text-gray-mid">
-                    {new Date(post.updated_at).toLocaleDateString('vi-VN')}
+                    {new Date(post.updated_at).toLocaleDateString('en-US')}
                   </td>
-                  <td className="p-3">
+                  <td className="p-3" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                     <div className="flex gap-3">
                       <Link href={`/admin/posts/${post.id}/edit`} className="text-brand hover:underline">
-                        Sửa
+                        Edit
                       </Link>
                       <button
                         onClick={() => handleDelete(post.id, post.title)}
                         className="text-down hover:underline"
                       >
-                        Xoá
+                        Delete
                       </button>
                     </div>
                   </td>
@@ -146,6 +207,15 @@ export default function AdminPostsPage() {
           ))}
         </div>
       )}
+
+      <DetailDrawer
+        open={detailId !== null}
+        title="Post detail"
+        loading={detailLoading}
+        fields={detailFields}
+        editHref={detailId ? `/admin/posts/${detailId}/edit` : undefined}
+        onClose={() => setDetailId(null)}
+      />
     </div>
   );
 }

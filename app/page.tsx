@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
+import { routes } from '@/lib/routes';
 import type { Category } from '@/lib/types';
 import Header from '@/components/Header';
 import TickerStrip from '@/components/TickerStrip';
@@ -29,15 +30,15 @@ export default async function Home() {
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-                Đối tác giao dịch
+                Trading partners
               </span>
-              <h2 className="mt-1 text-[26px] md:text-[30px]">Top Broker được đánh giá</h2>
+              <h2 className="mt-1 text-[26px] md:text-[30px]">Top rated brokers</h2>
             </div>
             <Link
-              href="/brokers"
+              href={routes.brokers}
               className="border-b-2 border-brand pb-0.5 text-[13px] font-semibold"
             >
-              Xem bảng so sánh đầy đủ →
+              View full comparison →
             </Link>
           </div>
           <BrokerGrid limit={6} />
@@ -49,25 +50,28 @@ export default async function Home() {
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-                Kiến thức &amp; phân tích
+                Insights &amp; analysis
               </span>
-              <h2 className="mt-1 text-[26px] md:text-[30px]">Bài viết mới nhất</h2>
+              <h2 className="mt-1 text-[26px] md:text-[30px]">Latest posts</h2>
             </div>
-            <Link href="/blog" className="border-b-2 border-brand pb-0.5 text-[13px] font-semibold">
-              Xem tất cả →
+            <Link
+              href={routes.blog}
+              className="border-b-2 border-brand pb-0.5 text-[13px] font-semibold"
+            >
+              View all →
             </Link>
           </div>
           <div className="mb-11 flex flex-wrap gap-3">
             <Link
-              href="/blog"
+              href={routes.blog}
               className="border border-surface-dark bg-surface-dark px-4.5 py-2.5 text-sm font-medium text-white"
             >
-              Tất cả
+              All
             </Link>
             {categories.map((cat) => (
               <Link
                 key={cat.id}
-                href={`/blog?cat=${cat.slug}`}
+                href={routes.blogCategory(cat.slug)}
                 className="border border-gray-line px-4.5 py-2.5 text-sm font-medium"
               >
                 {cat.name}

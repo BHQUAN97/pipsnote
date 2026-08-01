@@ -8,8 +8,8 @@ import BrokerCard from '@/components/BrokerCard';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'So sánh Broker | PIPSNOTE',
-  description: 'Bảng so sánh đầy đủ các sàn forex/crypto được đánh giá.',
+  title: 'Compare Brokers | PIPSNOTE',
+  description: 'Full comparison table of rated forex/crypto brokers.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -52,12 +52,12 @@ export default async function BrokersPage({
       <section className="py-16 md:py-[72px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-            Đối tác giao dịch
+            Trading partners
           </span>
-          <h1 className="mt-1 mb-9 text-[26px] md:text-[30px]">Tất cả Broker</h1>
+          <h1 className="mt-1 mb-9 text-[26px] md:text-[30px]">All Brokers</h1>
 
           {brokers.length === 0 ? (
-            <p className="text-sm text-gray-mid">Chưa có broker nào.</p>
+            <p className="text-sm text-gray-mid">No brokers yet.</p>
           ) : (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {brokers.map((broker) => (
