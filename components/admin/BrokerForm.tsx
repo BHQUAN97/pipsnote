@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Broker } from '@/lib/types';
 import Input from '@/components/ui/Input';
+import { slugify } from '@/lib/slugify';
 
 interface BrokerFormValues {
   name: string;
@@ -37,20 +38,6 @@ function toFormValues(broker?: Broker | null): BrokerFormValues {
     is_active: broker ? Boolean(broker.is_active) : true,
     is_featured: broker ? Boolean(broker.is_featured) : false,
   };
-}
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .split('')
-    .filter((ch) => {
-      const code = ch.codePointAt(0) ?? 0;
-      return code < 0x0300 || code > 0x036f;
-    })
-    .join('')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 }
 
 export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: number; initialBroker?: Broker }) {

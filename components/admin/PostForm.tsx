@@ -4,6 +4,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Category, Post } from '@/lib/types';
 import Input from '@/components/ui/Input';
+import RichTextEditor from '@/components/admin/RichTextEditor';
+import TagInput from '@/components/admin/TagInput';
+import { slugify } from '@/lib/slugify';
+
+interface TagOption {
+  id: number;
+  name: string;
+  slug: string;
+}
 
 interface PostFormValues {
   title: string;
@@ -17,6 +26,7 @@ interface PostFormValues {
   read_time: string;
   seo_title: string;
   seo_desc: string;
+  tags: TagOption[];
 }
 
 function toFormValues(post?: Post | null): PostFormValues {
@@ -32,21 +42,8 @@ function toFormValues(post?: Post | null): PostFormValues {
     read_time: post?.read_time != null ? String(post.read_time) : '',
     seo_title: post?.seo_title ?? '',
     seo_desc: post?.seo_desc ?? '',
+    tags: post?.tags ?? [],
   };
-}
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .split('')
-    .filter((ch) => {
-      const code = ch.codePointAt(0) ?? 0;
-      return code < 0x0300 || code > 0x036f;
-    })
-    .join('')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 }
 
 export default function PostForm({ postId, initialPost }: { postId?: number; initialPost?: Post }) {
@@ -85,6 +82,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       read_time: values.read_time ? Number(values.read_time) : null,
       seo_title: values.seo_title || null,
       seo_desc: values.seo_desc || null,
+      tag_ids: values.tags.map((tag) => tag.id),
     };
 
     try {
@@ -156,14 +154,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
 
       <div>
         <label className="block text-sm mb-2 font-medium">Content</label>
-        <textarea
-          value={values.content}
-          onChange={(e) => update('content', e.target.value)}
-          rows={12}
-          className="w-full px-4 py-2 border border-gray-line rounded-sm font-mono text-sm"
-          disabled={saving}
-          required
-        />
+        <RichTextEditor value={values.content} onChange={(html) => update('content', html)} disabled={saving} />
       </div>
 
       <div>
@@ -234,6 +225,11 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
             Featured post
           </label>
         </div>
+      </div>
+
+      <div>
+        <label className="block text-sm mb-2 font-medium">Tags</label>
+        <TagInput value={values.tags} onChange={(tags) => update('tags', tags)} disabled={saving} />
       </div>
 
       <div>

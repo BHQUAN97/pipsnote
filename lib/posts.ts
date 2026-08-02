@@ -34,3 +34,30 @@ export async function getPublishedPosts({
 
   return { items: listRows, total: countRows[0]?.total ?? 0 };
 }
+
+export interface PostTag {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export async function getPostTags(postId: number): Promise<PostTag[]> {
+  return query<PostTag[]>(
+    `SELECT t.id, t.name, t.slug FROM tags t
+     INNER JOIN post_tags pt ON pt.tag_id = t.id
+     WHERE pt.post_id = ?
+     ORDER BY t.name`,
+    [postId]
+  );
+}
+
+export async function syncPostTags(postId: number, tagIds: number[]): Promise<void> {
+  await query('DELETE FROM post_tags WHERE post_id = ?', [postId]);
+  if (tagIds.length === 0) return;
+
+  await Promise.all(
+    tagIds.map((tagId) =>
+      query('INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)', [postId, tagId])
+    )
+  );
+}

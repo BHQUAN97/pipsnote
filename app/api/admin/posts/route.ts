@@ -4,6 +4,8 @@ import { withApiHandler } from '@/lib/withApiHandler';
 import { requireAdmin } from '@/lib/getAdminUser';
 import { query } from '@/lib/db';
 import { syncPostSearchIndex } from '@/lib/meilisearch';
+import { sanitizeHtml } from '@/lib/sanitize';
+import { syncPostTags } from '@/lib/posts';
 import type { ResultSetHeader } from 'mysql2';
 
 const SlugSchema = z
@@ -24,6 +26,7 @@ const PostCreateSchema = z.object({
   read_time: z.number().int().nonnegative().nullable().optional(),
   seo_title: z.string().max(200).nullable().optional(),
   seo_desc: z.string().max(300).nullable().optional(),
+  tag_ids: z.array(z.number().int().positive()).optional(),
 });
 
 function isDuplicateEntryError(err: unknown): boolean {
@@ -90,6 +93,7 @@ async function postHandler(req: NextRequest) {
 
   const data = parsed.data;
   const publishedAt = data.status === 'published' ? new Date() : null;
+  const cleanContent = sanitizeHtml(data.content);
 
   try {
     const result = await query<ResultSetHeader>(
@@ -101,7 +105,7 @@ async function postHandler(req: NextRequest) {
         data.title,
         data.slug,
         data.excerpt ?? null,
-        data.content,
+        cleanContent,
         data.featured_image ?? null,
         user.id,
         data.category_id ?? null,
@@ -126,6 +130,10 @@ async function postHandler(req: NextRequest) {
         req.headers.get('user-agent') ?? null,
       ]
     );
+
+    if (data.tag_ids) {
+      await syncPostTags(result.insertId, data.tag_ids);
+    }
 
     await syncPostSearchIndex(result.insertId);
 
