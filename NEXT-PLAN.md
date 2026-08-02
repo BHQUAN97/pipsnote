@@ -217,6 +217,83 @@ Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất).
    file ≤200 dòng, có thể chia nhiều file) tách biệt/bổ sung cho `docs/` hiện có
    (`ADMIN_SETTINGS.md`, `DESIGN_SYSTEM.md`, `LOGGING_STANDARD.md`, `SECURITY_DETECTION.md`) —
    **chưa làm**, cần session riêng để viết nội dung đầy đủ.
+6. **Market data ticker — số liệu tỷ giá/giá thị trường thật (chưa build, mới research)**
+
+   **Hiện trạng xác nhận**: `components/TickerStrip.tsx` (10 cặp EUR/USD, BTC/USD...) là
+   **100% mock hardcode** (`TICKER_DATA` const trong file, copy nguyên từ `index.html` prototype),
+   không có bất kỳ fetch API/cron/DB nào phía sau. Đã grep `task.md`, `spec (1).md`,
+   `.env.example` — không chỗ nào từng spec nguồn dữ liệu thật, feature này chưa từng được lên kế
+   hoạch chính thức.
+
+   **Nguồn dữ liệu đề xuất (đã research 2026-08)** — kiến trúc **multi-provider theo từng lĩnh
+   vực** (không ép 1 API combo duy nhất — free tier mỗi API riêng thoải mái hơn, 1 nguồn sập chỉ
+   ảnh hưởng 1 lĩnh vực):
+   | Lĩnh vực | Provider đề xuất | Ghi chú free tier |
+   |---|---|---|
+   | Forex | Twelve Data (hoặc FCS API dự phòng) | ~800 req/ngày free, WebSocket chỉ bản trả phí |
+   | Crypto | CoinGecko | Free, không cần API key cho endpoint cơ bản |
+   | Commodities (vàng/bạc — XAU/XAG) | Gold-API.com (hoặc XAUS.com) | Free, không cần auth |
+   | US Stocks | Alpaca | Free tier gần như không giới hạn cho scale nhỏ |
+
+   **Tránh dùng**: Alpha Vantage (25 call/ngày — quá thấp), Polygon.io (rebrand "Massive", trial
+   giờ bắt buộc thẻ tín dụng), IEX Cloud (đã deprecated), Yahoo Finance (scraping không chính
+   thức, không ổn định).
+
+   **Kiến trúc đề xuất** (theo đúng pattern cache-aside đã dùng cho `site_settings`):
+   1. Mỗi provider có 1 adapter riêng (`lib/marketData/twelveData.ts`, `coinGecko.ts`,
+      `goldApi.ts`, `alpaca.ts`...) chuẩn hoá response về chung 1 shape
+      `{ pair, value, direction, updatedAt }` — code render (ticker/list) không cần biết nguồn
+      gốc là API nào.
+   2. Fetch định kỳ (cron), **không fetch trực tiếp từ client** (tránh lộ API key + tự đụng rate
+      limit). Cơ chế cron đề xuất: theo đúng pattern `backup-mysql.sh` đang dùng (VPS crontab gọi
+      1 API route nội bộ `POST /api/internal/market-data/refresh` có header secret riêng) thay vì
+      spawn 1 process cron trong container Next.js (Next.js serverless-style không phù hợp
+      long-running worker) — **cần chốt lại ở session lên plan**, đây chỉ là đề xuất mặc định.
+   3. Kết quả fetch → cache Redis (TTL ngắn, ví dụ 60-120s tuỳ lĩnh vực) + ghi snapshot MySQL
+      (bảng mới, ví dụ `market_data_snapshot`) để có fallback khi API ngoài lỗi/timeout.
+   4. Client (`TickerStrip.tsx` + trang list nếu có) chỉ đọc cache/DB qua 1 hàm dùng chung kiểu
+      `getMarketData()` — không bao giờ gọi API ngoài trực tiếp.
+
+   **Cấu hình admin cần có** (map vào UI pattern đã có sẵn trong codebase, không cần phát minh
+   mới):
+   | Cấu hình | UI tái dùng |
+   |---|---|
+   | Chọn provider theo từng lĩnh vực | Dropdown riêng mỗi lĩnh vực (forex/crypto/commodities/stocks) |
+   | API key (ẩn/mask khi hiển thị) | Input password-style, giống pattern secret hiện có |
+   | Danh sách symbol theo dõi | `components/admin/TagInput.tsx` (đã dùng cho tags bài viết) |
+   | Bật/tắt từng lĩnh vực | Toggle, giống `is_active` các bảng khác |
+   | Chế độ hiển thị | Selector: list tĩnh / ticker chạy liên tục / cả hai |
+   | Sắp xếp thứ tự hiển thị | Nút ▲▼ dùng lại `reorderRow()` (`lib/reorder.ts`, đã có từ Phase C) |
+   | Tần suất refresh | Input số giây/phút |
+   | Xem trước | Live preview ngay trong trang config |
+
+   **Việc cần làm khi bắt đầu build** (session riêng, phải qua `EnterPlanMode` vì đụng nhiều
+   file + kiến trúc mới, chưa được user confirm triển khai):
+   - Migration mới (`db/changelog/009_.../`): bảng `market_data_sources` (config theo lĩnh vực)
+     + `market_data_snapshot` (cache fallback).
+   - `lib/marketData/*` adapters + `lib/marketData.ts` (hàm `getMarketData()` cache-aside).
+   - `app/api/admin/market-data/**` (CRUD sources, giống pattern `lib/settings.ts`).
+   - `app/api/internal/market-data/refresh/route.ts` (endpoint cron gọi, có secret riêng, không
+     dùng `requireAdmin` vì không phải request từ browser).
+   - `app/admin/market-data/page.tsx` (trang config theo bảng UI ở trên).
+   - Sửa `components/TickerStrip.tsx` nhận data thật (props/hook) thay vì `TICKER_DATA` hardcode.
+   - Cần xin API key thật cho từng provider trước khi build (không cần cho code, nhưng cần cho
+     verify end-to-end) — user tự đăng ký, KHÔNG hardcode key vào code/`.env.example` (chỉ thêm
+     placeholder tên biến).
+7. ~~**Bug: UI tiếng Việt bị vỡ layout so với bản tiếng Anh**~~ — **ĐÃ FIX** (session này).
+   Root cause xác nhận bằng Playwright screenshot so sánh `/` (en) vs `/vi` ở 375px + 1280px:
+   `h1, h2, h3 { line-height: 1.05 }` (`app/globals.css`) quá chật cho dấu tiếng Việt (đặc biệt
+   dấu nặng dưới `ị`/`ọ`/`ạ` trong font Archivo Black cực đậm) — các dòng đè/chồng lên nhau ở
+   Hero headline và section heading, KHÔNG xảy ra ở bản tiếng Anh (không có dấu). Đã test loại trừ
+   giả thuyết font-fallback (thêm `vietnamese` subset cho Archivo Black, restart + xoá cache —
+   không đổi gì, nên revert lại, không phải nguyên nhân). Fix: `line-height: 1.05` → `1.25` (1
+   dòng CSS, áp dụng chung h1-h3 cả 2 locale — bản tiếng Anh vẫn đẹp, chỉ giãn dòng nhẹ hơn).
+   Verify: `npm run lint` + `npm run build` PASS, Playwright chụp lại `/` + `/vi` ở 375px + 1280px
+   xác nhận hết chồng dòng.
+   - **Gap phát hiện thêm khi test (KHÔNG phải bug layout, chưa fix)**: `/vi/blog` và
+     `/vi/brokers` — eyebrow + heading + `<title>` (`"All posts"`, `"INSIGHTS & ANALYSIS"`,
+     `"All Brokers"`, `"TRADING PARTNERS"`, `"Compare Brokers | PIPSNOTE"`) vẫn hiển thị tiếng Anh
+     dù đang ở route `/vi` — thiếu i18n key, không phải lỗi CSS. Cần session riêng để rà soát.
 
 **Quy ước code**: mỗi file doc ≤200 dòng, code nên giữ dưới ~500 dòng (component/route quá dài
 → tách nhỏ).
