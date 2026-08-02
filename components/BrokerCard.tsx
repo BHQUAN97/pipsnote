@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Broker } from '@/lib/types';
 
 export default function BrokerCard({ broker }: { broker: Broker }) {
@@ -9,7 +10,18 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
       className="card-elevated group flex flex-col gap-4 border border-gray-line bg-bg p-6 hover:-translate-y-1 hover:border-ink"
     >
       <div className="flex items-start justify-between">
-        <span className="font-display text-card-title">{broker.name}</span>
+        <span className="flex items-center gap-2.5">
+          {broker.logo_url && (
+            <Image
+              src={broker.logo_url}
+              alt=""
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 rounded-sm object-contain"
+            />
+          )}
+          <span className="font-display text-card-title">{broker.name}</span>
+        </span>
         {broker.badge && (
           <span
             className={`font-mono text-badge uppercase tracking-[0.06em] px-2 py-1 text-white ${

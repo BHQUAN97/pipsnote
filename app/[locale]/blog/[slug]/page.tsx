@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
 import { routes } from '@/lib/routes';
+import { getPostTags } from '@/lib/posts';
 import type { Post } from '@/lib/types';
 import Header from '@/components/Header';
 import PostCard from '@/components/PostCard';
@@ -63,6 +65,7 @@ export default async function BlogDetailPage({
 
   await query('UPDATE posts SET view_count = view_count + 1 WHERE id = ?', [post.id]);
 
+  const tags = await getPostTags(post.id);
   const t = await getTranslations('blogDetail');
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
@@ -85,6 +88,18 @@ export default async function BlogDetailPage({
 
       <article className="py-16 md:py-[72px]">
         <div className="mx-auto max-w-[760px] px-7">
+          {post.featured_image && (
+            <div className="relative mb-8 aspect-[16/9] overflow-hidden border border-gray-line bg-gray-bg">
+              <Image
+                src={post.featured_image}
+                alt={post.title}
+                fill
+                sizes="(min-width: 760px) 760px, 100vw"
+                priority
+                className="object-cover"
+              />
+            </div>
+          )}
           {post.category_name && (
             <Link
               href={routes.blogCategory(post.category_slug!)}
@@ -105,6 +120,19 @@ export default async function BlogDetailPage({
               </>
             )}
           </div>
+
+          {tags.length > 0 && (
+            <div className="mb-9 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag.id}
+                  className="rounded-sm border border-gray-line px-2.5 py-1 font-mono text-label uppercase tracking-[0.06em] text-gray-mid"
+                >
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div
             className="article-content"

@@ -107,6 +107,91 @@ commit fix gap sau đó. Đã đóng backlog cũ #6 toàn bộ 3 gap:
 - `app/admin/login/page.tsx` — thêm `autoComplete="username"`/`"current-password"`.
 - Verify: `npm run lint` + `npm run build` PASS.
 
+### Session này (Admin UX audit — Phase A + Phase B, đóng backlog #4 một phần)
+Plan 3 phase (A/B/C) từ backlog #4 cũ. Đã xong A + B, C chưa làm.
+
+1. **Phase A (fix nhanh, không cần migration)** — commit `1d1be95`:
+   `/about` + `/instruction` thành trang thật (trước là dead anchor), verify theme toggle +
+   admin logs bằng Playwright (không có bug thật, không cần fix), dashboard thêm nút refresh +
+   "last updated" timestamp, Brokers list thêm filter theo status, trang 404/error/maintenance.
+2. **Phase B (rich text editor cho posts)** — 2 commit, đã deploy qua CI/CD (health check
+   `/api/health` pass):
+   - `components/admin/RichTextEditor.tsx` — TipTap v3 (10 extension: Underline/Link/Image/
+     TextAlign/Placeholder/Highlight/CharacterCount/TextStyle/Color/StarterKit), toolbar dùng
+     `lucide-react` icon, tái dùng class `.article-content` có sẵn (không thêm dependency
+     `@tailwindcss/typography`).
+   - `lib/r2.ts` + `app/api/admin/upload/route.ts` — upload ảnh lên bucket R2 **riêng**
+     `pipsnote-media` (tách khỏi bucket backup `pipsnote-backups`), giới hạn 10MB,
+     jpeg/png/webp/gif.
+   - `lib/sanitize.ts` — whitelist-based HTML sanitizer (regex, không dùng DOMPurify+jsdom),
+     wire vào cả POST và PATCH `/api/admin/posts` **trước khi lưu DB** (vì
+     `posts.content` render qua `dangerouslySetInnerHTML` không escape ở blog public — đây là
+     mặt XSS thật, không phải phòng hờ).
+   - Tags: dùng lại bảng `tags`/`post_tags` có sẵn từ `001_init` nhưng trước đó chưa có API/UI.
+     `app/api/admin/tags/route.ts` (GET/POST, tự tạo tag mới nếu chưa tồn tại) +
+     `lib/posts.ts` (`getPostTags`/`syncPostTags`) + `components/admin/TagInput.tsx` (chip
+     input, autocomplete) wire vào `PostForm.tsx`.
+   - Dọn code trùng: extract `slugify()` (trước đó copy-paste y hệt ở `PostForm.tsx` và
+     `BrokerForm.tsx`) sang `lib/slugify.ts` dùng chung.
+   - **Gap tự phát hiện + fix trong lúc deploy**: `.github/workflows/deploy.yml` chưa sync
+     `R2_MEDIA_BUCKET`/`R2_MEDIA_PUBLIC_URL` xuống `.env` VPS (chỉ có 4 var của bucket backup) —
+     đã thêm 2 dòng vào workflow. **Cần tự set 2 GitHub Secret này** (`R2_MEDIA_BUCKET`,
+     `R2_MEDIA_PUBLIC_URL`) nếu chưa có, không thì nút upload ảnh trong editor sẽ báo lỗi "R2
+     media bucket not configured" (không crash cả app, chỉ tính năng upload ảnh fail).
+   - Verify: `npm run build`/`lint`/`type-check` PASS. **Chưa** verify tay qua Playwright (dev
+     server cục bộ không lên được trong session này do 1 process Node cũ từ session trước treo
+     ở port 3000 — đã kill, nhưng chưa retest UI thật; luồng upload ảnh qua R2 thật cũng chưa
+     test tay vì thiếu credential ở máy dev).
+3. **Phase C — done, đóng nốt backlog #4**: admin user management + sort_order/reorder.
+
+### Session này (UX polish trước Phase C + Phase C: users CRUD, sort_order/reorder)
+Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất). Chưa commit lúc bắt
+đầu session — tất cả nằm trong 1 lần verify + commit cuối session này.
+
+1. **Part 0 — Font tiếng Việt**: `app/layout.tsx` thêm subset `"vietnamese"` cho cả 3
+   `next/font/google` (Space Grotesk/Archivo Black/IBM Plex Mono) — sửa lỗi dấu tiếng Việt fallback
+   sang system font ở route `/vi`.
+2. **Part 1 — Ảnh + tags thật trên public pages**: `PostCard.tsx`/`BrokerCard.tsx` render
+   `featured_image`/`logo_url` qua `next/image` khi có, giữ placeholder cũ khi null.
+   `app/[locale]/blog/[slug]/page.tsx` thêm hero image + tag chips (dùng `getPostTags()` có sẵn
+   từ `lib/posts.ts`, không code lại).
+3. **Part 2 — Admin mobile card layout**: `app/admin/posts/page.tsx` + `brokers/page.tsx` — bảng
+   cũ (`overflow-x-auto`) giữ nguyên từ `sm:` trở lên, thêm card list riêng cho `<sm` dùng chung
+   handler (`openDetail`/`handleDelete`/reorder) — hết cuộn ngang trên mobile.
+4. **Part 3 — Phase C**:
+   - Migration `008_content_ranking/` — thêm `sort_order` cho `posts`/`brokers` + backfill.
+   - `lib/db.ts` — thêm `withTransaction()` helper (row lock `FOR UPDATE`, dùng bởi reorder).
+   - `lib/adminUsers.ts` (mới) — `assertNotLastSuperadmin(userId)`: chặn xoá/hạ quyền/deactivate
+     superadmin cuối cùng còn active; self-delete chặn riêng trong `deleteHandler`.
+   - `app/api/admin/users/route.ts` + `[id]/route.ts` — CRUD đầy đủ, `bcryptjs` hash, không bao
+     giờ trả `password_hash`, log `admin_audit_log` cho mọi mutation.
+   - `lib/reorder.ts` (mới) — `reorderRow(tableName, id, direction)` dùng chung bởi
+     `app/api/admin/posts/[id]/reorder/route.ts` + `brokers/[id]/reorder/route.ts` (transaction +
+     row lock, tiebreak `sort_order DESC, updated_at DESC, id DESC` khớp thứ tự list mặc định).
+   - UI: `components/admin/UserForm.tsx`, `app/admin/users/{page,new,[id]/edit}.tsx`,
+     `app/admin/layout.tsx` thêm nav "Users" (chỉ superadmin), nút ▲▼ (44px) trên Posts/Brokers.
+5. **Gap tự phát hiện + fix trong lúc verify Phase C**:
+   - **Bug thật, đã fix**: `isFkRestrictError()` trong `app/api/admin/users/[id]/route.ts` chỉ
+     check `err.code === 'ER_ROW_IS_REFERENCED_2'` (1451) — nhưng MySQL thực tế throw
+     `ER_ROW_IS_REFERENCED` (1217, không kèm chi tiết bảng/constraint trong message) cho câu
+     lệnh `DELETE` này, tuỳ ngữ cảnh câu query mà MySQL chọn 1 trong 2 code. Kết quả: xoá user là
+     tác giả post có sẵn (`posts.author_id ... ON DELETE RESTRICT`) trả về 500 "Internal server
+     error" thay vì 409 thân thiện. Đã fix: check cả 2 code
+     (`ER_ROW_IS_REFERENCED || ER_ROW_IS_REFERENCED_2`). Đã verify bằng script Node gọi thẳng
+     `mysql2` để xác nhận `err.code`/`errno` thật trước khi sửa, không đoán. Các chỗ khác dùng
+     pattern tương tự (`isDuplicateEntryError` / `ER_DUP_ENTRY`, 6 route file) đã kiểm tra riêng —
+     `ER_DUP_ENTRY` (1062) chỉ có 1 code, không bị lỗi tương tự, không cần sửa.
+   - Môi trường: `eslint.config.js` thêm `.claude/**` vào `ignores` (lint quét nhầm thư mục
+     session Claude); sửa `node_modules/pino` bị lỗi cài đặt (chặn dev server khởi động).
+6. **Verify toàn bộ Part 0-3**: `npm run build`/`lint`/`type-check` PASS; `db-changelog.sh` chạy
+   lại xác nhận idempotent (`PASS=0 SKIP=12 FAIL=0`, kể cả batch `008` mới). Playwright:
+   ảnh/tag hiển thị đúng trên `/blog/[slug]` + card grid, tiếng Việt render đúng font ở `/vi`,
+   admin Posts/Brokers ở 375px dùng card layout (hết cuộn ngang), tạo user mới qua
+   `/admin/users/new` thành công, PATCH tự hạ quyền superadmin cuối cùng → chặn đúng message,
+   xoá user là tác giả post → 409 đúng message (sau khi fix bug trên), ▲▼ reorder Posts/Brokers
+   persist sau full page reload, nav active-state (`pathname.startsWith(href)`) highlight đúng
+   route hiện tại — không có console error nào trong suốt quá trình test.
+
 ---
 
 ## 🔜 Backlog (chưa làm, ưu tiên theo thứ tự đề xuất)

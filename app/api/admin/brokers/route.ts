@@ -61,14 +61,15 @@ async function getHandler(req: NextRequest) {
     whereParams.push(type);
   }
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  const orderBy = status ? 'updated_at DESC' : 'sort_order DESC, updated_at DESC';
 
   const [countRows, items] = await Promise.all([
     query<{ total: number }[]>(`SELECT COUNT(*) AS total FROM brokers ${where}`, whereParams),
     query(
-      `SELECT id, name, slug, type, badge, rating, is_active, is_featured, click_count, updated_at
+      `SELECT id, name, slug, type, badge, rating, is_active, is_featured, sort_order, click_count, updated_at
        FROM brokers
        ${where}
-       ORDER BY updated_at DESC
+       ORDER BY ${orderBy}
        LIMIT ? OFFSET ?`,
       [...whereParams, pageSize, offset]
     ),

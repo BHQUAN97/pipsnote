@@ -9,6 +9,7 @@ const NAV_ITEMS: Array<{ href: string; label: string; roles: AdminUser['role'][]
   { href: '/admin', label: 'Dashboard', roles: ['superadmin', 'editor'] },
   { href: '/admin/posts', label: 'Posts', roles: ['superadmin', 'editor', 'author'] },
   { href: '/admin/brokers', label: 'Brokers', roles: ['superadmin', 'editor'] },
+  { href: '/admin/users', label: 'Users', roles: ['superadmin'] },
   { href: '/admin/settings', label: 'Settings', roles: ['superadmin'] },
   { href: '/admin/logs', label: 'Logs', roles: ['superadmin'] },
 ];
@@ -51,6 +52,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(user.role));
 
+  function isNavItemActive(href: string): boolean {
+    return href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+  }
+
   return (
     <div className="min-h-screen bg-bg">
       <header className="border-b border-gray-line">
@@ -65,7 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   key={item.href}
                   href={item.href}
                   className={`flex min-h-[44px] items-center rounded-sm px-3 py-2 text-sm font-medium ${
-                    pathname.startsWith(item.href)
+                    isNavItemActive(item.href)
                       ? 'bg-surface-dark text-white'
                       : 'hover:bg-gray-bg'
                   }`}
@@ -105,7 +110,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   href={item.href}
                   onClick={() => setDrawerOpen(false)}
                   className={`flex min-h-[44px] items-center rounded-sm px-3 py-2 text-sm font-medium ${
-                    pathname.startsWith(item.href)
+                    isNavItemActive(item.href)
                       ? 'bg-surface-dark text-white'
                       : 'hover:bg-gray-bg'
                   }`}

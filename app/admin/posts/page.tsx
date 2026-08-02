@@ -64,6 +64,15 @@ export default function AdminPostsPage() {
     if (res.ok) load();
   }
 
+  async function handleReorder(id: number, direction: 'up' | 'down') {
+    const res = await fetch(`/api/admin/posts/${id}/reorder`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ direction }),
+    });
+    if (res.ok) load();
+  }
+
   function openDetail(id: number) {
     setDetailId(id);
     setDetail(null);
@@ -141,55 +150,131 @@ export default function AdminPostsPage() {
       ) : items.length === 0 ? (
         <p className="text-sm text-gray-mid">No posts yet.</p>
       ) : (
-        <div className="overflow-x-auto border border-gray-line">
-          <table className="w-full min-w-[640px] text-sm">
-            <thead>
-              <tr className="border-b border-gray-line bg-gray-bg text-left">
-                <th className="p-3">Title</th>
-                <th className="p-3">Category</th>
-                <th className="p-3">Status</th>
-                <th className="p-3">Views</th>
-                <th className="p-3">Updated</th>
-                <th className="p-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((post) => (
-                <tr
-                  key={post.id}
-                  onClick={() => handleRowClick(post.id)}
-                  onDoubleClick={() => handleRowDoubleClick(post.id)}
-                  className="cursor-pointer border-b border-gray-line last:border-0 hover:bg-gray-bg"
+        <>
+          <div className="hidden overflow-x-auto border border-gray-line sm:block">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead>
+                <tr className="border-b border-gray-line bg-gray-bg text-left">
+                  <th className="p-3">Title</th>
+                  <th className="p-3">Category</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Views</th>
+                  <th className="p-3">Updated</th>
+                  <th className="p-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((post) => (
+                  <tr
+                    key={post.id}
+                    onClick={() => handleRowClick(post.id)}
+                    onDoubleClick={() => handleRowDoubleClick(post.id)}
+                    className="cursor-pointer border-b border-gray-line last:border-0 hover:bg-gray-bg"
+                  >
+                    <td className="p-3 font-medium">{post.title}</td>
+                    <td className="p-3 text-gray-mid">{post.category_name ?? '—'}</td>
+                    <td className="p-3">
+                      <span className="rounded-sm bg-gray-bg px-2 py-1 font-mono text-xs">
+                        {post.status}
+                      </span>
+                    </td>
+                    <td className="p-3 text-gray-mid">{post.view_count}</td>
+                    <td className="p-3 text-gray-mid">
+                      {new Date(post.updated_at).toLocaleDateString('en-US')}
+                    </td>
+                    <td className="p-3" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-3">
+                        {!status && (
+                          <div className="flex flex-col">
+                            <button
+                              aria-label="Move up"
+                              onClick={() => handleReorder(post.id, 'up')}
+                              className="flex h-5 w-6 items-center justify-center leading-none hover:text-brand"
+                            >
+                              ▲
+                            </button>
+                            <button
+                              aria-label="Move down"
+                              onClick={() => handleReorder(post.id, 'down')}
+                              className="flex h-5 w-6 items-center justify-center leading-none hover:text-brand"
+                            >
+                              ▼
+                            </button>
+                          </div>
+                        )}
+                        <Link href={`/admin/posts/${post.id}/edit`} className="text-brand hover:underline">
+                          Edit
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(post.id, post.title)}
+                          className="text-down hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:hidden">
+            {items.map((post) => (
+              <div
+                key={post.id}
+                onClick={() => openDetail(post.id)}
+                className="cursor-pointer border border-gray-line p-4 hover:bg-gray-bg"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <span className="font-medium leading-snug">{post.title}</span>
+                  <span className="shrink-0 rounded-sm bg-gray-bg px-2 py-1 font-mono text-xs">
+                    {post.status}
+                  </span>
+                </div>
+                <div className="mt-1 text-sm text-gray-mid">
+                  {post.category_name ?? '—'} · {post.view_count} views ·{' '}
+                  {new Date(post.updated_at).toLocaleDateString('en-US')}
+                </div>
+                <div
+                  className="mt-3 flex items-center gap-5"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <td className="p-3 font-medium">{post.title}</td>
-                  <td className="p-3 text-gray-mid">{post.category_name ?? '—'}</td>
-                  <td className="p-3">
-                    <span className="rounded-sm bg-gray-bg px-2 py-1 font-mono text-xs">
-                      {post.status}
-                    </span>
-                  </td>
-                  <td className="p-3 text-gray-mid">{post.view_count}</td>
-                  <td className="p-3 text-gray-mid">
-                    {new Date(post.updated_at).toLocaleDateString('en-US')}
-                  </td>
-                  <td className="p-3" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-                    <div className="flex gap-3">
-                      <Link href={`/admin/posts/${post.id}/edit`} className="text-brand hover:underline">
-                        Edit
-                      </Link>
+                  {!status && (
+                    <div className="flex items-center gap-1">
                       <button
-                        onClick={() => handleDelete(post.id, post.title)}
-                        className="text-down hover:underline"
+                        aria-label="Move up"
+                        onClick={() => handleReorder(post.id, 'up')}
+                        className="flex h-11 w-11 items-center justify-center hover:text-brand"
                       >
-                        Delete
+                        ▲
+                      </button>
+                      <button
+                        aria-label="Move down"
+                        onClick={() => handleReorder(post.id, 'down')}
+                        className="flex h-11 w-11 items-center justify-center hover:text-brand"
+                      >
+                        ▼
                       </button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  )}
+                  <Link
+                    href={`/admin/posts/${post.id}/edit`}
+                    className="flex min-h-[44px] items-center text-brand hover:underline"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post.id, post.title)}
+                    className="flex min-h-[44px] items-center text-down hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {totalPages > 1 && (

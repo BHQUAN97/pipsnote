@@ -23,6 +23,17 @@ export interface Broker {
   click_count: number;
 }
 
+export interface AdminUserRow {
+  id: number;
+  username: string;
+  email: string;
+  role: 'superadmin' | 'editor' | 'author';
+  is_active: number;
+  last_login_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Post {
   id: number;
   title: string;

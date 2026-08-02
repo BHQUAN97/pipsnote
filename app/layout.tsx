@@ -5,7 +5,7 @@ import "./globals.css";
 import { getSiteSettings } from "@/lib/settings";
 
 const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-space-grotesk",
   display: "swap",
@@ -17,7 +17,7 @@ const archivoBlack = Archivo_Black({
   display: "swap",
 });
 const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["400", "500"],
   variable: "--font-ibm-plex-mono",
   display: "swap",

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import type { Post } from '@/lib/types';
 
@@ -15,9 +16,21 @@ export default function PostCard({ post }: { post: Post }) {
       href={`/blog/${post.slug}`}
       className="card-elevated group block border border-gray-line bg-bg p-4 hover:border-ink"
     >
-      <div className="mb-4 flex aspect-[4/3] items-center justify-center border border-gray-line bg-gray-bg font-mono text-xs text-gray-mid">
-        IMG
-      </div>
+      {post.featured_image ? (
+        <div className="relative mb-4 aspect-[4/3] overflow-hidden border border-gray-line bg-gray-bg">
+          <Image
+            src={post.featured_image}
+            alt={post.title}
+            fill
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="object-cover transition-transform group-hover:scale-[1.03]"
+          />
+        </div>
+      ) : (
+        <div className="mb-4 flex aspect-[4/3] items-center justify-center border border-gray-line bg-gray-bg font-mono text-xs text-gray-mid">
+          IMG
+        </div>
+      )}
       {post.category_name && (
         <span className="mb-2 block font-mono text-label uppercase tracking-[0.06em] text-brand">
           {post.category_name}

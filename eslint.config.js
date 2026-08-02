@@ -3,7 +3,7 @@ const nextTypescript = require('eslint-config-next/typescript');
 
 module.exports = [
   {
-    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'eslint.config.js'],
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'eslint.config.js', '.claude/**'],
   },
   ...nextCoreWebVitals,
   ...nextTypescript,

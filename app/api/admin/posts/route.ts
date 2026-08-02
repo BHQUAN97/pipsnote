@@ -53,6 +53,7 @@ async function getHandler(req: NextRequest) {
 
   const where = status ? 'WHERE p.status = ?' : '';
   const whereParams = status ? [status] : [];
+  const orderBy = status ? 'p.updated_at DESC' : 'p.sort_order DESC, p.updated_at DESC';
 
   const [countRows, items] = await Promise.all([
     query<{ total: number }[]>(
@@ -60,12 +61,12 @@ async function getHandler(req: NextRequest) {
       whereParams
     ),
     query(
-      `SELECT p.id, p.title, p.slug, p.status, p.is_featured, p.view_count,
+      `SELECT p.id, p.title, p.slug, p.status, p.is_featured, p.sort_order, p.view_count,
               p.category_id, c.name AS category_name, p.published_at, p.updated_at
        FROM posts p
        LEFT JOIN categories c ON c.id = p.category_id
        ${where}
-       ORDER BY p.updated_at DESC
+       ORDER BY ${orderBy}
        LIMIT ? OFFSET ?`,
       [...whereParams, pageSize, offset]
     ),
