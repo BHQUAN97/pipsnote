@@ -31,7 +31,7 @@ interface SortableRow {
  * so it is interpolated directly into the SQL text.
  */
 export async function reorderRow(
-  tableName: 'posts' | 'brokers',
+  tableName: 'posts' | 'brokers' | 'market_data_symbols',
   id: number,
   direction: ReorderDirection
 ): Promise<ReorderResult> {

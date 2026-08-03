@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
+import { getMarketDataSnapshot } from '@/lib/marketData/getSnapshot';
 import { query } from '@/lib/db';
 import { routes } from '@/lib/routes';
 import type { Category } from '@/lib/types';
@@ -20,12 +21,13 @@ export default async function Home() {
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
   const showTicker = settings['layout.show_ticker'] !== 'false';
+  const tickerItems = showTicker ? await getMarketDataSnapshot() : [];
   const categories = await query<Category[]>('SELECT * FROM categories ORDER BY name');
 
   return (
     <>
       <Header siteName={siteName} />
-      <TickerStrip show={showTicker} />
+      <TickerStrip show={showTicker} items={tickerItems} />
       <Hero />
 
       <section id="brokers" className="py-16 md:py-[72px]">

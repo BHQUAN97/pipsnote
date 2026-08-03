@@ -23,6 +23,21 @@ export interface Broker {
   click_count: number;
 }
 
+export interface MarketDataSymbol {
+  id: number;
+  label: string;
+  category: 'forex' | 'crypto' | 'commodity' | 'stock';
+  decimals: number;
+  is_active: number;
+  sort_order: number;
+  price: string | null;
+  change_percent: string | null;
+  direction: 'up' | 'down' | 'flat' | null;
+  source: string | null;
+  fetched_at: string | null;
+  updated_at: string;
+}
+
 export interface AdminUserRow {
   id: number;
   username: string;

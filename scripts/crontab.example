@@ -13,3 +13,6 @@
 
 # Don dep Docker image/container cu — chu nhat hang tuan, 3:00 sang
 0 3 * * 0 /opt/pipsnote/scripts/docker-cleanup.sh >> /var/log/pipsnote-cleanup.log 2>&1
+
+# Refresh gia ticker (forex/crypto/commodity/stock) moi 15 phut
+*/15 * * * * /opt/pipsnote/scripts/refresh-market-data.sh >> /var/log/pipsnote-market-data.log 2>&1

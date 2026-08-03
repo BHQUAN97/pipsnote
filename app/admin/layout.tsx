@@ -9,6 +9,7 @@ const NAV_ITEMS: Array<{ href: string; label: string; roles: AdminUser['role'][]
   { href: '/admin', label: 'Dashboard', roles: ['superadmin', 'editor'] },
   { href: '/admin/posts', label: 'Posts', roles: ['superadmin', 'editor', 'author'] },
   { href: '/admin/brokers', label: 'Brokers', roles: ['superadmin', 'editor'] },
+  { href: '/admin/market-data', label: 'Market Data', roles: ['superadmin'] },
   { href: '/admin/users', label: 'Users', roles: ['superadmin'] },
   { href: '/admin/settings', label: 'Settings', roles: ['superadmin'] },
   { href: '/admin/logs', label: 'Logs', roles: ['superadmin'] },
