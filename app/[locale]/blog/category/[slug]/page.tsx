@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
 import { getPublishedPosts } from '@/lib/posts';
@@ -54,6 +55,9 @@ export default async function BlogCategoryPage({
   const category = await getCategory(slug);
   if (!category) notFound();
 
+  const t = await getTranslations('blogList');
+  const tHome = await getTranslations('home');
+
   const currentPage = Math.max(1, Number(page) || 1);
   const offset = (currentPage - 1) * PAGE_SIZE;
 
@@ -77,11 +81,11 @@ export default async function BlogCategoryPage({
     <>
       <Header siteName={siteName} />
       <BlogListView
-        eyebrow="Insights & analysis"
+        eyebrow={tHome('insightsAnalysis')}
         title={category.name}
         categories={categories}
         posts={posts}
-        emptyMessage="No posts in this category yet."
+        emptyMessage={t('emptyCategory')}
         currentPage={currentPage}
         totalPages={totalPages}
         pageHref={pageHref}

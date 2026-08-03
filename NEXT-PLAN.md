@@ -290,10 +290,13 @@ Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất).
    dòng CSS, áp dụng chung h1-h3 cả 2 locale — bản tiếng Anh vẫn đẹp, chỉ giãn dòng nhẹ hơn).
    Verify: `npm run lint` + `npm run build` PASS, Playwright chụp lại `/` + `/vi` ở 375px + 1280px
    xác nhận hết chồng dòng.
-   - **Gap phát hiện thêm khi test (KHÔNG phải bug layout, chưa fix)**: `/vi/blog` và
-     `/vi/brokers` — eyebrow + heading + `<title>` (`"All posts"`, `"INSIGHTS & ANALYSIS"`,
-     `"All Brokers"`, `"TRADING PARTNERS"`, `"Compare Brokers | PIPSNOTE"`) vẫn hiển thị tiếng Anh
-     dù đang ở route `/vi` — thiếu i18n key, không phải lỗi CSS. Cần session riêng để rà soát.
+   - ~~**Gap phát hiện thêm khi test**: `/vi/blog` và `/vi/brokers` thiếu i18n key~~ — **ĐÃ FIX**
+     (cùng session). Thêm namespace `blogList`/`brokersList` vào `messages/en.json`+`vi.json`
+     (tái dùng `home.tradingPartners`/`home.insightsAnalysis` cho phần eyebrow trùng nghĩa).
+     `app/[locale]/blog/page.tsx` + `brokers/page.tsx`: static `metadata` → `generateMetadata()` +
+     `getTranslations()` (theo đúng pattern trang pháp lý). `blog/category/[slug]/page.tsx`: giữ
+     nguyên `generateMetadata()` DB-driven, chỉ dịch 2 string tĩnh (`eyebrow`, `emptyMessage`)
+     truyền vào `BlogListView`. Verify: `npm run lint` + `npm run build` PASS.
 
 **Quy ước code**: mỗi file doc ≤200 dòng, code nên giữ dưới ~500 dòng (component/route quá dài
 → tách nhỏ).

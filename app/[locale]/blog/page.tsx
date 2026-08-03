@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getLocale } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { redirect } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
@@ -11,11 +11,14 @@ import Header from '@/components/Header';
 import BlogListView from '@/components/BlogListView';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Blog | PIPSNOTE',
-  description: 'Market analysis, trading guides, and forex/crypto broker reviews.',
-  alternates: { languages: { en: '/blog', vi: '/vi/blog' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('blogList');
+  return {
+    title: `${t('metaTitle')} | PIPSNOTE`,
+    description: t('metaDescription'),
+    alternates: { languages: { en: '/blog', vi: '/vi/blog' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +30,8 @@ export default async function BlogPage({
   searchParams: Promise<{ cat?: string; page?: string; q?: string }>;
 }) {
   const { cat, page, q } = await searchParams;
+  const t = await getTranslations('blogList');
+  const tHome = await getTranslations('home');
 
   if (cat) {
     const rest = new URLSearchParams();
@@ -71,11 +76,11 @@ export default async function BlogPage({
     <>
       <Header siteName={siteName} />
       <BlogListView
-        eyebrow="Insights & analysis"
-        title="All posts"
+        eyebrow={tHome('insightsAnalysis')}
+        title={t('title')}
         categories={categories}
         posts={posts}
-        emptyMessage={q ? `No posts found for "${q}".` : 'No posts yet.'}
+        emptyMessage={q ? t('emptySearch', { query: q }) : t('emptyDefault')}
         currentPage={currentPage}
         totalPages={totalPages}
         pageHref={pageHref}

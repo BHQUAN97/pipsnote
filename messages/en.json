@@ -130,6 +130,20 @@
   "blogDetail": {
     "relatedPosts": "Related posts"
   },
+  "blogList": {
+    "metaTitle": "Blog",
+    "metaDescription": "Market analysis, trading guides, and forex/crypto broker reviews.",
+    "title": "All posts",
+    "emptyDefault": "No posts yet.",
+    "emptySearch": "No posts found for \"{query}\".",
+    "emptyCategory": "No posts in this category yet."
+  },
+  "brokersList": {
+    "metaTitle": "Compare Brokers",
+    "metaDescription": "Full comparison table of rated forex/crypto brokers.",
+    "title": "All Brokers",
+    "empty": "No brokers yet."
+  },
   "about": {
     "title": "About us",
     "intro": "{siteName} is an independent forex and crypto blog helping traders cut through the noise with clear market analysis and unbiased broker reviews.",

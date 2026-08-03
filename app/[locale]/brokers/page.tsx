@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getSiteSettings } from '@/lib/settings';
 import { query } from '@/lib/db';
@@ -7,11 +8,14 @@ import Header from '@/components/Header';
 import BrokerCard from '@/components/BrokerCard';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: 'Compare Brokers | PIPSNOTE',
-  description: 'Full comparison table of rated forex/crypto brokers.',
-  alternates: { languages: { en: '/brokers', vi: '/vi/brokers' } },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('brokersList');
+  return {
+    title: `${t('metaTitle')} | PIPSNOTE`,
+    description: t('metaDescription'),
+    alternates: { languages: { en: '/brokers', vi: '/vi/brokers' } },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +27,8 @@ export default async function BrokersPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { page } = await searchParams;
+  const t = await getTranslations('brokersList');
+  const tHome = await getTranslations('home');
   const currentPage = Math.max(1, Number(page) || 1);
   const offset = (currentPage - 1) * PAGE_SIZE;
 
@@ -53,12 +59,12 @@ export default async function BrokersPage({
       <section className="py-16 md:py-[72px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
-            Trading partners
+            {tHome('tradingPartners')}
           </span>
-          <h1 className="mt-1 mb-9 text-h2 md:text-h2-lg">All Brokers</h1>
+          <h1 className="mt-1 mb-9 text-h2 md:text-h2-lg">{t('title')}</h1>
 
           {brokers.length === 0 ? (
-            <p className="text-sm text-gray-mid">No brokers yet.</p>
+            <p className="text-sm text-gray-mid">{t('empty')}</p>
           ) : (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {brokers.map((broker) => (

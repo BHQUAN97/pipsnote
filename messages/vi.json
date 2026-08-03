@@ -130,6 +130,20 @@
   "blogDetail": {
     "relatedPosts": "Bài viết liên quan"
   },
+  "blogList": {
+    "metaTitle": "Blog",
+    "metaDescription": "Phân tích thị trường, hướng dẫn giao dịch và đánh giá sàn forex/crypto.",
+    "title": "Tất cả bài viết",
+    "emptyDefault": "Chưa có bài viết nào.",
+    "emptySearch": "Không tìm thấy bài viết nào cho \"{query}\".",
+    "emptyCategory": "Chưa có bài viết nào trong danh mục này."
+  },
+  "brokersList": {
+    "metaTitle": "So sánh sàn giao dịch",
+    "metaDescription": "Bảng so sánh đầy đủ các sàn forex/crypto được đánh giá.",
+    "title": "Tất cả sàn giao dịch",
+    "empty": "Chưa có sàn giao dịch nào."
+  },
   "about": {
     "title": "Giới thiệu",
     "intro": "{siteName} là blog forex và tiền mã hóa độc lập, giúp trader lọc bỏ nhiễu loạn thông tin bằng phân tích thị trường rõ ràng và đánh giá sàn khách quan.",
