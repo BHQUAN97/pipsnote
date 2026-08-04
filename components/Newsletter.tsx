@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
-export default function Newsletter() {
+export default function Newsletter({ bgUrl }: { bgUrl?: string }) {
   const t = useTranslations('newsletter');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<Status>('idle');
@@ -28,15 +29,21 @@ export default function Newsletter() {
   }
 
   return (
-    <div className="flex flex-col items-start gap-10 bg-surface-dark p-8 text-white md:flex-row md:items-center md:justify-between md:p-14">
-      <div>
+    <div className="relative flex flex-col items-start gap-10 overflow-hidden bg-surface-dark p-8 text-white md:flex-row md:items-center md:justify-between md:p-14">
+      {bgUrl && (
+        <>
+          <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover" />
+          <div className="absolute inset-0 -z-10 bg-surface-dark/70" />
+        </>
+      )}
+      <div className="relative z-10">
         <h2 className="mb-2 max-w-[380px] text-2xl text-white">
           {t('heading')}
         </h2>
         <p className="text-sm text-white/60">{t('subtext')}</p>
       </div>
 
-      <div className="w-full md:min-w-[360px] md:max-w-[360px]">
+      <div className="relative z-10 w-full md:min-w-[360px] md:max-w-[360px]">
         <form onSubmit={handleSubmit} className="flex w-full gap-0">
           <input
             type="email"

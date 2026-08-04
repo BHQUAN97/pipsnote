@@ -90,6 +90,19 @@ export async function invalidateSiteSettingsCache() {
 }
 ```
 
+## 4b. Ảnh nền (Background Images)
+
+4 key mới trong `site_settings` (migration `db/changelog/010_background_images/001_add_background_settings.sql`), `value_type='image'`, `category='background'`, mặc định rỗng (`''` = không dùng ảnh nền, giữ nền màu token như hiện tại):
+
+- `bg.global` — nền toàn site, áp trực tiếp lên `<body>` (`app/layout.tsx`) qua inline `style.backgroundImage`.
+- `bg.hero`, `bg.ticker`, `bg.newsletter` — nền riêng cho 3 khối ở trang chủ (`components/Hero.tsx`, `TickerStrip.tsx`, `Newsletter.tsx`), truyền qua prop `bgUrl`. Không áp cho Header/Footer.
+
+Mỗi khối dùng `next/image` (`fill` + `object-cover`) phủ lớp `bg-surface-dark/70` (token có sẵn + opacity, không hex mới — đúng rule `DESIGN_SYSTEM.md`) để đảm bảo chữ đọc được trên mọi ảnh nền.
+
+Admin chọn ảnh qua `/admin/settings` → section "Ảnh nền": click 1 trong 4 ảnh mặc định (`lib/backgroundPresets.ts`, ảnh tĩnh trong `public/images/backgrounds/`) hoặc tải ảnh riêng (`POST /api/admin/upload` với `folder=backgrounds` → lưu R2 dưới prefix `backgrounds/`). Nút "Xoá ảnh" set lại giá trị rỗng.
+
+Validate: `ImageUrlSchema` trong `app/api/admin/settings/route.ts` — chuỗi rỗng hoặc bắt đầu bằng `http://`/`https://` hoặc `/images/backgrounds/`. Vẫn `superadmin`-only, vẫn ghi `admin_audit_log`, vẫn qua `PATCH /api/admin/settings` chung với các key khác — không có endpoint riêng.
+
 ## 5. Quyền truy cập & bảo mật
 
 - Chỉ `superadmin` được sửa (đổi giao diện toàn site ảnh hưởng mọi visitor — không phải quyền admin thường).

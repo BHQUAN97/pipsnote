@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { BACKGROUND_PRESETS } from '@/lib/backgroundPresets';
 
 type Settings = Record<string, string>;
 
@@ -19,6 +21,10 @@ const DEFAULT_SETTINGS: Settings = {
   'layout.show_ticker': 'true',
   'layout.hero_variant': 'editorial',
   'layout.site_name': 'PIPSNOTE',
+  'bg.global': '',
+  'bg.hero': '',
+  'bg.ticker': '',
+  'bg.newsletter': '',
 };
 
 const COLOR_KEYS = [
@@ -35,6 +41,13 @@ const COLOR_KEYS = [
 ];
 
 const HERO_VARIANTS = ['editorial', 'ticker-hero', 'grid'];
+
+const BG_SECTIONS = [
+  { key: 'bg.global', label: 'Toàn site' },
+  { key: 'bg.hero', label: 'Hero (trang chủ)' },
+  { key: 'bg.ticker', label: 'Ticker strip' },
+  { key: 'bg.newsletter', label: 'Newsletter' },
+];
 
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -56,6 +69,30 @@ export default function AdminSettingsPage() {
   }, []);
 
   const setKey = (key: string, value: string) => setSettings((s) => ({ ...s, [key]: value }));
+
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState('');
+
+  const handleBgUpload = async (key: string, file: File) => {
+    setUploadingKey(key);
+    setUploadError('');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'backgrounds');
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setUploadError(data.error || 'Upload failed');
+        return;
+      }
+      setKey(key, data.url);
+    } catch {
+      setUploadError('Network error while uploading');
+    } finally {
+      setUploadingKey(null);
+    }
+  };
 
   const handlePreset = async (preset: string) => {
     setSaving(true);
@@ -218,6 +255,67 @@ export default function AdminSettingsPage() {
                 maxLength={100}
               />
             </div>
+          </div>
+        </section>
+
+        {/* Background Images */}
+        <section className="mb-8 p-4 sm:p-6 border rounded-sm">
+          <h2 className="text-xl font-semibold mb-4">Ảnh nền</h2>
+          {uploadError && <p className="mb-4 text-sm text-down">{uploadError}</p>}
+          <div className="space-y-8">
+            {BG_SECTIONS.map(({ key, label }) => (
+              <div key={key}>
+                <label className="block text-sm font-medium mb-2">{label}</label>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  {settings[key] ? (
+                    <div className="relative h-16 w-28 overflow-hidden rounded-sm border">
+                      <Image src={settings[key]} alt="" fill className="object-cover" />
+                    </div>
+                  ) : (
+                    <div className="flex h-16 w-28 items-center justify-center rounded-sm border text-xs text-gray-mid">
+                      Không có
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setKey(key, '')}
+                    disabled={!settings[key]}
+                    className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg disabled:opacity-50"
+                  >
+                    Xoá ảnh
+                  </button>
+                  <label className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg cursor-pointer flex items-center">
+                    {uploadingKey === key ? 'Đang tải...' : 'Tải ảnh lên'}
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                      className="hidden"
+                      disabled={uploadingKey !== null}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        e.target.value = '';
+                        if (file) handleBgUpload(key, file);
+                      }}
+                    />
+                  </label>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {BACKGROUND_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => setKey(key, preset.url)}
+                      title={preset.label}
+                      className={`relative h-14 w-24 overflow-hidden rounded-sm border-2 ${
+                        settings[key] === preset.url ? 'border-brand' : 'border-transparent'
+                      }`}
+                    >
+                      <Image src={preset.url} alt={preset.label} fill className="object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

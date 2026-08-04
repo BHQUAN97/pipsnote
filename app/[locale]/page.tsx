@@ -22,13 +22,16 @@ export default async function Home() {
   const siteName = settings['layout.site_name'] || 'PIPSNOTE';
   const showTicker = settings['layout.show_ticker'] !== 'false';
   const tickerItems = showTicker ? await getMarketDataSnapshot() : [];
+  const heroBg = settings['bg.hero'] || undefined;
+  const tickerBg = settings['bg.ticker'] || undefined;
+  const newsletterBg = settings['bg.newsletter'] || undefined;
   const categories = await query<Category[]>('SELECT * FROM categories ORDER BY name');
 
   return (
     <>
       <Header siteName={siteName} />
-      <TickerStrip show={showTicker} items={tickerItems} />
-      <Hero />
+      <TickerStrip show={showTicker} items={tickerItems} bgUrl={tickerBg} />
+      <Hero bgUrl={heroBg} />
 
       <section id="brokers" className="py-16 md:py-[72px]">
         <div className="mx-auto max-w-[1180px] px-7">
@@ -89,7 +92,7 @@ export default async function Home() {
 
       <section className="py-16 md:py-[72px]">
         <div className="mx-auto max-w-[1180px] px-7">
-          <Newsletter />
+          <Newsletter bgUrl={newsletterBg} />
         </div>
       </section>
 

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
@@ -9,12 +10,18 @@ const HERO_STATS: Array<[pair: string, value: string, direction: 'up' | 'down']>
   ['BTC/USD', '64,215', 'down'],
 ];
 
-export default function Hero() {
+export default function Hero({ bgUrl }: { bgUrl?: string }) {
   const t = useTranslations('hero');
 
   return (
-    <section className="border-b border-gray-line py-16 md:py-[88px]">
-      <div className="mx-auto grid max-w-[1180px] gap-12 px-7 md:grid-cols-[1.15fr_0.85fr] md:items-end md:gap-16">
+    <section className="relative overflow-hidden border-b border-gray-line py-16 md:py-[88px]">
+      {bgUrl && (
+        <>
+          <Image src={bgUrl} alt="" fill priority className="absolute inset-0 -z-20 object-cover" />
+          <div className="absolute inset-0 -z-10 bg-surface-dark/70" />
+        </>
+      )}
+      <div className="relative z-10 mx-auto grid max-w-[1180px] gap-12 px-7 md:grid-cols-[1.15fr_0.85fr] md:items-end md:gap-16">
         <div>
           <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
             {t('eyebrow')}

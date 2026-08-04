@@ -45,6 +45,7 @@ export default async function RootLayout({
     .map(([k, v]) => `--${k.replace('theme.', '').replace(/_/g, '-')}: ${v};`)
     .join(' ');
   const darkDefault = settings['theme.dark_default'] === 'true';
+  const globalBg = settings['bg.global'] || undefined;
 
   return (
     <html
@@ -70,7 +71,20 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body>{children}</body>
+      <body
+        style={
+          globalBg
+            ? {
+                backgroundImage: `url(${globalBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+              }
+            : undefined
+        }
+      >
+        {children}
+      </body>
     </html>
   );
 }

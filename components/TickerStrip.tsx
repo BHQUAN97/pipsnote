@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { MarketDataSnapshotItem } from '@/lib/marketData/getSnapshot';
 
 function TickerItems({ items }: { items: MarketDataSnapshotItem[] }) {
@@ -26,15 +27,23 @@ function TickerItems({ items }: { items: MarketDataSnapshotItem[] }) {
 export default function TickerStrip({
   show = true,
   items = [],
+  bgUrl,
 }: {
   show?: boolean;
   items?: MarketDataSnapshotItem[];
+  bgUrl?: string;
 }) {
   if (!show || items.length === 0) return null;
 
   return (
-    <div className="overflow-hidden whitespace-nowrap bg-surface-dark">
-      <div className="animate-ticker-scroll inline-flex">
+    <div className="relative overflow-hidden whitespace-nowrap bg-surface-dark">
+      {bgUrl && (
+        <>
+          <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover" />
+          <div className="absolute inset-0 -z-10 bg-surface-dark/70" />
+        </>
+      )}
+      <div className="animate-ticker-scroll relative z-10 inline-flex">
         <TickerItems items={items} />
         <TickerItems items={items} />
       </div>

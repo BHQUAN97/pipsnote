@@ -8,6 +8,15 @@ import { query } from '@/lib/db';
 const HexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 const BoolStringSchema = z.enum(['true', 'false']);
 const HeroVariantSchema = z.enum(['editorial', 'ticker-hero', 'grid']);
+const ImageUrlSchema = z.union([
+  z.literal(''),
+  z
+    .string()
+    .refine(
+      (v) => /^https?:\/\//.test(v) || v.startsWith('/images/backgrounds/'),
+      'Invalid image URL'
+    ),
+]);
 
 // Whitelist key -> Zod schema cho tung setting (khop docs/ADMIN_SETTINGS.md §3)
 const KEY_SCHEMAS: Record<string, z.ZodTypeAny> = {
@@ -25,6 +34,10 @@ const KEY_SCHEMAS: Record<string, z.ZodTypeAny> = {
   'layout.show_ticker': BoolStringSchema,
   'layout.hero_variant': HeroVariantSchema,
   'layout.site_name': z.string().min(1).max(100),
+  'bg.global': ImageUrlSchema,
+  'bg.hero': ImageUrlSchema,
+  'bg.ticker': ImageUrlSchema,
+  'bg.newsletter': ImageUrlSchema,
 };
 
 const SettingsUpdateSchema = z
