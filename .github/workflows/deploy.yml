@@ -49,6 +49,12 @@ jobs:
             R2_MEDIA_BUCKET=${{ secrets.R2_MEDIA_BUCKET }}
             R2_MEDIA_PUBLIC_URL=${{ secrets.R2_MEDIA_PUBLIC_URL }}
             BACKUP_ENC_KEY=${{ secrets.BACKUP_ENC_KEY }}
+            MARKET_DATA_CRON_SECRET=${{ secrets.MARKET_DATA_CRON_SECRET }}
+            MARKET_DATA_MOCK=${{ secrets.MARKET_DATA_MOCK }}
+            TWELVEDATA_API_KEY=${{ secrets.TWELVEDATA_API_KEY }}
+            FCSAPI_API_KEY=${{ secrets.FCSAPI_API_KEY }}
+            ALPACA_API_KEY=${{ secrets.ALPACA_API_KEY }}
+            ALPACA_API_SECRET=${{ secrets.ALPACA_API_SECRET }}
             EOF
             chmod 600 "$APP_DIR/.env"
 
