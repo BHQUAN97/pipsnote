@@ -22,32 +22,45 @@ HEALTH_INTERVAL="${HEALTH_INTERVAL:-5}"
 
 cd "$APP_DIR"
 
-log_info "1/7 git pull"
+log_info "1/8 git pull"
 git pull origin main
 
 log_info "chuan hoa quyen scripts/ (tranh Permission denied do trang thai cu tren VPS)"
 chmod -R u+rwX,go+rX "${SCRIPT_DIR}"
 
-log_info "2/7 docker compose build ${APP_SERVICE}"
+log_info "2/8 docker compose build ${APP_SERVICE}"
 docker compose -f "$COMPOSE_FILE" build "$APP_SERVICE"
 
-log_info "3/7 db-changelog (FATAL neu that bai — day la nguon migration duy nhat)"
+log_info "3/8 db-changelog (FATAL neu that bai — day la nguon migration duy nhat)"
 if ! bash "${SCRIPT_DIR}/db-changelog.sh"; then
   log_error "db-changelog that bai — DUNG DEPLOY, container cu van dang chay binh thuong"
   exit 1
 fi
 
-log_info "4/7 db-dataseed (optional, chi chay neu SEED_DEMO_DATA=true)"
+log_info "4/8 db-dataseed (optional, chi chay neu SEED_DEMO_DATA=true)"
 # Dataseed fail KHONG block deploy (khac voi migration)
 bash "${SCRIPT_DIR}/db-dataseed.sh" || log_warn "db-dataseed fail — tiep tuc deploy (demo data khong critical)"
 
-log_info "5/7 dam bao network pipsnote_internal ton tai"
+log_info "5/8 dam bao network pipsnote_internal ton tai"
 docker network create pipsnote_internal 2>/dev/null || true
 
-log_info "6/7 up -d --no-deps ${APP_SERVICE} (zero-downtime: container cu van serve trong luc nay)"
+log_info "6/8 dong bo cron jobs tu scripts/crontab.example (best-effort, khong block deploy neu thieu quyen sudo)"
+if [[ -f "${SCRIPT_DIR}/crontab.example" ]]; then
+  if sudo -n cp "${SCRIPT_DIR}/crontab.example" /etc/cron.d/pipsnote 2>/dev/null \
+    && sudo -n chmod 644 /etc/cron.d/pipsnote 2>/dev/null; then
+    sudo -n systemctl reload cron 2>/dev/null || sudo -n systemctl restart cron 2>/dev/null || true
+    log_info "Da dong bo /etc/cron.d/pipsnote"
+  else
+    log_warn "Khong co quyen sudo -n (non-interactive) de cai cron — chay tay: sudo cp scripts/crontab.example /etc/cron.d/pipsnote && sudo chmod 644 /etc/cron.d/pipsnote && sudo systemctl reload cron"
+  fi
+else
+  log_warn "Khong tim thay scripts/crontab.example, bo qua dong bo cron"
+fi
+
+log_info "7/8 up -d --no-deps ${APP_SERVICE} (zero-downtime: container cu van serve trong luc nay)"
 docker compose -f "$COMPOSE_FILE" up -d --no-deps "$APP_SERVICE"
 
-log_info "7/7 health-check ${HEALTH_URL} (toi da ${HEALTH_RETRIES} lan, moi lan cach ${HEALTH_INTERVAL}s)"
+log_info "8/8 health-check ${HEALTH_URL} (toi da ${HEALTH_RETRIES} lan, moi lan cach ${HEALTH_INTERVAL}s)"
 healthy=false
 for i in $(seq 1 "$HEALTH_RETRIES"); do
   if curl -sf "$HEALTH_URL" >/dev/null 2>&1; then

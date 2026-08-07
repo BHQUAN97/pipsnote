@@ -249,6 +249,17 @@ Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất).
    `ALPACA_API_SECRET` **chưa tồn tại trong GitHub Secrets** (`gh secret list` xác nhận, 2026-08-07)
    nên dù tắt mock, forex ×7 + stock ×3 vẫn sẽ fail (crypto qua CoinGecko và commodity qua
    Gold-API không cần key nên sẽ chạy được ngay).
+   **Verify thực tế (session này)**: gọi thẳng `coinGeckoProvider.fetchQuotes()` và
+   `goldApiProvider.fetchQuotes()` (qua `tsx`, không qua mock) → trả về giá live thật (BTC ~$64.8k,
+   ETH ~$1.9k, XAU ~$4342, XAG ~$63.6) — xác nhận code provider hoạt động đúng với dữ liệu thị
+   trường thực, không chỉ mock. **Fix bổ sung**: nhận ra `setup-server.sh` chỉ chạy 1 lần thủ công
+   (không nằm trong luồng CI), nên fix cài cron ở đó không tự áp dụng cho VPS đã provision sẵn qua
+   `git push` bình thường. Đã thêm bước cài cron **idempotent, best-effort** (dùng `sudo -n`, không
+   fatal nếu thiếu quyền) vào `scripts/deploy.sh` (bước 6/8, chạy ở MỌI lần CI deploy) — nghĩa là
+   lần deploy production tiếp theo qua `git push` sẽ tự đồng bộ cron mà không cần SSH tay, MIỄN LÀ
+   user SSH trên VPS (`VPS_USER` trong secret) có passwordless sudo; nếu không, deploy sẽ log warn
+   và vẫn cần làm tay như hướng dẫn ở trên. `MARKET_DATA_MOCK` + 4 provider key vẫn là việc cấu hình
+   secret, không phải code — chưa đổi.
 7. ~~**Bug: UI tiếng Việt bị vỡ layout so với bản tiếng Anh**~~ — **ĐÃ FIX** (session này).
    Root cause xác nhận bằng Playwright screenshot so sánh `/` (en) vs `/vi` ở 375px + 1280px:
    `h1, h2, h3 { line-height: 1.05 }` (`app/globals.css`) quá chật cho dấu tiếng Việt (đặc biệt
