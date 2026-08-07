@@ -12,7 +12,7 @@ source "${SCRIPT_DIR}/lib/_logging.sh"
 
 APP_DIR="${APP_DIR:-/opt/pipsnote}"
 
-log_info "1/5 Kiem tra Docker"
+log_info "1/6 Kiem tra Docker"
 if ! command -v docker >/dev/null 2>&1; then
   log_info "Docker chua co — cai dat tu apt repo chinh thuc"
   curl -fsSL https://get.docker.com | sh
@@ -25,10 +25,10 @@ if ! docker compose version >/dev/null 2>&1; then
   exit 1
 fi
 
-log_info "2/5 Tao thu muc lam viec ${APP_DIR}"
+log_info "2/6 Tao thu muc lam viec ${APP_DIR}"
 mkdir -p "${APP_DIR}/backups/mysql" "${APP_DIR}/db/changelog"
 
-log_info "3/5 Tao .env tu .env.example (neu chua co)"
+log_info "3/6 Tao .env tu .env.example (neu chua co)"
 if [[ ! -f "${APP_DIR}/.env" ]]; then
   if [[ -f "${PROJECT_ROOT}/.env.example" ]]; then
     cp "${PROJECT_ROOT}/.env.example" "${APP_DIR}/.env"
@@ -42,10 +42,20 @@ else
   log_info ".env da ton tai, khong ghi de"
 fi
 
-log_info "4/5 Tao network pipsnote_internal (idempotent)"
+log_info "4/6 Tao network pipsnote_internal (idempotent)"
 docker network create pipsnote_internal 2>/dev/null || log_info "Network pipsnote_internal da ton tai"
 
-log_info "5/5 Nhac tao DB + user tren shared-mysql (chay tay, can root password):"
+log_info "5/6 Cai cron jobs (backup/monitor/cleanup/market-data refresh) tu scripts/crontab.example"
+if [[ -f "${PROJECT_ROOT}/scripts/crontab.example" ]]; then
+  cp "${PROJECT_ROOT}/scripts/crontab.example" /etc/cron.d/pipsnote
+  chmod 644 /etc/cron.d/pipsnote
+  systemctl reload cron 2>/dev/null || systemctl restart cron 2>/dev/null || log_warn "Khong reload duoc cron service — kiem tra tay (service ten khac tren distro nay?)"
+  log_info "Da cai /etc/cron.d/pipsnote (nguon: scripts/crontab.example — sua file nay trong repo, khong sua truc tiep tren VPS)"
+else
+  log_warn "Khong tim thay scripts/crontab.example, bo qua cai cron"
+fi
+
+log_info "6/6 Nhac tao DB + user tren shared-mysql (chay tay, can root password):"
 cat <<'SQL'
 
 -- Chay lenh sau tren shared-mysql (vd: docker exec -it shared-mysql mysql -uroot -p)

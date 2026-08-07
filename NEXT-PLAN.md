@@ -234,6 +234,21 @@ Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất).
    set `MARKET_DATA_MOCK=false` trước khi deploy production — chưa làm. Also chưa re-verify riêng
    3 kịch bản: cách ly lỗi 1 provider, admin-toggle propagate ngay ra ticker công khai, và thứ tự
    reorder trên UI đang chạy (logic mirror `brokers` đã test, nhưng chưa click tay lại lần này).
+   **BUG PHÁT HIỆN SAU (session này, 2026-08-07)**: ticker không update tự động trên production —
+   root cause là `scripts/crontab.example` (chứa cron `*/15 * * * *` gọi
+   `/api/internal/market-data/refresh`) chỉ là file mẫu, chưa từng được cài tự động ở đâu
+   (không có trong `setup-server.sh` cũ, không có trong `deploy.yml`/`deploy.sh`) → endpoint
+   refresh nhiều khả năng chưa từng được gọi trên VPS → `market_data_snapshots` rỗng (migration
+   `009` chỉ seed symbol, không seed snapshot) → ticker không có số. **Đã fix**: `setup-server.sh`
+   giờ tự cài `/etc/cron.d/pipsnote` từ `scripts/crontab.example` (bước 5/6, idempotent). **Vẫn
+   cần làm tay 1 lần** vì VPS hiện tại đã qua `setup-server.sh` bản cũ (không có bước cài cron):
+   SSH vào VPS, chạy lại `bash scripts/setup-server.sh` (an toàn, các bước khác đều idempotent/no-op
+   nếu đã có) hoặc copy tay `scripts/crontab.example` → `/etc/cron.d/pipsnote` + `chmod 644` +
+   reload cron. Đồng thời kiểm tra lại GitHub Secret `MARKET_DATA_MOCK` (rất có thể vẫn là `true`
+   theo commit `e2a3e4f`) — `TWELVEDATA_API_KEY`/`FCSAPI_API_KEY`/`ALPACA_API_KEY`/
+   `ALPACA_API_SECRET` **chưa tồn tại trong GitHub Secrets** (`gh secret list` xác nhận, 2026-08-07)
+   nên dù tắt mock, forex ×7 + stock ×3 vẫn sẽ fail (crypto qua CoinGecko và commodity qua
+   Gold-API không cần key nên sẽ chạy được ngay).
 7. ~~**Bug: UI tiếng Việt bị vỡ layout so với bản tiếng Anh**~~ — **ĐÃ FIX** (session này).
    Root cause xác nhận bằng Playwright screenshot so sánh `/` (en) vs `/vi` ở 375px + 1280px:
    `h1, h2, h3 { line-height: 1.05 }` (`app/globals.css`) quá chật cho dấu tiếng Việt (đặc biệt
