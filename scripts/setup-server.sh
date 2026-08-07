@@ -45,7 +45,7 @@ fi
 log_info "4/6 Tao network pipsnote_internal (idempotent)"
 docker network create pipsnote_internal 2>/dev/null || log_info "Network pipsnote_internal da ton tai"
 
-log_info "5/6 Cai cron jobs (backup/monitor/cleanup/market-data refresh) tu scripts/crontab.example"
+log_info "5/6 Cai cron jobs (backup/monitor/cleanup) tu scripts/crontab.example"
 if [[ -f "${PROJECT_ROOT}/scripts/crontab.example" ]]; then
   cp "${PROJECT_ROOT}/scripts/crontab.example" /etc/cron.d/pipsnote
   chmod 644 /etc/cron.d/pipsnote

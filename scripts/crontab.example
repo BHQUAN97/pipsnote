@@ -14,5 +14,7 @@
 # Don dep Docker image/container cu — chu nhat hang tuan, 3:00 sang
 0 3 * * 0 /opt/pipsnote/scripts/docker-cleanup.sh >> /var/log/pipsnote-cleanup.log 2>&1
 
-# Refresh gia ticker (forex/crypto/commodity/stock) moi 15 phut
-*/15 * * * * /opt/pipsnote/scripts/refresh-market-data.sh >> /var/log/pipsnote-market-data.log 2>&1
+# Luu y: refresh gia ticker (forex/crypto/commodity/stock) KHONG con dung OS cron —
+# chay bang node-cron ngay trong process Next.js (xem lib/marketData/scheduler.ts,
+# instrumentation.ts), tu dong hoat dong khi container "pipsnote-app" song, khong
+# can cron OS/sudo.

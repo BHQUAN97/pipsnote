@@ -60,6 +60,8 @@ function directionClass(direction: MarketDataRow['direction']): string {
 export default function AdminMarketDataPage() {
   const [items, setItems] = useState<MarketDataRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   const load = useCallback(() => {
     fetch('/api/admin/market-data')
@@ -74,6 +76,20 @@ export default function AdminMarketDataPage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    setRefreshError(null);
+    try {
+      const res = await fetch('/api/admin/market-data/refresh', { method: 'POST' });
+      if (!res.ok) throw new Error();
+      load();
+    } catch {
+      setRefreshError('Refresh failed. Try again.');
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   async function handleToggle(row: MarketDataRow) {
     const nextActive = row.is_active ? false : true;
@@ -105,6 +121,16 @@ export default function AdminMarketDataPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold sm:text-3xl">Market Data</h1>
+        <div className="flex items-center gap-3">
+          {refreshError && <span className="text-sm text-down">{refreshError}</span>}
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="rounded-sm bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+          >
+            {refreshing ? 'Refreshing…' : 'Refresh now'}
+          </button>
+        </div>
       </div>
 
       {loading ? (

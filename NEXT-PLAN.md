@@ -278,6 +278,40 @@ Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất).
      nguyên `generateMetadata()` DB-driven, chỉ dịch 2 string tĩnh (`eyebrow`, `emptyMessage`)
      truyền vào `BlogListView`. Verify: `npm run lint` + `npm run build` PASS.
 
+8. **Refresh market-data: bỏ OS cron, chuyển sang node-cron in-process** (session này). Bước
+   6/8 vá tạm ở mục #6 (dùng `sudo -n` để tự cài `/etc/cron.d/pipsnote` mỗi lần deploy) vẫn phụ
+   thuộc quyền sudo passwordless — dễ vỡ, không đảm bảo trên mọi VPS. User đặt câu hỏi kiến trúc
+   ("sao không dùng 1 worker chạy theo thời gian, không phụ thuộc OS") → xác nhận
+   `docker-compose.prod.yml`/`Dockerfile` (`CMD ["node", "server.js"]`, `output: 'standalone'`)
+   chỉ chạy **1 instance** `pipsnote-app` duy nhất, không có concern multi-instance/distributed
+   lock → đủ điều kiện chạy scheduler ngay trong process.
+   - Thêm `node-cron` + `@types/node-cron` (`package.json`).
+   - `lib/marketData/scheduler.ts` (mới): `startMarketDataScheduler()` — `cron.schedule('*/15 * * * *', ..., { timezone: 'UTC' })`,
+     gọi thẳng `refreshMarketData()` (không qua HTTP/`x-internal-secret` nữa), guard chống đăng ký
+     trùng bằng cờ module-level (theo đúng pattern singleton hiện có ở `lib/redis.ts`), chạy 1 lần
+     ngay lúc boot để giảm "stale" ngay sau deploy, try/catch quanh mỗi lần chạy (1 lần fail không
+     crash app), log qua `lib/logger.ts`.
+   - `instrumentation.ts` (mới, root) — `register()` guard `process.env.NEXT_RUNTIME === 'nodejs'`
+     rồi gọi `startMarketDataScheduler()`. Next 16 tự nhận diện file này trong build `standalone`,
+     không cần config flag.
+   - Dọn toàn bộ artifact OS-cron liên quan market-data: xoá `scripts/refresh-market-data.sh`;
+     `scripts/crontab.example` bỏ dòng `*/15 * * * *` (giữ 3 job backup/monitor/cleanup);
+     `scripts/deploy.sh` revert bước 6/8 vừa thêm, về lại 7 bước (đánh số lại `1/7`...`7/7`);
+     `scripts/setup-server.sh` sửa log text bước cài cron (bỏ nhắc "market-data refresh");
+     `.env.example` sửa comment `MARKET_DATA_CRON_SECRET` (giờ chỉ dùng cho trigger thủ công/bên
+     ngoài qua `app/api/internal/market-data/refresh`, không phải cho refresh định kỳ nữa).
+   - **Giữ nguyên** `app/api/internal/market-data/refresh/route.ts` — vẫn dùng được cho trigger
+     thủ công bên ngoài process (vd script/cron ngoài, hoặc gọi tay qua `curl` + secret).
+   - **Thêm nút "Refresh now" trên admin UI** (theo yêu cầu user): `app/api/admin/market-data/refresh/route.ts`
+     (mới) — `requireAdmin(['superadmin'])` → gọi thẳng `refreshMarketData()` → ghi
+     `admin_audit_log` (action `refresh_market_data`) → `withApiHandler('admin-market-data-refresh', ...)`.
+     `app/admin/market-data/page.tsx` — thêm state `refreshing`/`refreshError` + nút "Refresh now"
+     cạnh tiêu đề trang, gọi `POST` route trên rồi `load()` lại danh sách.
+   - Kết quả: deploy production bình thường qua `git push` → CI → rebuild container → refresh
+     market-data tự hoạt động ngay khi container khởi động lại, KHÔNG cần sudo/cron OS/SSH tay
+     trên VPS nữa. 3 cron job còn lại (backup/monitor/cleanup) vẫn qua OS cron như cũ (tác vụ
+     OS-level thực sự, không hợp với chạy trong process Next.js).
+
 **Quy ước code**: mỗi file doc ≤200 dòng, code nên giữ dưới ~500 dòng (component/route quá dài
 → tách nhỏ).
 
