@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "instruction": "Guide",
+    "topBroker": "Meilleur courtier",
+    "aboutUs": "À propos",
+    "compareBrokers": "Comparer les courtiers"
+  },
+  "footer": {
+    "tagline": "Un blog forex indépendant — proposant analyses de marché, guides de trading et avis sur les courtiers pour aider les traders à prendre de meilleures décisions.",
+    "navigation": "Navigation",
+    "policies": "Politiques",
+    "contact": "Contact",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsConditions": "Conditions générales",
+    "riskDisclosure": "Avertissement sur les risques",
+    "affiliateDisclosure": "Divulgation d'affiliation",
+    "sendFeedback": "Envoyer un commentaire",
+    "copyright": "© 2026 {siteName}. Tous droits réservés.",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "sitemap": "Plan du site"
+  },
+  "riskDisclaimer": {
+    "label": "Avertissement sur les risques :",
+    "body": "Le trading du forex et des CFD avec effet de levier comporte un risque élevé de perte en capital et peut ne pas convenir à tous les investisseurs. Le contenu sur {siteName} est fourni à titre informatif uniquement et ne constitue pas un conseil en investissement. {siteName} peut percevoir des commissions d'affiliation de la part de certains des courtiers répertoriés sur ce site."
+  },
+  "hero": {
+    "eyebrow": "L'intelligence des marchés, sans le bruit",
+    "headlineLine1": "Lisez le marché.",
+    "headlineLine2": "Tradez avec clarté.",
+    "subtitle": "Analyses forex, stratégies de trading et avis impartiaux sur les courtiers — pour décider sur la base des données, pas des émotions.",
+    "readLatest": "Lire le dernier article",
+    "viewTopBrokers": "Voir les meilleurs courtiers"
+  },
+  "newsletter": {
+    "heading": "Recevez l'analyse de marché hebdomadaire",
+    "subtext": "Pas de spam. Désabonnement à tout moment.",
+    "emailPlaceholder": "Votre e-mail",
+    "subscribe": "S'abonner",
+    "success": "Abonnement réussi, merci !",
+    "error": "Une erreur s'est produite, veuillez réessayer."
+  },
+  "search": {
+    "placeholder": "Rechercher des articles...",
+    "button": "Rechercher"
+  },
+  "categoryFilter": {
+    "all": "Tous"
+  },
+  "home": {
+    "tradingPartners": "Partenaires de trading",
+    "topRatedBrokers": "Courtiers les mieux notés",
+    "viewFullComparison": "Voir le comparatif complet →",
+    "insightsAnalysis": "Analyses & perspectives",
+    "latestPosts": "Derniers articles",
+    "viewAll": "Voir tout →"
+  },
+  "terms": {
+    "title": "Conditions générales",
+    "lastUpdated": "Dernière mise à jour : 1er août 2026",
+    "intro": "Les présentes Conditions générales régissent votre utilisation de {siteName} (le « Site »). En accédant au Site ou en l'utilisant, vous acceptez d'être lié par ces conditions. Si vous n'êtes pas d'accord, veuillez ne pas utiliser le Site.",
+    "section1Title": "1. Objectif purement informatif",
+    "section1Body": "Le contenu du Site — y compris les articles, avis sur les courtiers, comparatifs et commentaires de marché — est fourni à titre d'information générale uniquement et ne constitue pas un conseil financier, en investissement, juridique ou fiscal. Vous devriez consulter un professionnel agréé avant toute décision de trading ou d'investissement.",
+    "section2Title": "2. Aucune garantie",
+    "section2Body": "Le Site est fourni « en l'état » sans garantie d'aucune sorte, expresse ou implicite. Nous ne garantissons pas l'exactitude, l'exhaustivité ou l'actualité du contenu, y compris les informations sur les courtiers, les notations ou les données de marché, qui peuvent changer sans préavis.",
+    "section3Title": "3. Liens vers des tiers et courtiers",
+    "section3Body": "Le Site contient des liens vers des sites web de courtiers tiers. Nous ne contrôlons pas et ne sommes pas responsables du contenu, des produits, des services ou des pratiques de tiers. Certains liens sont des liens d'affiliation — voir notre <link>Divulgation d'affiliation</link> pour plus de détails.",
+    "section4Title": "4. Limitation de responsabilité",
+    "section4Body": "Dans toute la mesure permise par la loi, {siteName} et ses exploitants ne sauraient être tenus responsables de toute perte ou dommage direct, indirect, accessoire ou consécutif résultant de votre utilisation du Site ou de la confiance accordée à tout contenu publié sur celui-ci, y compris les pertes de trading.",
+    "section5Title": "5. Modifications des présentes conditions",
+    "section5Body": "Nous pouvons mettre à jour ces conditions de temps à autre. La poursuite de l'utilisation du Site après la publication des modifications constitue une acceptation des conditions mises à jour.",
+    "section6Title": "6. Contact",
+    "section6Body": "Les questions concernant ces conditions peuvent être envoyées à <email>hello@pipsnote.com</email>."
+  },
+  "privacyPolicy": {
+    "title": "Politique de confidentialité",
+    "lastUpdated": "Dernière mise à jour : 1er août 2026",
+    "intro": "Cette Politique de confidentialité explique comment {siteName} (« nous ») collecte, utilise et protège les informations lorsque vous visitez le Site. Nous visons à nous conformer au Règlement général sur la protection des données (RGPD) de l'UE et aux lois régionales similaires sur la confidentialité.",
+    "section1Title": "1. Données que nous collectons",
+    "section1Body": "Nous pouvons collecter : (a) les informations que vous soumettez volontairement, telles que votre adresse e-mail lors de l'inscription à notre newsletter ou lorsque vous nous contactez ; (b) des données techniques collectées automatiquement, telles que l'adresse IP, le type de navigateur, le type d'appareil et les pages visitées, via des cookies et technologies similaires ; et (c) des données analytiques agrégées utilisées pour comprendre l'utilisation du Site.",
+    "section2Title": "2. Cookies et analyse",
+    "section2Body": "Nous utilisons des cookies et des outils d'analyse tiers pour mesurer le trafic et améliorer le Site. Vous pouvez contrôler ou désactiver les cookies via les paramètres de votre navigateur. La désactivation des cookies peut affecter certaines fonctionnalités du site.",
+    "section3Title": "3. Comment nous utilisons vos données",
+    "section3Body": "Nous utilisons les données collectées pour exploiter et améliorer le Site, envoyer les newsletters auxquelles vous vous êtes inscrit, répondre aux demandes et mesurer la performance du contenu et des partenariats d'affiliation. Nous ne vendons pas vos données personnelles à des tiers.",
+    "section4Title": "4. Base légale et vos droits (RGPD)",
+    "section4Body": "Si vous êtes situé dans l'EEE/au Royaume-Uni, notre base légale pour le traitement de vos données est généralement le consentement (par ex. inscription à la newsletter) ou l'intérêt légitime (par ex. analyse du site). Vous avez le droit d'accéder à vos données personnelles, de les corriger, de les supprimer ou de les exporter, et de retirer votre consentement à tout moment en nous contactant à <email>hello@pipsnote.com</email>.",
+    "section5Title": "5. Conservation des données et sécurité",
+    "section5Body": "Nous conservons les données personnelles uniquement le temps nécessaire aux finalités décrites ci-dessus et appliquons des mesures techniques et organisationnelles raisonnables pour les protéger contre tout accès non autorisé, perte ou utilisation abusive.",
+    "section6Title": "6. Liens vers des tiers",
+    "section6Body": "Le Site renvoie vers des sites web de courtiers tiers ayant leurs propres pratiques en matière de confidentialité. Nous ne sommes pas responsables des pratiques de confidentialité des sites externes.",
+    "section7Title": "7. Modifications de cette politique",
+    "section7Body": "Nous pouvons mettre à jour périodiquement cette Politique de confidentialité. Les modifications importantes seront reflétées par la mise à jour de la date « Dernière mise à jour » ci-dessus.",
+    "section8Title": "8. Contact",
+    "section8Body": "Pour toute question ou demande relative à la confidentialité, contactez-nous à <email>hello@pipsnote.com</email>."
+  },
+  "riskDisclosure": {
+    "title": "Avertissement sur les risques",
+    "lastUpdated": "Dernière mise à jour : 1er août 2026",
+    "warningLabel": "Avertissement sur les risques :",
+    "intro": "Le trading du forex et des CFD avec effet de levier comporte un risque élevé de perte en capital et peut ne pas convenir à tous les investisseurs. Vous pourriez perdre plus que votre dépôt initial. Avant de trader, vous devez examiner attentivement vos objectifs d'investissement, votre niveau d'expérience et votre appétence au risque, et solliciter un conseil financier indépendant si nécessaire.",
+    "section1Title": "Risque de levier",
+    "section1Body": "L'effet de levier peut amplifier à la fois les gains et les pertes. De faibles mouvements de marché peuvent entraîner des pertes supérieures à votre investissement initial lors d'un trading sur marge.",
+    "section2Title": "Volatilité du marché",
+    "section2Body": "Les marchés du forex et des cryptomonnaies peuvent être très volatils. Les prix peuvent évoluer rapidement contre votre position en raison d'événements économiques, d'actualités ou d'une faible liquidité, et les performances passées ne préjugent pas des résultats futurs.",
+    "section3Title": "Ne constitue pas un conseil en investissement",
+    "section3Body": "Le contenu sur {siteName} — y compris les articles, commentaires de marché et comparatifs de courtiers — est fourni à titre informatif uniquement et ne constitue pas un conseil en investissement ou une recommandation d'achat, de vente ou de détention d'un instrument financier. {siteName} peut percevoir des commissions d'affiliation de la part de certains des courtiers répertoriés sur ce site — voir notre <link>Divulgation d'affiliation</link> pour plus de détails.",
+    "section4Title": "Solliciter un conseil indépendant",
+    "section4Body": "Ne tradez qu'avec de l'argent que vous pouvez vous permettre de perdre. Si vous n'êtes pas certain des risques encourus, consultez un conseiller financier agréé avant toute décision de trading."
+  },
+  "affiliateDisclosure": {
+    "title": "Divulgation d'affiliation",
+    "lastUpdated": "Dernière mise à jour : 1er août 2026",
+    "intro": "{siteName} est un site de contenu indépendant. Pour que l'utilisation du Site reste gratuite, nous participons à des partenariats d'affiliation avec certains des courtiers forex et crypto présentés dans nos articles, avis et tableaux comparatifs.",
+    "section1Title": "Comment ça marche",
+    "section1Body": "Lorsque vous cliquez sur certains liens vers le site web d'un courtier et ouvrez un compte ou effectuez une action qualifiante, nous pouvons recevoir une commission de ce courtier. Cela n'entraîne aucun coût supplémentaire pour vous et n'affecte ni le prix, ni les conditions que vous obtenez auprès du courtier.",
+    "section2Title": "Indépendance éditoriale",
+    "section2Body": "Les relations d'affiliation ne déterminent pas quels courtiers nous couvrons ni la manière dont nous les évaluons. Nos avis et comparatifs reposent sur nos propres recherches et sur des informations publiquement disponibles. Cependant, comme les revenus d'affiliation soutiennent le Site, vous devez être conscient de ce conflit d'intérêts potentiel en lisant le contenu relatif aux courtiers.",
+    "section3Title": "Ne constitue pas un conseil financier",
+    "section3Body": "Les avis et classements de courtiers sont fournis à titre informatif uniquement et ne constituent pas une recommandation ou une sollicitation d'ouvrir un compte auprès d'un courtier spécifique. Effectuez toujours vos propres recherches avant de choisir un courtier.",
+    "section4Title": "Questions",
+    "section4Body": "Si vous avez des questions sur nos relations d'affiliation, contactez-nous à <email>hello@pipsnote.com</email>."
+  },
+  "contact": {
+    "title": "Nous contacter",
+    "intro": "Une question, un commentaire ou une correction à signaler concernant {siteName} ? Nous serions ravis de vous entendre.",
+    "emailHeading": "E-mail",
+    "responseNote": "Nous nous efforçons de répondre à toutes les demandes sous quelques jours ouvrés."
+  },
+  "blogDetail": {
+    "relatedPosts": "Articles similaires"
+  },
+  "blogList": {
+    "metaTitle": "Blog",
+    "metaDescription": "Analyses de marché, guides de trading et avis sur les courtiers forex/crypto.",
+    "title": "Tous les articles",
+    "emptyDefault": "Pas encore d'articles.",
+    "emptySearch": "Aucun article trouvé pour « {query} ».",
+    "emptyCategory": "Pas encore d'articles dans cette catégorie."
+  },
+  "brokersList": {
+    "metaTitle": "Comparer les courtiers",
+    "metaDescription": "Tableau comparatif complet des courtiers forex/crypto notés.",
+    "title": "Tous les courtiers",
+    "empty": "Pas encore de courtiers."
+  },
+  "about": {
+    "title": "À propos de nous",
+    "intro": "{siteName} est un blog forex et crypto indépendant qui aide les traders à faire le tri dans le bruit ambiant grâce à des analyses de marché claires et des avis impartiaux sur les courtiers.",
+    "missionTitle": "Notre mission",
+    "missionBody": "Nous pensons que les traders prennent de meilleures décisions lorsqu'ils disposent d'informations claires et fondées sur des données plutôt que sur du battage médiatique. {siteName} a été créé pour proposer des comparatifs de courtiers honnêtes, des guides de trading pratiques et des analyses de marché opportunes, le tout au même endroit.",
+    "approachTitle": "Notre méthode de travail",
+    "approachBody": "Notre équipe étudie directement les courtiers, suit leur statut réglementaire et teste les plateformes de première main avant de publier un avis. Lorsque nous percevons des commissions d'affiliation, nous le divulguons clairement — voir notre Divulgation d'affiliation pour plus de détails."
+  },
+  "instruction": {
+    "title": "Comment utiliser ce site",
+    "intro": "Nouveau sur {siteName} ? Voici un guide rapide pour tirer le meilleur parti du site.",
+    "step1Title": "Lire les avis sur les courtiers",
+    "step1Body": "Parcourez notre tableau comparatif des courtiers pour voir la réglementation, les spreads et les fonctionnalités des plateformes côte à côte. Cliquez sur un courtier pour un avis complet.",
+    "step2Title": "Suivre l'analyse de marché",
+    "step2Body": "Consultez le Blog pour des commentaires de marché quotidiens et hebdomadaires, des stratégies de trading et des articles pédagogiques destinés aux traders débutants comme expérimentés.",
+    "step3Title": "Ouvrir un compte en toute sécurité",
+    "step3Body": "Lorsque vous êtes prêt, cliquez via nos liens pour accéder au site officiel d'un courtier. Nous ne recommandons que des courtiers que nous avons évalués — vérifiez toujours la réglementation et les conditions directement auprès du courtier avant de déposer des fonds."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "La page que vous recherchez n'existe pas ou a peut-être été déplacée.",
+    "backHome": "Retour à l'accueil"
+  },
+  "maintenance": {
+    "title": "En maintenance",
+    "body": "{siteName} est actuellement en maintenance programmée. Nous serons de retour sous peu — merci de votre patience."
+  }
+}

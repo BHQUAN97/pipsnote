@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "instruction": "Anleitung",
+    "topBroker": "Top-Broker",
+    "aboutUs": "Über uns",
+    "compareBrokers": "Broker vergleichen"
+  },
+  "footer": {
+    "tagline": "Ein unabhängiger Forex-Blog — mit Marktanalysen, Trading-Guides und Broker-Bewertungen, damit Trader klügere Entscheidungen treffen können.",
+    "navigation": "Navigation",
+    "policies": "Richtlinien",
+    "contact": "Kontakt",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsConditions": "Allgemeine Geschäftsbedingungen",
+    "riskDisclosure": "Risikohinweis",
+    "affiliateDisclosure": "Affiliate-Offenlegung",
+    "sendFeedback": "Feedback senden",
+    "copyright": "© 2026 {siteName}. Alle Rechte vorbehalten.",
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "sitemap": "Sitemap"
+  },
+  "riskDisclaimer": {
+    "label": "Risikohinweis:",
+    "body": "Der gehebelte Handel mit Forex und CFDs birgt ein hohes Risiko des Kapitalverlusts und ist möglicherweise nicht für alle Anleger geeignet. Inhalte auf {siteName} dienen ausschließlich Informationszwecken und stellen keine Anlageberatung dar. {siteName} kann von einigen der auf dieser Website gelisteten Broker Affiliate-Provisionen erhalten."
+  },
+  "hero": {
+    "eyebrow": "Marktintelligenz ohne Rauschen",
+    "headlineLine1": "Den Markt lesen.",
+    "headlineLine2": "Mit Klarheit handeln.",
+    "subtitle": "Forex-Analysen, Trading-Strategien und unabhängige Broker-Bewertungen — damit Sie auf Basis von Daten entscheiden, nicht von Emotionen.",
+    "readLatest": "Neuesten Beitrag lesen",
+    "viewTopBrokers": "Top-Broker ansehen"
+  },
+  "newsletter": {
+    "heading": "Wöchentliche Marktanalysen erhalten",
+    "subtext": "Kein Spam. Jederzeit abbestellbar.",
+    "emailPlaceholder": "Ihre E-Mail",
+    "subscribe": "Abonnieren",
+    "success": "Erfolgreich abonniert, vielen Dank!",
+    "error": "Etwas ist schiefgelaufen, bitte versuchen Sie es erneut."
+  },
+  "search": {
+    "placeholder": "Beiträge durchsuchen...",
+    "button": "Suchen"
+  },
+  "categoryFilter": {
+    "all": "Alle"
+  },
+  "home": {
+    "tradingPartners": "Handelspartner",
+    "topRatedBrokers": "Bestbewertete Broker",
+    "viewFullComparison": "Vollständigen Vergleich ansehen →",
+    "insightsAnalysis": "Einblicke & Analysen",
+    "latestPosts": "Neueste Beiträge",
+    "viewAll": "Alle ansehen →"
+  },
+  "terms": {
+    "title": "Allgemeine Geschäftsbedingungen",
+    "lastUpdated": "Zuletzt aktualisiert: 1. August 2026",
+    "intro": "Diese Allgemeinen Geschäftsbedingungen regeln Ihre Nutzung von {siteName} (die „Website“). Durch den Zugriff auf oder die Nutzung der Website erklären Sie sich mit diesen Bedingungen einverstanden. Falls Sie nicht einverstanden sind, nutzen Sie die Website bitte nicht.",
+    "section1Title": "1. Nur zu Informationszwecken",
+    "section1Body": "Inhalte auf der Website — einschließlich Artikel, Broker-Bewertungen, Vergleiche und Marktkommentare — dienen ausschließlich allgemeinen Informationszwecken und stellen keine Finanz-, Anlage-, Rechts- oder Steuerberatung dar. Sie sollten vor jeder Handels- oder Anlageentscheidung einen zugelassenen Fachmann konsultieren.",
+    "section2Title": "2. Keine Gewährleistung",
+    "section2Body": "Die Website wird „wie besehen“ ohne jegliche ausdrückliche oder stillschweigende Gewährleistung bereitgestellt. Wir garantieren nicht die Richtigkeit, Vollständigkeit oder Aktualität von Inhalten, einschließlich Broker-Informationen, Bewertungen oder Marktdaten, die sich ohne Vorankündigung ändern können.",
+    "section3Title": "3. Links zu Drittanbietern und Brokern",
+    "section3Body": "Die Website enthält Links zu Websites von Drittanbieter-Brokern. Wir haben keine Kontrolle über und übernehmen keine Verantwortung für die Inhalte, Produkte, Dienstleistungen oder Praktiken Dritter. Einige Links sind Affiliate-Links — Details finden Sie in unserer <link>Affiliate-Offenlegung</link>.",
+    "section4Title": "4. Haftungsbeschränkung",
+    "section4Body": "Im gesetzlich zulässigen Umfang haften {siteName} und dessen Betreiber nicht für direkte, indirekte, beiläufig entstandene oder Folgeschäden, die aus der Nutzung der Website oder dem Vertrauen auf darauf veröffentlichte Inhalte entstehen, einschließlich Handelsverlusten.",
+    "section5Title": "5. Änderungen dieser Bedingungen",
+    "section5Body": "Wir können diese Bedingungen von Zeit zu Zeit aktualisieren. Die fortgesetzte Nutzung der Website nach Veröffentlichung von Änderungen gilt als Zustimmung zu den aktualisierten Bedingungen.",
+    "section6Title": "6. Kontakt",
+    "section6Body": "Fragen zu diesen Bedingungen können an <email>hello@pipsnote.com</email> gesendet werden."
+  },
+  "privacyPolicy": {
+    "title": "Datenschutzerklärung",
+    "lastUpdated": "Zuletzt aktualisiert: 1. August 2026",
+    "intro": "Diese Datenschutzerklärung erläutert, wie {siteName} („wir“, „uns“) Informationen erhebt, verwendet und schützt, wenn Sie die Website besuchen. Wir bemühen uns um die Einhaltung der EU-Datenschutz-Grundverordnung (DSGVO) und ähnlicher regionaler Datenschutzgesetze.",
+    "section1Title": "1. Von uns erhobene Daten",
+    "section1Body": "Wir können Folgendes erheben: (a) Informationen, die Sie freiwillig übermitteln, wie z. B. Ihre E-Mail-Adresse beim Abonnieren unseres Newsletters oder bei der Kontaktaufnahme; (b) technische Daten, die automatisch erfasst werden, wie IP-Adresse, Browsertyp, Gerätetyp und besuchte Seiten, über Cookies und ähnliche Technologien; sowie (c) aggregierte Analysedaten zur Auswertung der Website-Nutzung.",
+    "section2Title": "2. Cookies & Analyse",
+    "section2Body": "Wir verwenden Cookies und Analyse-Tools von Drittanbietern, um den Traffic zu messen und die Website zu verbessern. Sie können Cookies über Ihre Browser-Einstellungen steuern oder deaktivieren. Das Deaktivieren von Cookies kann einige Funktionen der Website beeinträchtigen.",
+    "section3Title": "3. Wie wir Ihre Daten verwenden",
+    "section3Body": "Wir verwenden erhobene Daten, um die Website zu betreiben und zu verbessern, Newsletter zu versenden, für die Sie sich angemeldet haben, Anfragen zu beantworten und die Leistung von Inhalten und Affiliate-Partnerschaften zu messen. Wir verkaufen Ihre personenbezogenen Daten nicht an Dritte.",
+    "section4Title": "4. Rechtsgrundlage & Ihre Rechte (DSGVO)",
+    "section4Body": "Wenn Sie sich im EWR/Vereinigten Königreich befinden, ist unsere Rechtsgrundlage für die Verarbeitung Ihrer Daten in der Regel Einwilligung (z. B. Newsletter-Anmeldung) oder berechtigtes Interesse (z. B. Website-Analyse). Sie haben das Recht, auf Ihre personenbezogenen Daten zuzugreifen, sie zu berichtigen, zu löschen oder zu exportieren sowie Ihre Einwilligung jederzeit zu widerrufen, indem Sie uns unter <email>hello@pipsnote.com</email> kontaktieren.",
+    "section5Title": "5. Datenspeicherung & Sicherheit",
+    "section5Body": "Wir speichern personenbezogene Daten nur so lange, wie es für die oben beschriebenen Zwecke erforderlich ist, und ergreifen angemessene technische und organisatorische Maßnahmen, um sie vor unbefugtem Zugriff, Verlust oder Missbrauch zu schützen.",
+    "section6Title": "6. Links zu Drittanbietern",
+    "section6Body": "Die Website verlinkt zu Websites von Drittanbieter-Brokern mit eigenen Datenschutzpraktiken. Wir sind nicht verantwortlich für die Datenschutzpraktiken externer Websites.",
+    "section7Title": "7. Änderungen dieser Richtlinie",
+    "section7Body": "Wir können diese Datenschutzerklärung regelmäßig aktualisieren. Wesentliche Änderungen werden durch eine Aktualisierung des Datums „Zuletzt aktualisiert“ oben kenntlich gemacht.",
+    "section8Title": "8. Kontakt",
+    "section8Body": "Bei Fragen oder Anliegen zum Datenschutz kontaktieren Sie uns unter <email>hello@pipsnote.com</email>."
+  },
+  "riskDisclosure": {
+    "title": "Risikohinweis",
+    "lastUpdated": "Zuletzt aktualisiert: 1. August 2026",
+    "warningLabel": "Risikohinweis:",
+    "intro": "Der gehebelte Handel mit Forex und CFDs birgt ein hohes Risiko des Kapitalverlusts und ist möglicherweise nicht für alle Anleger geeignet. Sie könnten mehr verlieren als Ihre ursprüngliche Einzahlung. Vor dem Handel sollten Sie Ihre Anlageziele, Ihr Erfahrungsniveau und Ihre Risikobereitschaft sorgfältig abwägen und bei Bedarf unabhängigen Finanzrat einholen.",
+    "section1Title": "Hebelrisiko",
+    "section1Body": "Hebelwirkung kann sowohl Gewinne als auch Verluste verstärken. Kleine Marktbewegungen können beim Handel auf Margin zu Verlusten führen, die Ihre ursprüngliche Investition übersteigen.",
+    "section2Title": "Marktvolatilität",
+    "section2Body": "Forex- und Kryptomärkte können sehr volatil sein. Preise können sich aufgrund wirtschaftlicher Ereignisse, Nachrichten oder geringer Liquidität schnell gegen Ihre Position bewegen, und vergangene Performance ist kein Hinweis auf zukünftige Ergebnisse.",
+    "section3Title": "Keine Anlageberatung",
+    "section3Body": "Inhalte auf {siteName} — einschließlich Artikel, Marktkommentare und Broker-Vergleiche — dienen ausschließlich Informationszwecken und stellen keine Anlageberatung oder Empfehlung zum Kauf, Verkauf oder Halten eines Finanzinstruments dar. {siteName} kann von einigen der auf dieser Website gelisteten Broker Affiliate-Provisionen erhalten — Details finden Sie in unserer <link>Affiliate-Offenlegung</link>.",
+    "section4Title": "Unabhängigen Rat einholen",
+    "section4Body": "Handeln Sie nur mit Geld, dessen Verlust Sie sich leisten können. Wenn Sie sich über die damit verbundenen Risiken unsicher sind, konsultieren Sie vor jeder Handelsentscheidung einen zugelassenen Finanzberater."
+  },
+  "affiliateDisclosure": {
+    "title": "Affiliate-Offenlegung",
+    "lastUpdated": "Zuletzt aktualisiert: 1. August 2026",
+    "intro": "{siteName} ist eine unabhängige Content-Website. Um die Nutzung der Website kostenlos zu halten, gehen wir Affiliate-Partnerschaften mit einigen der Forex- und Krypto-Broker ein, die in unseren Artikeln, Bewertungen und Vergleichstabellen vorgestellt werden.",
+    "section1Title": "So funktioniert es",
+    "section1Body": "Wenn Sie auf bestimmte Links zur Website eines Brokers klicken und ein Konto eröffnen oder eine qualifizierende Aktion durchführen, erhalten wir möglicherweise eine Provision von diesem Broker. Dies ist für Sie mit keinen zusätzlichen Kosten verbunden und wirkt sich nicht auf den Preis, die Bedingungen oder Konditionen aus, die Sie vom Broker erhalten.",
+    "section2Title": "Redaktionelle Unabhängigkeit",
+    "section2Body": "Affiliate-Beziehungen bestimmen nicht, welche Broker wir behandeln oder wie wir sie bewerten. Unsere Bewertungen und Vergleiche basieren auf eigenen Recherchen und öffentlich zugänglichen Informationen. Da Affiliate-Einnahmen die Website jedoch unterstützen, sollten Sie sich dieses potenziellen Interessenkonflikts beim Lesen von Broker-Inhalten bewusst sein.",
+    "section3Title": "Keine Finanzberatung",
+    "section3Body": "Broker-Bewertungen und -Rankings dienen ausschließlich Informationszwecken und stellen keine Empfehlung oder Aufforderung dar, ein Konto bei einem bestimmten Broker zu eröffnen. Führen Sie vor der Wahl eines Brokers stets eigene Recherchen durch.",
+    "section4Title": "Fragen",
+    "section4Body": "Wenn Sie Fragen zu unseren Affiliate-Beziehungen haben, kontaktieren Sie uns unter <email>hello@pipsnote.com</email>."
+  },
+  "contact": {
+    "title": "Kontaktieren Sie uns",
+    "intro": "Haben Sie eine Frage, ein Feedback oder eine Korrektur zu {siteName} zu melden? Wir freuen uns, von Ihnen zu hören.",
+    "emailHeading": "E-Mail",
+    "responseNote": "Wir bemühen uns, alle Anfragen innerhalb weniger Werktage zu beantworten."
+  },
+  "blogDetail": {
+    "relatedPosts": "Verwandte Beiträge"
+  },
+  "blogList": {
+    "metaTitle": "Blog",
+    "metaDescription": "Marktanalysen, Trading-Guides und Bewertungen von Forex-/Krypto-Brokern.",
+    "title": "Alle Beiträge",
+    "emptyDefault": "Noch keine Beiträge.",
+    "emptySearch": "Keine Beiträge gefunden für „{query}“.",
+    "emptyCategory": "Noch keine Beiträge in dieser Kategorie."
+  },
+  "brokersList": {
+    "metaTitle": "Broker vergleichen",
+    "metaDescription": "Vollständige Vergleichstabelle bewerteter Forex-/Krypto-Broker.",
+    "title": "Alle Broker",
+    "empty": "Noch keine Broker."
+  },
+  "about": {
+    "title": "Über uns",
+    "intro": "{siteName} ist ein unabhängiger Forex- und Krypto-Blog, der Tradern hilft, sich mit klaren Marktanalysen und unabhängigen Broker-Bewertungen im Rauschen zurechtzufinden.",
+    "missionTitle": "Unsere Mission",
+    "missionBody": "Wir glauben, dass Trader bessere Entscheidungen treffen, wenn sie über klare, datenbasierte Informationen statt Hype verfügen. {siteName} wurde geschaffen, um ehrliche Broker-Vergleiche, praktische Trading-Guides und aktuelle Marktanalysen an einem Ort zu bieten.",
+    "approachTitle": "Wie wir arbeiten",
+    "approachBody": "Unser Team recherchiert Broker direkt, verfolgt den regulatorischen Status und testet Plattformen selbst, bevor eine Bewertung veröffentlicht wird. Wo wir Affiliate-Provisionen verdienen, legen wir dies klar offen — Details finden Sie in unserer Affiliate-Offenlegung."
+  },
+  "instruction": {
+    "title": "So nutzen Sie diese Website",
+    "intro": "Neu bei {siteName}? Hier ist eine kurze Anleitung, um das Beste aus der Website herauszuholen.",
+    "step1Title": "Broker-Bewertungen lesen",
+    "step1Body": "Durchsuchen Sie unsere Broker-Vergleichstabelle, um Regulierung, Spreads und Plattformfunktionen nebeneinander zu sehen. Klicken Sie auf einen Broker für eine vollständige Bewertung.",
+    "step2Title": "Marktanalysen folgen",
+    "step2Body": "Schauen Sie im Blog vorbei für tägliche und wöchentliche Marktkommentare, Trading-Strategien und lehrreiche Artikel für neue und erfahrene Trader.",
+    "step3Title": "Sicher ein Konto eröffnen",
+    "step3Body": "Wenn Sie bereit sind, klicken Sie über unsere Links zur offiziellen Website eines Brokers. Wir empfehlen nur Broker, die wir bewertet haben — überprüfen Sie Regulierung und Bedingungen stets direkt beim Broker, bevor Sie Geld einzahlen."
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "body": "Die gesuchte Seite existiert nicht oder wurde möglicherweise verschoben.",
+    "backHome": "Zurück zur Startseite"
+  },
+  "maintenance": {
+    "title": "Wartungsarbeiten",
+    "body": "{siteName} befindet sich derzeit in einer geplanten Wartung. Wir sind in Kürze zurück — vielen Dank für Ihre Geduld."
+  }
+}

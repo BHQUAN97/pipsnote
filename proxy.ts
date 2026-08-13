@@ -4,7 +4,24 @@ import { routing } from './i18n/routing';
 import { checkRateLimit } from './lib/security/rateLimiter';
 import { isIpBlocked } from './lib/security/loginGuard';
 
-const handleI18nRouting = createMiddleware(routing);
+// Cloudflare set san header nay o edge (khong can GeoIP service rieng).
+// Chi anh huong den defaultLocale (uu tien 4 trong next-intl) — cookie
+// NEXT_LOCALE da chon truoc va Accept-Language khop ro rang van thang.
+const COUNTRY_LOCALE_MAP: Record<string, (typeof routing.locales)[number]> = {
+  VN: 'vi',
+  DE: 'de',
+  AT: 'de',
+  CH: 'de',
+  FR: 'fr',
+  BE: 'fr',
+  LU: 'fr',
+};
+
+function resolveGeoDefaultLocale(req: NextRequest): (typeof routing.locales)[number] {
+  const country = req.headers.get('cf-ipcountry');
+  if (!country) return routing.defaultLocale;
+  return COUNTRY_LOCALE_MAP[country] ?? routing.defaultLocale;
+}
 
 export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
@@ -46,6 +63,10 @@ export async function proxy(req: NextRequest) {
   }
 
   // Mọi path công khai còn lại (không phải /go, /api, /admin) → locale routing.
+  const handleI18nRouting = createMiddleware({
+    ...routing,
+    defaultLocale: resolveGeoDefaultLocale(req),
+  });
   return handleI18nRouting(req);
 }
 
