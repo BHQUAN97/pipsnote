@@ -312,6 +312,70 @@ Plan file: `parallel-soaring-clover.md` (Part 0-3, toàn bộ đã hoàn tất).
      trên VPS nữa. 3 cron job còn lại (backup/monitor/cleanup) vẫn qua OS cron như cũ (tác vụ
      OS-level thực sự, không hợp với chạy trong process Next.js).
 
+9. **Admin UI quản lý API key + bật/tắt provider market-data** (session này, qua plan đã duyệt
+   `wobbly-skipping-shell`) — đóng gap "user tự đăng ký API key thật rồi set GitHub Secret" nêu ở
+   mục #6/#8: giờ superadmin nhập/sửa key trực tiếp qua `/admin/market-data`, không cần redeploy.
+   - Migration `db/changelog/012_market_data_provider_config/` — bảng `market_data_provider_config`
+     (seed 5 provider: `twelvedata`/`fcs`/`alpaca` `requires_key=true`, `coingecko`/`goldapi`
+     `requires_key=false`).
+   - `lib/crypto.ts` (mới) — AES-256-GCM (`ENCRYPTION_KEY` đã có sẵn trong `.env.example`, chưa
+     từng dùng trước session này). `lib/marketData/providerConfig.ts` (mới) — cache-aside Redis
+     (mirror `lib/settings.ts`), `resolveProviderCredential(Pair)()`: DB-key (decrypt) ưu tiên,
+     rỗng thì fallback `process.env` như cũ (deploy hiện tại không cần đổi gì vẫn chạy được).
+   - `lib/marketData/providers/{twelveData,fcs,alpaca}.ts` đọc key qua resolver thay vì
+     `process.env` trực tiếp. `getProviderChain()` (`providerRegistry.ts`) chuyển `async`, filter
+     theo `is_enabled` từ DB — thứ tự chain (`twelvedata`→`fcs`) giữ nguyên, chỉ enable/disable
+     từng provider trong chain.
+   - API: `GET/PATCH app/api/admin/market-data/providers/(.../[key]/)route.ts` —
+     `requireAdmin(['superadmin'])`, key thật KHÔNG BAO GIỜ trả về client (chỉ `has_api_key`/
+     `has_api_secret: boolean`), audit log `admin_audit_log` chỉ ghi cờ đã-đổi, không ghi giá trị.
+   - UI: `components/admin/ProviderSettingsPanel.tsx` (mới) gắn vào `app/admin/market-data/page.tsx`
+     — toggle enable/disable + input key/secret riêng cho từng provider, badge configured/not set.
+   - **Còn lại (không phải code, theo đúng phạm vi "PHẢI DỪNG" — thay đổi production env vars)**:
+     user tự `openssl rand -hex 32` set `ENCRYPTION_KEY` trên VPS (GitHub Secret) nếu production
+     chưa có, rồi vào `/admin/market-data` nhập key thật cho `twelvedata`/`fcs`/`alpaca` — thay thế
+     nhu cầu set 4 GitHub Secret provider key nêu ở mục #6/#8 (vẫn dùng được nếu muốn, chỉ là
+     fallback giờ không bắt buộc nữa).
+   - Verify: `bash scripts/db-changelog.sh` + `npm run lint` + `npm run build` — xem báo cáo cuối
+     session để biết kết quả thực tế (viết mục này TRƯỚC khi chạy verify).
+
+9. **Đa ngôn ngữ theo quốc gia (CF-IPCountry) + dịch bài viết bằng AI** (session này). User chốt
+   2 câu hỏi qua AskUserQuestion: dùng `CF-IPCountry` cho geo-detect, và thêm cột bản dịch + nút
+   dịch AI ở admin (review trước khi publish).
+   - **Geo-locale**: `proxy.ts` — `resolveGeoDefaultLocale(req)` đọc header `cf-ipcountry`
+     (`VN` → `vi`, còn lại → `routing.defaultLocale`), truyền vào `createMiddleware({...routing,
+     defaultLocale})` **theo từng request** (thay vì instance cố định module-scope). Theo đúng
+     thứ tự ưu tiên nội bộ next-intl (path prefix > cookie `NEXT_LOCALE` > `Accept-Language` khớp
+     rõ > `defaultLocale`) — geo chỉ quyết định khi user chưa từng chọn locale và trình duyệt
+     không có `Accept-Language` khớp `en`/`vi`. Local dev không có header này → hành vi cũ (`en`)
+     không đổi.
+   - **Schema**: `db/changelog/011_post_translations/001_create_post_translations.sql` — bảng
+     `post_translations` (`post_id`, `locale`, `title`/`excerpt`/`content`/`seo_title`/`seo_desc`,
+     `status: draft|published`, `source: ai|human`, `translated_by`), `UNIQUE(post_id, locale)`.
+     `posts.title/excerpt/content` giữ nguyên là nội dung gốc, không đổi.
+   - **AI translate**: `lib/ai/translate.ts` — gọi thẳng Anthropic Messages API qua `fetch`
+     (không thêm SDK mới), model `claude-haiku-4-5-20251001`, ép `tool_choice` để trả JSON đúng
+     schema (tránh parse free text). Cần `ANTHROPIC_API_KEY` trong `.env` (đã thêm vào
+     `.env.example`); thiếu key hoặc API lỗi → ném `HttpError`, log qua `lib/logger.ts`, không
+     leak chi tiết cho client.
+   - **Data access**: `lib/postTranslations.ts` — CRUD + publish/unpublish theo pattern
+     `lib/posts.ts` (`query()` từ `lib/db.ts`).
+   - **Admin API**: `app/api/admin/posts/[id]/translations/{route.ts, [locale]/route.ts,
+     [locale]/ai/route.ts}` — `requireAdmin` + `withApiHandler` + ghi `admin_audit_log`
+     (`update_post_translation`, `publish_post_translation`, `delete_post_translation`,
+     `ai_translate_post`).
+   - **Admin UI**: `components/admin/PostForm.tsx` — thêm tab strip "Original" + 1 tab mỗi locale
+     khác locale mặc định (hiện chỉ `vi`), chỉ hiện khi đang edit post đã tồn tại (`postId` có
+     giá trị — post mới phải tạo bản gốc trước). Tab dịch dùng `components/admin/
+     PostTranslationPanel.tsx` (mới) — nút "Translate with AI", sau đó review/sửa rồi "Save draft"
+     hoặc "Publish translation" (đúng flow review-trước-khi-publish).
+   - **Public site**: `app/[locale]/blog/[slug]/page.tsx` — `getPost(slug, locale)` thêm
+     `LEFT JOIN post_translations` + `COALESCE(pt.x, p.x)`, chỉ lấy bản dịch `status='published'`,
+     fallback về bản gốc nếu chưa dịch/chưa publish.
+   - **Cố tình để ngoài phạm vi** (chưa làm, note lại nếu cần mở rộng sau): danh sách bài viết
+     (`app/[locale]/blog/page.tsx`, `PostCard`) chưa đọc bản dịch — vẫn hiện tiêu đề/excerpt gốc ở
+     list; tên category/tag chưa có bản dịch riêng.
+
 **Quy ước code**: mỗi file doc ≤200 dòng, code nên giữ dưới ~500 dòng (component/route quá dài
 → tách nhỏ).
 
