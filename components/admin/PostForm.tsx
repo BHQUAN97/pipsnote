@@ -6,7 +6,11 @@ import type { Category, Post } from '@/lib/types';
 import Input from '@/components/ui/Input';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import TagInput from '@/components/admin/TagInput';
+import PostTranslationPanel from '@/components/admin/PostTranslationPanel';
 import { slugify } from '@/lib/slugify';
+import { routing } from '@/i18n/routing';
+
+const TRANSLATION_LOCALES = routing.locales.filter((l) => l !== routing.defaultLocale);
 
 interface TagOption {
   id: number;
@@ -53,6 +57,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
   const [slugTouched, setSlugTouched] = useState(Boolean(initialPost));
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<'original' | string>('original');
 
   useEffect(() => {
     fetch('/api/admin/categories')
@@ -107,7 +112,41 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 max-w-3xl">
+    <div className="max-w-3xl">
+      {postId && TRANSLATION_LOCALES.length > 0 && (
+        <div className="flex gap-2 border-b border-gray-line mb-5">
+          <button
+            type="button"
+            onClick={() => setActiveTab('original')}
+            className={`min-h-[44px] px-4 text-sm font-medium border-b-2 -mb-px ${
+              activeTab === 'original'
+                ? 'border-brand text-brand'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Original
+          </button>
+          {TRANSLATION_LOCALES.map((locale) => (
+            <button
+              key={locale}
+              type="button"
+              onClick={() => setActiveTab(locale)}
+              className={`min-h-[44px] px-4 text-sm font-medium border-b-2 -mb-px uppercase ${
+                activeTab === locale
+                  ? 'border-brand text-brand'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {locale}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {activeTab !== 'original' && postId ? (
+        <PostTranslationPanel key={activeTab} postId={postId} locale={activeTab} />
+      ) : (
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && <div className="p-3 bg-red text-white rounded-sm text-sm">{error}</div>}
 
       <div>
@@ -272,5 +311,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
         </button>
       </div>
     </form>
+      )}
+    </div>
   );
 }

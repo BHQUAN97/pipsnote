@@ -23,15 +23,22 @@ function formatDate(dateString: string | null): string {
   return `${dd}/${mm}/${d.getFullYear()}`;
 }
 
-async function getPost(slug: string): Promise<Post | null> {
+async function getPost(slug: string, locale: string): Promise<Post | null> {
   const rows = await query<Post[]>(
-    `SELECT p.*, c.name AS category_name, c.slug AS category_slug, u.username AS author_name
+    `SELECT p.*, c.name AS category_name, c.slug AS category_slug, u.username AS author_name,
+            COALESCE(pt.title, p.title) AS title,
+            COALESCE(pt.excerpt, p.excerpt) AS excerpt,
+            COALESCE(pt.content, p.content) AS content,
+            COALESCE(pt.seo_title, p.seo_title) AS seo_title,
+            COALESCE(pt.seo_desc, p.seo_desc) AS seo_desc
      FROM posts p
      LEFT JOIN categories c ON c.id = p.category_id
      LEFT JOIN admin_users u ON u.id = p.author_id
+     LEFT JOIN post_translations pt
+       ON pt.post_id = p.id AND pt.locale = ? AND pt.status = 'published'
      WHERE p.slug = ? AND p.status = 'published'
      LIMIT 1`,
-    [slug]
+    [locale, slug]
   );
   return rows[0] ?? null;
 }
@@ -39,10 +46,10 @@ async function getPost(slug: string): Promise<Post | null> {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPost(slug);
+  const { slug, locale } = await params;
+  const post = await getPost(slug, locale);
   if (!post) return {};
 
   return {
@@ -57,10 +64,10 @@ export async function generateMetadata({
 export default async function BlogDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }) {
-  const { slug } = await params;
-  const post = await getPost(slug);
+  const { slug, locale } = await params;
+  const post = await getPost(slug, locale);
   if (!post) notFound();
 
   await query('UPDATE posts SET view_count = view_count + 1 WHERE id = ?', [post.id]);
