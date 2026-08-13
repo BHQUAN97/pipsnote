@@ -38,6 +38,16 @@ export interface MarketDataSymbol {
   updated_at: string;
 }
 
+export interface MarketDataProviderConfig {
+  provider_key: string;
+  category: 'forex' | 'crypto' | 'commodity' | 'stock';
+  is_enabled: boolean;
+  requires_key: boolean;
+  has_api_key: boolean;
+  has_api_secret: boolean;
+  updated_at: string;
+}
+
 export interface AdminUserRow {
   id: number;
   username: string;
@@ -69,4 +79,20 @@ export interface Post {
   published_at: string | null;
   author_name?: string | null;
   tags?: { id: number; name: string; slug: string }[];
+}
+
+export interface PostTranslation {
+  id: number;
+  post_id: number;
+  locale: string;
+  title: string;
+  excerpt: string | null;
+  content: string;
+  seo_title: string | null;
+  seo_desc: string | null;
+  status: 'draft' | 'published';
+  source: 'ai' | 'human';
+  translated_by: number | null;
+  created_at: string;
+  updated_at: string;
 }
