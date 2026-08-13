@@ -4,6 +4,7 @@ import {
   type MarketDataSymbolRow,
   type ProviderQuote,
 } from './types';
+import { resolveProviderCredential } from '../providerConfig';
 
 const PROVIDER_KEY = 'twelvedata';
 
@@ -16,7 +17,7 @@ interface TwelveDataQuote {
 export const twelveDataProvider: MarketDataProvider = {
   name: 'twelvedata',
   async fetchQuotes(symbols: MarketDataSymbolRow[]): Promise<ProviderQuote[]> {
-    const apiKey = process.env.TWELVEDATA_API_KEY;
+    const apiKey = await resolveProviderCredential(PROVIDER_KEY, 'TWELVEDATA_API_KEY');
     if (!apiKey) {
       throw new Error('TWELVEDATA_API_KEY is not configured');
     }

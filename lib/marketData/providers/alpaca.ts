@@ -4,6 +4,7 @@ import {
   type MarketDataSymbolRow,
   type ProviderQuote,
 } from './types';
+import { resolveProviderCredentialPair } from '../providerConfig';
 
 const PROVIDER_KEY = 'alpaca';
 
@@ -15,8 +16,11 @@ interface AlpacaSnapshot {
 export const alpacaProvider: MarketDataProvider = {
   name: 'alpaca',
   async fetchQuotes(symbols: MarketDataSymbolRow[]): Promise<ProviderQuote[]> {
-    const apiKey = process.env.ALPACA_API_KEY;
-    const apiSecret = process.env.ALPACA_API_SECRET;
+    const { apiKey, apiSecret } = await resolveProviderCredentialPair(
+      PROVIDER_KEY,
+      'ALPACA_API_KEY',
+      'ALPACA_API_SECRET'
+    );
     if (!apiKey || !apiSecret) {
       throw new Error('ALPACA_API_KEY/ALPACA_API_SECRET is not configured');
     }

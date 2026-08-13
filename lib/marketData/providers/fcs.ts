@@ -4,6 +4,7 @@ import {
   type MarketDataSymbolRow,
   type ProviderQuote,
 } from './types';
+import { resolveProviderCredential } from '../providerConfig';
 
 const PROVIDER_KEY = 'fcs';
 
@@ -26,7 +27,7 @@ function normalizeCode(code: string): string {
 export const fcsProvider: MarketDataProvider = {
   name: 'fcs',
   async fetchQuotes(symbols: MarketDataSymbolRow[]): Promise<ProviderQuote[]> {
-    const apiKey = process.env.FCSAPI_API_KEY;
+    const apiKey = await resolveProviderCredential(PROVIDER_KEY, 'FCSAPI_API_KEY');
     if (!apiKey) {
       throw new Error('FCSAPI_API_KEY is not configured');
     }

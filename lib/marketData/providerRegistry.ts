@@ -5,6 +5,7 @@ import { fcsProvider } from './providers/fcs';
 import { coinGeckoProvider } from './providers/coinGecko';
 import { goldApiProvider } from './providers/goldApi';
 import { alpacaProvider } from './providers/alpaca';
+import { getProviderConfigRows } from './providerConfig';
 
 // forex: twelvedata la primary, fcs la fallback khi twelvedata throw toan bo request
 const CATEGORY_CHAINS: Record<SymbolCategory, MarketDataProvider[]> = {
@@ -14,9 +15,10 @@ const CATEGORY_CHAINS: Record<SymbolCategory, MarketDataProvider[]> = {
   stock: [alpacaProvider],
 };
 
-export function getProviderChain(category: SymbolCategory): MarketDataProvider[] {
+export async function getProviderChain(category: SymbolCategory): Promise<MarketDataProvider[]> {
   if (process.env.MARKET_DATA_MOCK === 'true') {
     return [mockProvider];
   }
-  return CATEGORY_CHAINS[category];
+  const config = await getProviderConfigRows();
+  return CATEGORY_CHAINS[category].filter((p) => config[p.name]?.is_enabled ?? true);
 }

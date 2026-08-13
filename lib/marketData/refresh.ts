@@ -46,7 +46,7 @@ export async function refreshMarketData(): Promise<RefreshResult> {
   const resolvedIds = new Set<number>();
 
   for (const [category, categorySymbols] of byCategory) {
-    for (const provider of getProviderChain(category)) {
+    for (const provider of await getProviderChain(category)) {
       const remaining = categorySymbols.filter((s) => !resolvedIds.has(s.id));
       if (remaining.length === 0) break;
 

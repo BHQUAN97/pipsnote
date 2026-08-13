@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import ProviderSettingsPanel from '@/components/admin/ProviderSettingsPanel';
 
 interface MarketDataRow {
   id: number;
@@ -132,6 +133,8 @@ export default function AdminMarketDataPage() {
           </button>
         </div>
       </div>
+
+      <ProviderSettingsPanel />
 
       {loading ? (
         <p className="text-sm text-gray-mid">Loading...</p>
