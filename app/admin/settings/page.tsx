@@ -49,11 +49,21 @@ const BG_SECTIONS = [
   { key: 'bg.newsletter', label: 'Newsletter' },
 ];
 
+const TABS = [
+  { key: 'presets', label: 'Presets' },
+  { key: 'colors', label: 'Theme Colors' },
+  { key: 'layout', label: 'Layout' },
+  { key: 'backgrounds', label: 'Ảnh nền' },
+] as const;
+
+type TabKey = (typeof TABS)[number]['key'];
+
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [activeTab, setActiveTab] = useState<TabKey>('presets');
 
   useEffect(() => {
     fetch('/api/admin/settings')
@@ -146,12 +156,30 @@ export default function AdminSettingsPage() {
       <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Site Settings</h1>
 
       {message && (
-          <div className="mb-4 p-4 border rounded-sm bg-gray-bg">
-            {message}
-          </div>
-        )}
+        <div className="mb-4 p-4 border rounded-sm bg-gray-bg">
+          {message}
+        </div>
+      )}
 
-        {/* Presets */}
+      {/* Tab nav — horizontally scrollable trên mobile, tránh 1 trang cuộn dài khi có nhiều nhóm setting */}
+      <div className="mb-6 flex gap-1 overflow-x-auto border-b border-gray-line">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => setActiveTab(tab.key)}
+            className={`min-h-[44px] shrink-0 whitespace-nowrap border-b-2 px-4 py-2 text-sm font-medium ${
+              activeTab === tab.key
+                ? 'border-brand text-brand'
+                : 'border-transparent text-gray-mid hover:text-ink'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'presets' && (
         <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Quick Presets</h2>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -178,8 +206,9 @@ export default function AdminSettingsPage() {
             </button>
           </div>
         </section>
+      )}
 
-        {/* Theme Colors */}
+      {activeTab === 'colors' && (
         <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Theme Colors</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -214,8 +243,9 @@ export default function AdminSettingsPage() {
             <span>Default dark mode for new visitors (no localStorage yet)</span>
           </label>
         </section>
+      )}
 
-        {/* Layout Options */}
+      {activeTab === 'layout' && (
         <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Layout Options</h2>
           <div className="space-y-3">
@@ -257,8 +287,9 @@ export default function AdminSettingsPage() {
             </div>
           </div>
         </section>
+      )}
 
-        {/* Background Images */}
+      {activeTab === 'backgrounds' && (
         <section className="mb-8 p-4 sm:p-6 border rounded-sm">
           <h2 className="text-xl font-semibold mb-4">Ảnh nền</h2>
           {uploadError && <p className="mb-4 text-sm text-down">{uploadError}</p>}
@@ -318,23 +349,24 @@ export default function AdminSettingsPage() {
             ))}
           </div>
         </section>
+      )}
 
-        {/* Save Button */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="min-h-[44px] px-8 py-3 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50 font-semibold"
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-          <button
-            onClick={() => window.location.reload()}
-            className="min-h-[44px] px-6 py-3 border rounded-sm hover:bg-gray-bg"
-          >
-            Reset
-          </button>
-        </div>
+      {/* Save Button — luôn hiện bất kể tab nào đang mở, vì settings là 1 state chung */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="min-h-[44px] px-8 py-3 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50 font-semibold"
+        >
+          {saving ? 'Saving...' : 'Save Changes'}
+        </button>
+        <button
+          onClick={() => window.location.reload()}
+          className="min-h-[44px] px-6 py-3 border rounded-sm hover:bg-gray-bg"
+        >
+          Reset
+        </button>
+      </div>
 
       <p className="mt-4 text-sm text-gray-mid">
         💡 Changes apply immediately after save + page refresh. Settings stored in database.
