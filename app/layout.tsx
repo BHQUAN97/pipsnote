@@ -74,12 +74,7 @@ export default async function RootLayout({
       <body
         style={
           globalBg
-            ? {
-                backgroundImage: `url(${globalBg})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundAttachment: 'fixed',
-              }
+            ? ({ '--global-bg-image': `url(${globalBg})` } as React.CSSProperties)
             : undefined
         }
       >

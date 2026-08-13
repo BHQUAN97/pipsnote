@@ -52,6 +52,19 @@ body {
   background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-space-grotesk), sans-serif;
+  background-image: var(--global-bg-image, none);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* background-attachment: fixed vỡ/lag trên trình duyệt mobile (đặc biệt iOS Safari) do
+   viewport đổi kích thước khi thanh URL ẩn/hiện — tắt hẳn ảnh nền dưới breakpoint md */
+@media (max-width: 767px) {
+  body {
+    background-image: none;
+  }
 }
 
 h1, h2, h3 {
