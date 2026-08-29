@@ -1,0 +1,56 @@
+name: Restore pipsnote
+
+on:
+  workflow_dispatch:
+    inputs:
+      backup_file:
+        description: 'File .sql.gz.enc (vd pipsnote_2026-07-01_02-00.sql.gz.enc). Empty = latest trong BACKUP_DIR local'
+        required: false
+        default: ''
+      from_r2:
+        description: 'Tai file tu R2 truoc khi restore (offsite)'
+        required: true
+        type: boolean
+        default: true
+      force:
+        description: 'Bo qua buoc confirm (tu dong restore)'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Restore DB pipsnote qua SSH (restore-mysql.sh)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            export MYSQL_BACKUP_PASSWORD='${{ secrets.MYSQL_BACKUP_PASSWORD }}'
+            export R2_ENDPOINT='${{ secrets.R2_ENDPOINT }}'
+            export R2_BUCKET='${{ secrets.R2_BUCKET }}'
+            export BACKUP_ENC_KEY='${{ secrets.BACKUP_ENC_KEY }}'
+            INPUT_FILE='${{ inputs.backup_file }}'
+            FROM_R2='${{ inputs.from_r2 }}'
+            FORCE='${{ inputs.force }}'
+
+            CMD=""
+            if [ -z "$INPUT_FILE" ]; then
+              CMD="./scripts/restore-mysql.sh latest"
+            else
+              CMD="./scripts/restore-mysql.sh $INPUT_FILE"
+            fi
+            if [ "$FROM_R2" == "true" ]; then
+              CMD="$CMD --from-r2"
+            fi
+            if [ "$FORCE" == "true" ]; then
+              CMD="$CMD --force"
+            fi
+            echo ">> Running: $CMD"
+            cd /opt/pipsnote && bash $CMD
