@@ -91,7 +91,7 @@ export default function AdminUsersPage() {
         <h1 className="text-2xl font-bold sm:text-3xl">Users</h1>
         <Link
           href="/admin/users/new"
-          className="min-h-[44px] rounded-sm bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
+          className="btn-primary"
         >
           + New user
         </Link>

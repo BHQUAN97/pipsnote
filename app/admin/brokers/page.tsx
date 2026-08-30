@@ -127,10 +127,7 @@ export default function AdminBrokersPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold sm:text-3xl">Brokers</h1>
-        <Link
-          href="/admin/brokers/new"
-          className="min-h-[44px] rounded-sm bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
-        >
+        <Link href="/admin/brokers/new" className="btn-primary">
           + New broker
         </Link>
       </div>
@@ -143,9 +140,12 @@ export default function AdminBrokersPage() {
               setStatus(s);
               setPage(1);
             }}
-            className={`min-h-[44px] rounded-sm border px-4 text-sm font-medium ${
-              status === s ? 'border-surface-dark bg-surface-dark text-white' : 'border-gray-line hover:bg-gray-bg'
-            }`}
+            className="min-h-[40px] rounded-md px-4 text-sm font-medium transition-colors"
+            style={{
+              background: status === s ? 'var(--red)' : 'transparent',
+              color: status === s ? '#fff' : 'var(--gray-mid)',
+              border: status === s ? '1px solid var(--red)' : '1px solid var(--gray-line)',
+            }}
           >
             {s || 'All statuses'}
           </button>
@@ -175,16 +175,16 @@ export default function AdminBrokersPage() {
         <p className="text-sm text-gray-mid">No brokers yet.</p>
       ) : (
         <>
-          <div className="hidden overflow-x-auto border border-gray-line sm:block">
-            <table className="w-full min-w-[640px] text-sm">
+          <div className="hidden overflow-hidden rounded-xl border sm:block" style={{ borderColor: 'var(--gray-line)' }}>
+            <table className="admin-table">
               <thead>
-                <tr className="border-b border-gray-line bg-gray-bg text-left">
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Type</th>
-                  <th className="p-3">Rating</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Clicks</th>
-                  <th className="p-3"></th>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Rating</th>
+                  <th>Status</th>
+                  <th>Clicks</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -193,9 +193,9 @@ export default function AdminBrokersPage() {
                     key={broker.id}
                     onClick={() => handleRowClick(broker.id)}
                     onDoubleClick={() => handleRowDoubleClick(broker.id)}
-                    className="cursor-pointer border-b border-gray-line last:border-0 hover:bg-gray-bg"
+                    className="cursor-pointer"
                   >
-                    <td className="p-3 font-medium">
+                    <td className="font-medium">
                       {broker.name}
                       {broker.badge && (
                         <span className="ml-2 rounded-sm bg-gray-bg px-2 py-0.5 text-xs font-normal">
@@ -203,8 +203,8 @@ export default function AdminBrokersPage() {
                         </span>
                       )}
                     </td>
-                    <td className="p-3 text-gray-mid">{broker.type}</td>
-                    <td className="p-3 text-gray-mid">{broker.rating ?? '—'}</td>
+                    <td style={{ color: 'var(--gray-mid)' }}>{broker.type}</td>
+                    <td style={{ color: 'var(--gray-mid)' }}>{broker.rating ?? '—'}</td>
                     <td className="p-3">
                       <span
                         className={`rounded-sm px-2 py-1 font-mono text-xs ${
@@ -214,8 +214,8 @@ export default function AdminBrokersPage() {
                         {broker.is_active ? 'active' : 'inactive'}
                       </span>
                     </td>
-                    <td className="p-3 text-gray-mid">{broker.click_count}</td>
-                    <td className="p-3" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+                    <td style={{ color: 'var(--gray-mid)' }}>{broker.click_count}</td>
+                    <td onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-3">
                         {!status && (
                           <div className="flex flex-col">
