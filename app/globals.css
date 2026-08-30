@@ -73,6 +73,18 @@ h1, h2, h3 {
   letter-spacing: -0.01em;
 }
 
+/* Archivo Black (Google Fonts) KHÔNG có glyph tiếng Việt → heading tiếng Việt
+   sẽ bị fallback về font hệ thống trông vỡ. Với locale vi (lang="vi" trên <html>)
+   dùng Space Grotesk Bold — font đã load, đủ ký tự có dấu — giữ đồng bộ & đẹp. */
+html[lang="vi"] h1,
+html[lang="vi"] h2,
+html[lang="vi"] h3 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
 @keyframes ticker-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
