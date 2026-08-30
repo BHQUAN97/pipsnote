@@ -52,19 +52,27 @@ body {
   background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-space-grotesk), sans-serif;
-  background-image: var(--global-bg-image, none);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
 }
 
-/* background-attachment: fixed vỡ/lag trên trình duyệt mobile (đặc biệt iOS Safari) do
-   viewport đổi kích thước khi thanh URL ẩn/hiện — tắt hẳn ảnh nền dưới breakpoint md */
+/* Global background image — dùng Cuộn bình thường (không fixed) để không vỡ trên
+   mobile/iOS. Tô thêm 1 layer tối (gradient) đè lên ảnh để nội dung dễ đọc & hài hoà. */
+body.bg-image {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgb(11 14 20 / 0.55) 0%,
+      rgb(11 14 20 / 0.62) 40%,
+      rgb(11 14 20 / 0.78) 100%
+    ),
+    var(--global-bg-image, none);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-attachment: scroll, scroll;
+}
+
 @media (max-width: 767px) {
-  body {
-    background-image: none;
-  }
+  /* fixed đã bỏ nên mobile an toàn — giữ ảnh nền luôn (không tắt như trước). */
 }
 
 h1, h2, h3 {

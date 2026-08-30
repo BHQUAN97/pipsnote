@@ -14,6 +14,8 @@ services:
     env_file: .env
     ports:
       - "127.0.0.1:5601:3000"
+    volumes:
+      - media_data:/app/public/uploads
     networks:
       - webphoto_backend   # network shared co san — cham toi shared-mysql
       - pipsnote_internal  # cham toi redis/meilisearch cua rieng pipsnote
@@ -71,3 +73,4 @@ networks:
 volumes:
   redis_data:
   meili_data:
+  media_data:

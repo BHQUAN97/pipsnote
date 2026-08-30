@@ -72,6 +72,7 @@ export default async function RootLayout({
         />
       </head>
       <body
+        className={globalBg ? 'bg-image' : undefined}
         style={
           globalBg
             ? ({ '--global-bg-image': `url(${globalBg})` } as React.CSSProperties)

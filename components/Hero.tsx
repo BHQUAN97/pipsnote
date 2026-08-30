@@ -17,8 +17,8 @@ export default function Hero({ bgUrl }: { bgUrl?: string }) {
     <section className="relative overflow-hidden border-b border-gray-line py-16 md:py-[88px]">
       {bgUrl && (
         <>
-          <Image src={bgUrl} alt="" fill priority className="absolute inset-0 -z-20 object-cover" />
-          <div className="absolute inset-0 -z-10 bg-surface-dark/70" />
+          <Image src={bgUrl} alt="" fill priority className="absolute inset-0 -z-20 object-cover object-center" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-surface-dark/90 via-surface-dark/55 to-surface-dark/30" />
         </>
       )}
       <div className="relative z-10 mx-auto grid max-w-[1180px] gap-12 px-7 md:grid-cols-[1.15fr_0.85fr] md:items-end md:gap-16">

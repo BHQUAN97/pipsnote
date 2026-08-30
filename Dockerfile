@@ -52,6 +52,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
+# Media upload local — tao thu muc uploads + cho nextjs (uid 1001) ghi duoc
+RUN mkdir -p ./public/uploads && chown -R nextjs:nodejs ./public
+
 # Switch to non-root user
 USER nextjs
 

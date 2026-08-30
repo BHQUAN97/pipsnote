@@ -32,8 +32,8 @@ export default function Newsletter({ bgUrl }: { bgUrl?: string }) {
     <div className="relative flex flex-col items-start gap-10 overflow-hidden bg-surface-dark p-8 text-white md:flex-row md:items-center md:justify-between md:p-14">
       {bgUrl && (
         <>
-          <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover" />
-          <div className="absolute inset-0 -z-10 bg-surface-dark/70" />
+          <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover object-center" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-surface-dark/90 via-surface-dark/65 to-surface-dark/75" />
         </>
       )}
       <div className="relative z-10">

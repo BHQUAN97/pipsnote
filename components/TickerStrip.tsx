@@ -39,8 +39,8 @@ export default function TickerStrip({
     <div className="relative overflow-hidden whitespace-nowrap bg-surface-dark">
       {bgUrl && (
         <>
-          <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover" />
-          <div className="absolute inset-0 -z-10 bg-surface-dark/70" />
+          <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover object-center" />
+          <div className="absolute inset-0 -z-10 bg-surface-dark/80" />
         </>
       )}
       <div className="animate-ticker-scroll relative z-10 inline-flex">

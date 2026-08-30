@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withApiHandler } from '@/lib/withApiHandler';
 import { requireAdmin } from '@/lib/getAdminUser';
 import { HttpError } from '@/lib/httpError';
-import { uploadMediaToR2 } from '@/lib/r2';
+import { uploadMediaToStorage } from '@/lib/media';
 
 const ALLOWED_TYPES: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -35,7 +35,7 @@ async function postHandler(req: NextRequest) {
 
   const buffer = Buffer.from(await file.arrayBuffer());
   const key = `${folder}/${new Date().toISOString().slice(0, 7)}/${crypto.randomUUID()}.${ext}`;
-  const url = await uploadMediaToR2(key, buffer, file.type);
+  const url = await uploadMediaToStorage(key, buffer, file.type);
 
   return NextResponse.json({ url }, { status: 201 });
 }
