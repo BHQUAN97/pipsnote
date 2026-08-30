@@ -15,6 +15,17 @@ const NAV_ITEMS: Array<{ href: string; label: string; roles: AdminUser['role'][]
   { href: '/admin/logs', label: 'Logs', roles: ['superadmin'] },
 ];
 
+// Icon đơn giản (unicode) cho từng nav item
+const NAV_ICON: Record<string, string> = {
+  Dashboard: '▦',
+  Posts: '✎',
+  Brokers: '◈',
+  'Market Data': '◍',
+  Users: '☻',
+  Settings: '⚙',
+  Logs: '☰',
+};
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -23,27 +34,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    if (pathname === '/admin/login') {
-      return;
-    }
-
+    if (pathname === '/admin/login') return;
     fetch('/api/admin/me')
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data: AdminUser) => {
         setUser(data);
         setChecked(true);
       })
-      .catch(() => {
-        router.replace('/admin/login');
-      });
+      .catch(() => router.replace('/admin/login'));
   }, [pathname, router]);
 
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
+  if (pathname === '/admin/login') return <>{children}</>;
 
   if (!checked || !user) {
-    return <div className="min-h-screen flex items-center justify-center bg-bg">Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--gray-mid)' }}>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          Loading…
+        </div>
+      </div>
+    );
   }
 
   const handleLogout = async () => {
@@ -52,89 +63,94 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(user.role));
-
-  function isNavItemActive(href: string): boolean {
-    return href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
-  }
+  const isActive = (href: string) =>
+    href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header className="border-b border-gray-line">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-8">
-          <div className="flex items-center gap-1">
-            <Link href="/admin/posts" className="mr-3 font-display text-lg">
-              PIPSNOTE Admin
-            </Link>
-            <nav className="hidden items-center gap-1 md:flex">
-              {visibleItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex min-h-[44px] items-center rounded-sm px-3 py-2 text-sm font-medium ${
-                    isNavItemActive(item.href)
-                      ? 'bg-surface-dark text-white'
-                      : 'hover:bg-gray-bg'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-          <div className="hidden items-center gap-3 md:flex">
-            <span className="text-sm text-gray-mid">
-              {user.username} ({user.role})
+    <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--ink)' }}>
+      {/* Top bar */}
+      <header
+        className="sticky top-0 z-40 border-b"
+        style={{
+          background: 'linear-gradient(180deg, var(--surface-dark) 0%, var(--bg) 100%)',
+          borderColor: 'var(--gray-line)',
+        }}
+      >
+        <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-4 sm:px-6">
+          <Link href="/admin" className="flex items-center gap-2 font-display text-lg tracking-tight">
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-md text-white text-base"
+              style={{ background: 'var(--red)' }}
+            >
+              P
+            </span>
+            PIPSNOTE
+            <span className="hidden text-sm font-normal sm:inline" style={{ color: 'var(--gray-mid)' }}>
+              Admin
+            </span>
+          </Link>
+
+          <nav className="hidden flex-1 items-center gap-1 lg:flex">
+            {visibleItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium transition-colors ${
+                  isActive(item.href) ? 'text-white' : 'hover:bg-white/5'
+                }`}
+                style={isActive(item.href) ? { background: 'color-mix(in srgb, var(--red) 16%, transparent)' } : undefined}
+              >
+                <span style={{ color: isActive(item.href) ? 'var(--red)' : 'var(--gray-mid)' }} className="text-sm leading-none">
+                  {NAV_ICON[item.label]}
+                </span>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-3 lg:ml-0">
+            <span className="hidden rounded-md px-2.5 py-1 text-xs font-medium sm:inline" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--gray-mid)' }}>
+              {user.username} · {user.role}
             </span>
             <button
               onClick={handleLogout}
-              className="min-h-[44px] rounded-sm border border-gray-line px-4 py-2 text-sm hover:bg-gray-bg"
+              className="flex h-9 items-center gap-1.5 rounded-md px-3 text-[13px] font-medium transition-colors hover:bg-white/5"
+              style={{ color: 'var(--gray-mid)' }}
             >
-              Logout
+              <span>⎋</span> Logout
+            </button>
+            <button
+              type="button"
+              onClick={() => setDrawerOpen((o) => !o)}
+              aria-label="Menu"
+              className="flex h-10 w-10 items-center justify-center rounded-md text-lg lg:hidden hover:bg-white/5"
+            >
+              {drawerOpen ? '✕' : '☰'}
             </button>
           </div>
-          <button
-            type="button"
-            onClick={() => setDrawerOpen((open) => !open)}
-            aria-label={drawerOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={drawerOpen}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gray-line text-lg md:hidden"
-          >
-            {drawerOpen ? '✕' : '☰'}
-          </button>
         </div>
+
+        {/* Mobile drawer */}
         {drawerOpen && (
-          <nav className="card-elevated border-t border-gray-line bg-bg px-4 py-3 md:hidden">
-            <div className="flex flex-col gap-1">
-              {visibleItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setDrawerOpen(false)}
-                  className={`flex min-h-[44px] items-center rounded-sm px-3 py-2 text-sm font-medium ${
-                    isNavItemActive(item.href)
-                      ? 'bg-surface-dark text-white'
-                      : 'hover:bg-gray-bg'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <div className="mt-3 flex items-center justify-between border-t border-gray-line pt-3">
-              <span className="text-sm text-gray-mid">
-                {user.username} ({user.role})
-              </span>
-              <button
-                onClick={handleLogout}
-                className="min-h-[44px] rounded-sm border border-gray-line px-4 py-2 text-sm hover:bg-gray-bg"
+          <nav className="border-t px-3 py-2 lg:hidden" style={{ borderColor: 'var(--gray-line)' }}>
+            {visibleItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setDrawerOpen(false)}
+                className="flex min-h-[44px] items-center gap-3 rounded-md px-3 text-sm font-medium hover:bg-white/5"
+                style={isActive(item.href) ? { color: 'var(--red)' } : undefined}
               >
-                Logout
-              </button>
-            </div>
+                <span style={{ color: 'var(--gray-mid)' }}>{NAV_ICON[item.label]}</span>
+                {item.label}
+              </Link>
+            ))}
           </nav>
         )}
       </header>
-      <main className="mx-auto max-w-6xl p-4 sm:p-8">{children}</main>
+
+      {/* Content */}
+      <main className="mx-auto max-w-[1440px] p-4 sm:p-6 lg:p-8">{children}</main>
     </div>
   );
 }

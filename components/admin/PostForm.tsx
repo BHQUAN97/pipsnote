@@ -186,7 +186,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           value={values.excerpt}
           onChange={(e) => update('excerpt', e.target.value)}
           rows={3}
-          className="w-full px-4 py-2 border border-gray-line rounded-sm"
+          className="admin-input"
           disabled={saving}
         />
       </div>
@@ -213,7 +213,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           <select
             value={values.category_id}
             onChange={(e) => update('category_id', e.target.value)}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded-sm"
+            className="admin-input"
             disabled={saving}
           >
             <option value="">— None —</option>
@@ -230,7 +230,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           <select
             value={values.status}
             onChange={(e) => update('status', e.target.value as PostFormValues['status'])}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded-sm"
+            className="admin-input"
             disabled={saving}
           >
             <option value="draft">Draft</option>
@@ -294,19 +294,10 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50"
-        >
+        <button type="submit" disabled={saving} className="btn-primary">
           {saving ? 'Saving...' : 'Save post'}
         </button>
-        <button
-          type="button"
-          onClick={() => router.push('/admin/posts')}
-          disabled={saving}
-          className="min-h-[44px] px-6 py-2 border border-gray-line rounded-sm hover:bg-gray-bg disabled:opacity-50"
-        >
+        <button type="button" onClick={() => router.push('/admin/posts')} disabled={saving} className="btn-secondary">
           Cancel
         </button>
       </div>

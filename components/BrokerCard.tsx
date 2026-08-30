@@ -24,9 +24,12 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         </span>
         {broker.badge && (
           <span
-            className={`font-mono text-badge uppercase tracking-[0.06em] px-2 py-1 text-white ${
-              broker.badge === 'Hot' ? 'bg-brand' : 'bg-surface-dark'
-            }`}
+            className="font-mono text-badge uppercase tracking-[0.06em] px-2 py-1 text-white rounded-full"
+            style={
+              broker.badge === 'Hot'
+                ? { background: 'linear-gradient(135deg, var(--red), var(--red-dark))', boxShadow: '0 2px 8px rgba(46,139,255,0.35)' }
+                : undefined
+            }
           >
             {broker.badge}
           </span>

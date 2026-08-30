@@ -120,10 +120,7 @@ export default function AdminPostsPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold sm:text-3xl">Posts</h1>
-        <Link
-          href="/admin/posts/new"
-          className="min-h-[44px] rounded-sm bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark flex items-center"
-        >
+        <Link href="/admin/posts/new" className="btn-primary">
           + New post
         </Link>
       </div>
@@ -136,9 +133,12 @@ export default function AdminPostsPage() {
               setStatus(s);
               setPage(1);
             }}
-            className={`min-h-[44px] rounded-sm border px-4 py-2 text-sm ${
-              status === s ? 'bg-surface-dark text-white' : 'hover:bg-gray-bg'
-            }`}
+            className="min-h-[40px] rounded-md px-4 py-2 text-sm font-medium transition-colors"
+            style={{
+              background: status === s ? 'var(--red)' : 'transparent',
+              color: status === s ? '#fff' : 'var(--gray-mid)',
+              border: status === s ? '1px solid var(--red)' : `1px solid var(--gray-line)`,
+            }}
           >
             {s || 'All'}
           </button>
@@ -151,16 +151,16 @@ export default function AdminPostsPage() {
         <p className="text-sm text-gray-mid">No posts yet.</p>
       ) : (
         <>
-          <div className="hidden overflow-x-auto border border-gray-line sm:block">
-            <table className="w-full min-w-[640px] text-sm">
+          <div className="hidden overflow-hidden rounded-xl border sm:block" style={{ borderColor: 'var(--gray-line)' }}>
+            <table className="admin-table">
               <thead>
-                <tr className="border-b border-gray-line bg-gray-bg text-left">
-                  <th className="p-3">Title</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Views</th>
-                  <th className="p-3">Updated</th>
-                  <th className="p-3"></th>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Views</th>
+                  <th>Updated</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -169,48 +169,43 @@ export default function AdminPostsPage() {
                     key={post.id}
                     onClick={() => handleRowClick(post.id)}
                     onDoubleClick={() => handleRowDoubleClick(post.id)}
-                    className="cursor-pointer border-b border-gray-line last:border-0 hover:bg-gray-bg"
+                    className="cursor-pointer"
                   >
-                    <td className="p-3 font-medium">{post.title}</td>
-                    <td className="p-3 text-gray-mid">{post.category_name ?? '—'}</td>
-                    <td className="p-3">
-                      <span className="rounded-sm bg-gray-bg px-2 py-1 font-mono text-xs">
-                        {post.status}
-                      </span>
+                    <td className="font-medium">{post.title}</td>
+                    <td style={{ color: 'var(--gray-mid)' }}>{post.category_name ?? '—'}</td>
+                    <td>
+                      <span className={`badge badge-${post.status}`}>{post.status}</span>
                     </td>
-                    <td className="p-3 text-gray-mid">{post.view_count}</td>
-                    <td className="p-3 text-gray-mid">
+                    <td style={{ color: 'var(--gray-mid)' }}>{post.view_count}</td>
+                    <td style={{ color: 'var(--gray-mid)' }}>
                       {new Date(post.updated_at).toLocaleDateString('en-US')}
                     </td>
-                    <td className="p-3" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+                    <td onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-3">
                         {!status && (
                           <div className="flex flex-col">
                             <button
                               aria-label="Move up"
                               onClick={() => handleReorder(post.id, 'up')}
-                              className="flex h-5 w-6 items-center justify-center leading-none hover:text-brand"
-                            >
-                              ▲
-                            </button>
+                              className="flex h-5 w-6 items-center justify-center leading-none hover:!text-brand"
+                              style={{ color: 'var(--gray-mid)' }}
+                            >▲</button>
                             <button
                               aria-label="Move down"
                               onClick={() => handleReorder(post.id, 'down')}
-                              className="flex h-5 w-6 items-center justify-center leading-none hover:text-brand"
-                            >
-                              ▼
-                            </button>
+                              className="flex h-5 w-6 items-center justify-center leading-none hover:!text-brand"
+                              style={{ color: 'var(--gray-mid)' }}
+                            >▼</button>
                           </div>
                         )}
-                        <Link href={`/admin/posts/${post.id}/edit`} className="text-brand hover:underline">
+                        <Link href={`/admin/posts/${post.id}/edit`} className="font-medium hover:underline" style={{ color: 'var(--red)' }}>
                           Edit
                         </Link>
                         <button
                           onClick={() => handleDelete(post.id, post.title)}
-                          className="text-down hover:underline"
-                        >
-                          Delete
-                        </button>
+                          className="font-medium hover:underline"
+                          style={{ color: 'var(--down)' }}
+                        >Delete</button>
                       </div>
                     </td>
                   </tr>

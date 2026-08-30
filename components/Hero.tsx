@@ -14,7 +14,20 @@ export default function Hero({ bgUrl }: { bgUrl?: string }) {
   const t = useTranslations('hero');
 
   return (
-    <section className="relative overflow-hidden border-b border-gray-line py-16 md:py-[88px]">
+    <section
+      className="relative overflow-hidden border-b py-16 md:py-[88px]"
+      style={{ borderColor: 'var(--gray-line)' }}
+    >
+      {/* Nền gradient tài chính mặc định (luôn có, kể cả không đặt bg.hero) */}
+      <div
+        className="absolute inset-0 -z-30"
+        style={{
+          backgroundImage:
+            'radial-gradient(ellipse 80% 60% at 85% 20%, rgba(46,139,255,0.18) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 60% 50% at 5% 90%, rgba(46,139,255,0.10) 0%, transparent 55%),' +
+            'linear-gradient(160deg, var(--surface-dark) 0%, var(--bg) 100%)',
+        }}
+      />
       {bgUrl && (
         <>
           <Image src={bgUrl} alt="" fill priority className="absolute inset-0 -z-20 object-cover object-center" />
