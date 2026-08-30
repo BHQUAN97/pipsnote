@@ -87,7 +87,9 @@ export default function AdminDashboardPage() {
         <StatCard label="Published" value={data.postsByStatus.published} />
         <StatCard label="Drafts" value={data.postsByStatus.draft} />
         <StatCard label="Active brokers" value={data.activeBrokerCount} />
-        <StatCard label="Errors (24h)" value={data.recentErrorCount} alert />
+        <div className="col-span-2 sm:col-span-2 lg:col-span-1">
+          <StatCard label="Errors (24h)" value={data.recentErrorCount} alert />
+        </div>
       </div>
 
       <div className="mb-8 admin-card p-5">
