@@ -19,6 +19,14 @@ export function withApiHandler(
         method: req.method,
         url: req.url,
       }, 'Request received');
+      await persistLog({
+        level: 'info',
+        message: 'Request received',
+        module: moduleName,
+        requestId,
+        url: req.url,
+        method: req.method,
+      });
 
       const response = await handler(req);
 
@@ -26,6 +34,15 @@ export function withApiHandler(
         requestId,
         status: response.status,
       }, 'Request completed');
+      await persistLog({
+        level: 'info',
+        message: 'Request completed',
+        module: moduleName,
+        requestId,
+        url: req.url,
+        method: req.method,
+        statusCode: response.status,
+      });
 
       return response;
 
@@ -36,6 +53,16 @@ export function withApiHandler(
           error: error.message,
           statusCode: error.statusCode,
         }, 'Request rejected');
+        // Persist warn đến DB
+        await persistLog({
+          level: 'warn',
+          message: error.message,
+          module: moduleName,
+          requestId,
+          url: req.url,
+          method: req.method,
+          statusCode: error.statusCode,
+        });
 
         return NextResponse.json(
           { error: error.message, requestId },
