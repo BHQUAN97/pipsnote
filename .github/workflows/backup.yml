@@ -10,6 +10,7 @@ env:
   KEEP_DAYS: 7
   DB_NAME: pipsnote
   DB_USER: pipsnote_app
+  MEDIA_VOLUME: pipsnote_media_data
   BACKUP_BRANCH: backups
 
 permissions:
@@ -17,7 +18,7 @@ permissions:
 
 jobs:
   backup:
-    name: Backup DB
+    name: Backup DB + Uploads
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -77,6 +78,21 @@ jobs:
             echo \"  DB: \$(du -h \$BACKUP_DIR/${DB_NAME}.sql.gz | cut -f1)\"
 
             echo ''
+            echo '=== Upload archives: ${MEDIA_VOLUME} ==='
+            UPLOADS_PATH=\$(docker volume inspect ${MEDIA_VOLUME} --format '{{.Mountpoint}}' 2>/dev/null || echo '')
+            if [ -n \"\$UPLOADS_PATH\" ] && [ -d \"\$UPLOADS_PATH\" ] && [ \"\$(ls -A \$UPLOADS_PATH 2>/dev/null)\" ]; then
+              echo \"Uploads path: \$UPLOADS_PATH\"
+              FILE_COUNT=\$(find \$UPLOADS_PATH -type f | wc -l)
+              echo \"  Files: \$FILE_COUNT\"
+              if [ \"\$FILE_COUNT\" -gt 0 ]; then
+                tar czf \$BACKUP_DIR/uploads.tar.gz -C \$UPLOADS_PATH .
+                echo \"  Uploads: \$(du -h \$BACKUP_DIR/uploads.tar.gz | cut -f1)\"
+              fi
+            else
+              echo 'No uploads found (skip)'
+            fi
+
+            echo ''
             echo '=== Verify backups ==='
             VERIFY_FAIL=0
             for gz in \$(find \$BACKUP_DIR -name '*.sql.gz'); do
@@ -92,6 +108,9 @@ jobs:
                 echo \"FAIL: \$(basename \$gz) corrupt\"
                 VERIFY_FAIL=1
               fi
+            done
+            for z in \$(find \$BACKUP_DIR -name '*.tar.gz'); do
+              tar tzf \"\$z\" > /dev/null 2>&1 && echo \"OK: \$(basename \$z) (\$(du -h \$z | cut -f1))\" || { echo \"FAIL: \$(basename \$z) corrupt\"; VERIFY_FAIL=1; }
             done
             [ \$VERIFY_FAIL -eq 0 ] || { echo 'ERROR: Verification failed!'; exit 1; }
 
@@ -121,9 +140,9 @@ jobs:
             cat > README.md << 'READMEEOF'
           # pipsnote Backups
 
-          Daily DB backups.
+          Daily DB backups. Media backed up as uploads.tar.gz.
 
-          Structure: pipsnote/YYYY-MM-DD/pipsnote.sql.gz
+          Structure: pipsnote/YYYY-MM-DD/{pipsnote.sql.gz, uploads.tar.gz}
           READMEEOF
             git add README.md
           fi
