@@ -51,7 +51,8 @@ jobs:
             R2_MEDIA_PUBLIC_URL=${{ secrets.R2_MEDIA_PUBLIC_URL }}
             BACKUP_ENC_KEY=${{ secrets.BACKUP_ENC_KEY }}
             MARKET_DATA_CRON_SECRET=${{ secrets.MARKET_DATA_CRON_SECRET }}
-            MARKET_DATA_MOCK=${{ secrets.MARKET_DATA_MOCK }}
+            MARKET_DATA_MOCK=false
+            AI_TRANSLATE_API_KEY=${{ secrets.AI_TRANSLATE_API_KEY }}
             TWELVEDATA_API_KEY=${{ secrets.TWELVEDATA_API_KEY }}
             FCSAPI_API_KEY=${{ secrets.FCSAPI_API_KEY }}
             ALPACA_API_KEY=${{ secrets.ALPACA_API_KEY }}
