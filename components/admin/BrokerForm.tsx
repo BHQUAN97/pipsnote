@@ -134,7 +134,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           value={values.description}
           onChange={(e) => update('description', e.target.value)}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-line rounded-sm"
+          className="admin-input"
           disabled={saving}
         />
       </div>
@@ -156,7 +156,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           <select
             value={values.type}
             onChange={(e) => update('type', e.target.value as BrokerFormValues['type'])}
-            className="w-full min-h-[44px] px-4 py-2 border border-gray-line rounded-sm"
+            className="admin-input"
             disabled={saving}
           >
             <option value="forex">Forex</option>
@@ -270,7 +270,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         <button
           type="submit"
           disabled={saving}
-          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50"
+          className="btn-primary"
         >
           {saving ? 'Saving...' : 'Save broker'}
         </button>
@@ -278,7 +278,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
           type="button"
           onClick={() => router.push('/admin/brokers')}
           disabled={saving}
-          className="min-h-[44px] px-6 py-2 border border-gray-line rounded-sm hover:bg-gray-bg disabled:opacity-50"
+          className="btn-secondary"
         >
           Cancel
         </button>

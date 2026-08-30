@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--ink)' }}>
+    <div className="admin-scope min-h-screen" style={{ background: 'var(--bg)', color: 'var(--ink)' }}>
       {/* Top bar */}
       <header
         className="sticky top-0 z-40 border-b"

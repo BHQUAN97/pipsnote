@@ -132,7 +132,7 @@ export default function TagInput({ value, onChange, disabled }: TagInputProps) {
       </div>
 
       {showSuggestions && input.trim() && suggestions.length > 0 && (
-        <ul className="absolute z-10 mt-1 w-full max-h-48 overflow-auto border border-gray-line rounded-sm bg-white shadow-md">
+        <ul className="absolute z-10 mt-1 w-full max-h-48 overflow-auto border border-gray-line rounded-sm bg-gray-bg shadow-md">
           {suggestions.slice(0, 8).map((opt) => (
             <li key={opt.id}>
               <button
