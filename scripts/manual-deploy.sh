@@ -3,7 +3,7 @@
 
 set -e
 
-VPS="root@159.223.77.247"
+VPS="root@221.121.1.141"
 APP_DIR="/opt/pdhoan"
 
 echo "=== PDHOAN VPS Deploy ==="

@@ -1,15 +1,15 @@
 # ══════════════════════════════════════════════════════════
 # PDHOAN PIPSNOTE — VPS Deploy Script (PowerShell)
 # Domain: hoan.bhquan.store
-# VPS: 159.223.77.247 (root / password auth)
+# VPS: 221.121.1.141 (root / password auth)
 # ══════════════════════════════════════════════════════════
 
 $ErrorActionPreference = "Stop"
 
 # ── Configuration ──────────────────────────────────────────
-$VPS_IP = "159.223.77.247"
+$VPS_IP = "221.121.1.141"
 $VPS_USER = "root"
-$VPS_PASSWORD = "12345678@AbcBHQuan"
+$VPS_PASSWORD = "@zg%#8pYmP@dNjrQ"
 $APP_DIR = "/opt/pdhoan"
 $REPO_URL = "https://github.com/BHQUAN97/PDHOAN.git"
 $BRANCH = "main"
