@@ -1,9 +1,13 @@
 import { logger } from '@/lib/logger';
 import { HttpError } from '@/lib/httpError';
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const ANTHROPIC_VERSION = '2023-06-01';
-const MODEL = 'claude-haiku-4-5-20251001';
+// Backend dịch AI — dùng OpenRouter (OpenAI-compatible) hoặc Gemini qua OpenRouter.
+// Cấu hình bằng env:
+//   AI_TRANSLATE_BASE_URL  (default: https://openrouter.ai/api/v1)
+//   AI_TRANSLATE_API_KEY   (default: process.env.OPENROUTER_API_KEY / ANTHROPIC_API_KEY fallback)
+//   AI_TRANSLATE_MODEL     (default: google/gemini-3.7-flash)
+const BASE_URL = process.env.AI_TRANSLATE_BASE_URL || 'https://openrouter.ai/api/v1';
+const MODEL = process.env.AI_TRANSLATE_MODEL || 'google/gemini-3.7-flash';
 
 export interface TranslatePostInput {
   title: string;
@@ -25,36 +29,62 @@ export interface TranslatePostResult {
 const LOCALE_NAMES: Record<string, string> = {
   vi: 'Vietnamese',
   en: 'English',
+  de: 'German',
+  fr: 'French',
 };
 
 const EMIT_TRANSLATION_TOOL = {
   name: 'emit_translation',
-  description: 'Return the translated post fields.',
-  input_schema: {
-    type: 'object' as const,
+  description: 'Return the translated post fields as JSON.',
+  parameters: {
+    type: 'object',
     properties: {
-      title: { type: 'string' as const },
-      excerpt: { type: 'string' as const },
-      content: { type: 'string' as const },
-      seoTitle: { type: 'string' as const },
-      seoDesc: { type: 'string' as const },
+      title: { type: 'string' },
+      excerpt: { type: 'string' },
+      content: { type: 'string' },
+      seoTitle: { type: 'string' },
+      seoDesc: { type: 'string' },
     },
     required: ['title', 'excerpt', 'content', 'seoTitle', 'seoDesc'],
   },
 };
 
+function resolveApiKey(): string | undefined {
+  return (
+    process.env.AI_TRANSLATE_API_KEY ||
+    process.env.OPENROUTER_API_KEY ||
+    process.env.ANTHROPIC_API_KEY
+  );
+}
+
+function extractToolArguments(data: Record<string, unknown>): Record<string, unknown> | null {
+  // OpenAI-compatible: choices[0].message.tool_calls[0].function.arguments (JSON string)
+  const choices = data?.choices as Array<{
+    message?: { tool_calls?: Array<{ function?: { arguments?: string } }> };
+  }>;
+  const toolCalls = choices?.[0]?.message?.tool_calls;
+  const args = toolCalls?.[0]?.function?.arguments;
+  if (!args) return null;
+  try {
+    return JSON.parse(args) as Record<string, unknown>;
+  } catch (err) {
+    logger.error({ err, args }, 'AI translation tool arguments not valid JSON');
+    return null;
+  }
+}
+
 export async function translatePostContent(
   input: TranslatePostInput
 ): Promise<TranslatePostResult> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = resolveApiKey();
   if (!apiKey) {
-    throw new HttpError(500, 'AI translation is not configured');
+    throw new HttpError(500, 'AI translation is not configured (missing AI_TRANSLATE_API_KEY / OPENROUTER_API_KEY / ANTHROPIC_API_KEY)');
   }
 
   const targetLanguage = LOCALE_NAMES[input.targetLocale] ?? input.targetLocale;
 
   const userMessage = [
-    `Translate the following forex/crypto blog post into ${targetLanguage}.`,
+    `You are a professional forex/crypto blog translator. Translate the following blog post into ${targetLanguage}.`,
     'Preserve the HTML tag structure of "content" exactly — translate only the text nodes, never the tags/attributes.',
     'Do not translate brand names, broker names, currency symbols, or numbers.',
     'Call the emit_translation tool with the translated fields.',
@@ -68,18 +98,17 @@ export async function translatePostContent(
 
   let res: Response;
   try {
-    res = await fetch(ANTHROPIC_API_URL, {
+    res = await fetch(`${BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': ANTHROPIC_VERSION,
+        authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 8192,
-        tools: [EMIT_TRANSLATION_TOOL],
-        tool_choice: { type: 'tool', name: 'emit_translation' },
+        tools: [{ type: 'function', function: EMIT_TRANSLATION_TOOL }],
+        tool_choice: { type: 'function', function: { name: 'emit_translation' } },
         messages: [{ role: 'user', content: userMessage }],
       }),
     });
@@ -95,20 +124,31 @@ export async function translatePostContent(
   }
 
   const data = await res.json();
-  const toolUse = data?.content?.find(
-    (block: { type: string }) => block.type === 'tool_use'
-  );
+  const fields = extractToolArguments(data);
 
-  if (!toolUse?.input) {
-    logger.error({ data }, 'AI translation response missing tool_use block');
+  if (!fields) {
+    // Fallback: nếu model trả plain-text JSON thay vì tool call, thử parse content.
+    const content = (data as Record<string, unknown>)?.choices
+      ? ((data as Record<string, unknown>).choices as Array<{ message?: { content?: string } }>)?.[0]
+          ?.message?.content
+      : undefined;
+    if (typeof content === 'string' && content.trim()) {
+      try {
+        const parsed = JSON.parse(content) as Record<string, unknown>;
+        return normalizeFields(parsed);
+      } catch {
+        // không parse được — báo lỗi
+      }
+    }
+    logger.error({ data }, 'AI translation response missing tool use');
     throw new HttpError(502, 'AI translation failed');
   }
 
-  const { title, excerpt, content, seoTitle, seoDesc } = toolUse.input as Record<
-    string,
-    unknown
-  >;
+  return normalizeFields(fields);
+}
 
+function normalizeFields(fields: Record<string, unknown>): TranslatePostResult {
+  const { title, excerpt, content, seoTitle, seoDesc } = fields;
   if (
     typeof title !== 'string' ||
     typeof excerpt !== 'string' ||
@@ -116,9 +156,8 @@ export async function translatePostContent(
     typeof seoTitle !== 'string' ||
     typeof seoDesc !== 'string'
   ) {
-    logger.error({ toolUse }, 'AI translation response has unexpected shape');
+    logger.error({ fields }, 'AI translation response has unexpected shape');
     throw new HttpError(502, 'AI translation failed');
   }
-
   return { title, excerpt, content, seoTitle, seoDesc };
 }
