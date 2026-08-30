@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
             <ul className="flex flex-col gap-3">
               {data.topPosts.map((post) => (
                 <li key={post.id} className="flex items-center justify-between gap-3">
-                  <Link href={`/admin/posts/${post.id}/edit`} className="truncate text-sm hover:underline">
+                  <Link href={`/admin/posts/${post.id}/edit`} className="min-w-0 flex-1 truncate text-sm hover:underline">
                     {post.title}
                   </Link>
                   <span className="shrink-0 font-mono text-sm text-gray-mid">{post.view_count}</span>

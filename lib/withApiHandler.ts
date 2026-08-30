@@ -13,20 +13,26 @@ export function withApiHandler(
     const logger = createRequestLogger(moduleName);
     const requestId = crypto.randomUUID();
 
+    // Health check không có ý nghĩa để log DB — bỏ qua hoàn toàn.
+    const isHealth = moduleName === 'health' || req.url.includes('/api/health');
+    const shouldPersist = !isHealth;
+
     try {
       logger.info({
         requestId,
         method: req.method,
         url: req.url,
       }, 'Request received');
-      await persistLog({
-        level: 'info',
-        message: 'Request received',
-        module: moduleName,
-        requestId,
-        url: req.url,
-        method: req.method,
-      });
+      if (shouldPersist) {
+        await persistLog({
+          level: 'info',
+          message: 'Request received',
+          module: moduleName,
+          requestId,
+          url: req.url,
+          method: req.method,
+        });
+      }
 
       const response = await handler(req);
 
@@ -34,15 +40,17 @@ export function withApiHandler(
         requestId,
         status: response.status,
       }, 'Request completed');
-      await persistLog({
-        level: 'info',
-        message: 'Request completed',
-        module: moduleName,
-        requestId,
-        url: req.url,
-        method: req.method,
-        statusCode: response.status,
-      });
+      if (shouldPersist) {
+        await persistLog({
+          level: 'info',
+          message: 'Request completed',
+          module: moduleName,
+          requestId,
+          url: req.url,
+          method: req.method,
+          statusCode: response.status,
+        });
+      }
 
       return response;
 
@@ -55,18 +63,20 @@ export function withApiHandler(
           statusCode: error.statusCode,
           stack,
         }, 'Request rejected');
-        // Persist warn đến DB (kèm stack nếu có)
-        await persistLog({
-          level: 'warn',
-          message: error.message,
-          stacktrace: stack,
-          module: moduleName,
-          requestId,
-          url: req.url,
-          method: req.method,
-          statusCode: error.statusCode,
-          metadata: { name: error.name },
-        });
+        // Persist warn đến DB (kèm stack nếu có) — trừ health
+        if (shouldPersist) {
+          await persistLog({
+            level: 'warn',
+            message: error.message,
+            stacktrace: stack,
+            module: moduleName,
+            requestId,
+            url: req.url,
+            method: req.method,
+            statusCode: error.statusCode,
+            metadata: { name: error.name },
+          });
+        }
 
         return NextResponse.json(
           { error: error.message, requestId },
@@ -83,18 +93,20 @@ export function withApiHandler(
         stack: stacktrace,
       }, 'Request failed');
 
-      // Persist log vào DB (fire-and-forget) — đầy đủ message + stacktrace
-      await persistLog({
-        level: 'error',
-        message,
-        stacktrace,
-        module: moduleName,
-        requestId,
-        url: req.url,
-        method: req.method,
-        statusCode: 500,
-        metadata: { name: error instanceof Error ? error.name : typeof error },
-      });
+      // Persist log vào DB (fire-and-forget) — đầy đủ message + stacktrace, trừ health
+      if (shouldPersist) {
+        await persistLog({
+          level: 'error',
+          message,
+          stacktrace,
+          module: moduleName,
+          requestId,
+          url: req.url,
+          method: req.method,
+          statusCode: 500,
+          metadata: { name: error instanceof Error ? error.name : typeof error },
+        });
+      }
 
       // Trả về client message chung chung (không leak stacktrace)
       return NextResponse.json(
