@@ -145,7 +145,7 @@ export default function ProviderSettingsPanel() {
                 const input = getKeyInput(row.provider_key);
                 const isFree = FREE_PROVIDERS.has(row.provider_key);
                 return (
-                  <div key={row.provider_key} className="border border-gray-line bg-white p-4">
+                  <div key={row.provider_key} className="admin-card p-4" style={{ border: '1px solid var(--gray-line)', borderRadius: '0.75rem' }}>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium">{PROVIDER_LABELS[row.provider_key] ?? row.provider_key}</span>
@@ -165,11 +165,14 @@ export default function ProviderSettingsPanel() {
                       </div>
                       <button
                         onClick={() => handleToggle(row)}
-                        className={`min-h-[44px] rounded-sm px-3 py-2 font-mono text-xs ${
-                          row.is_enabled ? 'bg-up text-white' : 'bg-gray-bg'
-                        }`}
+                        className="min-h-[40px] rounded-md px-3 py-2 font-mono text-xs font-semibold transition-colors"
+                        style={
+                          row.is_enabled
+                            ? { background: 'color-mix(in srgb, var(--up) 18%, transparent)', color: 'var(--up)', border: '1px solid color-mix(in srgb, var(--up) 40%, transparent)' }
+                            : { background: 'transparent', color: 'var(--gray-mid)', border: '1px solid var(--gray-line)' }
+                        }
                       >
-                        {row.is_enabled ? 'enabled' : 'disabled'}
+                        {row.is_enabled ? '● enabled' : '○ disabled'}
                       </button>
                     </div>
 
@@ -180,7 +183,7 @@ export default function ProviderSettingsPanel() {
                           placeholder="New API key"
                           value={input.apiKey}
                           onChange={(e) => setKeyInput(row.provider_key, { apiKey: e.target.value })}
-                          className="min-h-[44px] flex-1 border border-gray-line px-3 py-2 text-sm"
+                          className="admin-input flex-1"
                         />
                         {row.provider_key === 'alpaca' && (
                           <input
@@ -188,14 +191,14 @@ export default function ProviderSettingsPanel() {
                             placeholder="API secret"
                             value={input.apiSecret}
                             onChange={(e) => setKeyInput(row.provider_key, { apiSecret: e.target.value })}
-                            className="min-h-[44px] flex-1 border border-gray-line px-3 py-2 text-sm"
+                            className="admin-input flex-1"
                           />
                         )}
                         {!isFree && (
                           <button
                             onClick={() => handleSaveKey(row)}
                             disabled={input.saving}
-                            className="min-h-[44px] shrink-0 rounded-sm bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+                            className="btn-primary shrink-0"
                           >
                             {input.saving ? 'Saving…' : 'Save key'}
                           </button>
