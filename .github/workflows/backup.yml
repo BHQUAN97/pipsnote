@@ -1,28 +1,166 @@
-name: Backup pipsnote MySQL
+name: Daily Backup pipsnote
 
 on:
   schedule:
-    - cron: '30 18 * * *'   # 1:30 sang gio VN (UTC+7)
-  workflow_dispatch: {}
+    - cron: '40 20 * * *'
+  workflow_dispatch:
+
+env:
+  APP_DIR: /opt/pipsnote
+  KEEP_DAYS: 7
+  DB_NAME: pipsnote
+  DB_USER: pipsnote_app
+  BACKUP_BRANCH: backups
+
+permissions:
+  contents: write
 
 jobs:
   backup:
+    name: Backup DB
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Chay backup-mysql.sh qua SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass > /dev/null
+          mkdir -p ~/.ssh
+          VPS_PORT="${{ secrets.VPS_PORT }}"
+          VPS_PORT="${VPS_PORT:-22}"
+          ssh-keyscan -p $VPS_PORT -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          echo "SSHPASS=${{ secrets.VPS_PASSWORD }}" >> $GITHUB_ENV
+          echo "DATE=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+          echo "SSH_PORT=${VPS_PORT}" >> $GITHUB_ENV
+
+      - name: Create backups on VPS
+        run: |
+          VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+          PORT="${{ env.SSH_PORT }}"
+          DATE="${{ env.DATE }}"
+
+          sshpass -e ssh -p $PORT $VPS "
             set -e
-            export MYSQL_BACKUP_PASSWORD='${{ secrets.MYSQL_BACKUP_PASSWORD }}'
-            export R2_ENDPOINT='${{ secrets.R2_ENDPOINT }}'
-            export R2_BUCKET='${{ secrets.R2_BUCKET }}'
-            export BACKUP_ENC_KEY='${{ secrets.BACKUP_ENC_KEY }}'
-            bash /opt/pipsnote/scripts/backup-mysql.sh
-          # Script fail-hard (set -euo pipefail) neu dump/verify/upload loi — job se FAIL,
-          # khong am tham bo qua (khac voi chi log warning).
+            BACKUP_DIR=/tmp/backup-pipsnote-${DATE}
+            rm -rf \$BACKUP_DIR
+            mkdir -p \$BACKUP_DIR
+
+            DB_PWD=\$(grep '^DB_PASSWORD=' ${APP_DIR}/.env 2>/dev/null | cut -d= -f2-)
+            if [ -z \"\$DB_PWD\" ]; then
+              echo 'ERROR: DB_PASSWORD not found in ${APP_DIR}/.env'
+              exit 1
+            fi
+
+            echo '=== MySQL check ==='
+            if ! docker exec shared-mysql mysqladmin ping -h localhost --silent 2>/dev/null; then
+              echo 'ERROR: shared-mysql not responding'
+              docker logs shared-mysql --tail 20 2>&1 || true
+              exit 1
+            fi
+            if ! docker exec -e MYSQL_PWD=\"\$DB_PWD\" shared-mysql mysql -u ${DB_USER} ${DB_NAME} -e 'SELECT 1' >/dev/null 2>&1; then
+              echo 'ERROR: Cannot connect as ${DB_USER}@${DB_NAME}'
+              exit 1
+            fi
+            echo 'MySQL: OK (user=${DB_USER})'
+
+            echo ''
+            echo '=== Database dump: ${DB_NAME} ==='
+            docker exec -e MYSQL_PWD=\"\$DB_PWD\" shared-mysql mysqldump \
+              -u ${DB_USER} \
+              --single-transaction --routines --triggers \
+              ${DB_NAME} > /tmp/dump_pipsnote.sql 2>/tmp/dump_pipsnote_err.txt \
+              || { echo 'MYSQLDUMP FAILED:'; cat /tmp/dump_pipsnote_err.txt; rm -f /tmp/dump_pipsnote_err.txt /tmp/dump_pipsnote.sql; exit 1; }
+            rm -f /tmp/dump_pipsnote_err.txt
+            gzip -c /tmp/dump_pipsnote.sql > \$BACKUP_DIR/${DB_NAME}.sql.gz
+            rm -f /tmp/dump_pipsnote.sql
+            echo \"  DB: \$(du -h \$BACKUP_DIR/${DB_NAME}.sql.gz | cut -f1)\"
+
+            echo ''
+            echo '=== Verify backups ==='
+            VERIFY_FAIL=0
+            for gz in \$(find \$BACKUP_DIR -name '*.sql.gz'); do
+              if gunzip -t \"\$gz\" 2>/dev/null; then
+                SIZE=\$(stat -c%s \"\$gz\")
+                if [ \"\$SIZE\" -lt 100 ]; then
+                  echo \"FAIL: \$(basename \$gz) too small\"
+                  VERIFY_FAIL=1
+                else
+                  echo \"OK: \$(basename \$gz) (\$(du -h \$gz | cut -f1))\"
+                fi
+              else
+                echo \"FAIL: \$(basename \$gz) corrupt\"
+                VERIFY_FAIL=1
+              fi
+            done
+            [ \$VERIFY_FAIL -eq 0 ] || { echo 'ERROR: Verification failed!'; exit 1; }
+
+            echo ''
+            echo '=== All backup files ==='
+            find \$BACKUP_DIR -type f -exec ls -lh {} \;
+          "
+
+      - name: Download backups from VPS
+        run: |
+          VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+          PORT="${{ env.SSH_PORT }}"
+          DATE="${{ env.DATE }}"
+          mkdir -p /tmp/backups
+          sshpass -e scp -P $PORT -r $VPS:/tmp/backup-pipsnote-${DATE}/* /tmp/backups/
+          echo "Downloaded:"; find /tmp/backups -type f -exec ls -lh {} \;
+
+      - name: Push to backups branch
+        run: |
+          DATE="${{ env.DATE }}"
+          git fetch origin ${{ env.BACKUP_BRANCH }} 2>/dev/null || true
+          if git rev-parse origin/${{ env.BACKUP_BRANCH }} >/dev/null 2>&1; then
+            git checkout ${{ env.BACKUP_BRANCH }}
+          else
+            git checkout --orphan ${{ env.BACKUP_BRANCH }}
+            git rm -rf . > /dev/null 2>&1 || true
+            cat > README.md << 'READMEEOF'
+          # pipsnote Backups
+
+          Daily DB backups.
+
+          Structure: pipsnote/YYYY-MM-DD/pipsnote.sql.gz
+          READMEEOF
+            git add README.md
+          fi
+
+          mkdir -p "pipsnote/${DATE}"
+          cp /tmp/backups/* "pipsnote/${DATE}/" 2>/dev/null || true
+
+          CUTOFF=$(date -d "${{ env.KEEP_DAYS }} days ago" +%Y-%m-%d)
+          for dir in pipsnote/*/; do
+            DIRNAME=$(basename "$dir")
+            if [[ "$DIRNAME" < "$CUTOFF" ]]; then
+              echo "Removing old: $dir"
+              rm -rf "$dir"
+            fi
+          done
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "backup: pipsnote ${DATE}"
+            git push origin ${{ env.BACKUP_BRANCH }}
+          fi
+
+      - name: Cleanup VPS temp
+        if: always()
+        run: |
+          VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+          PORT="${{ env.SSH_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "rm -rf /tmp/backup-pipsnote-* /tmp/dump_pipsnote*.sql /tmp/dump_pipsnote_err.txt" 2>/dev/null || true
+
+      - name: Summary
+        run: |
+          echo "==============================="
+          echo "Backup OK: ${{ env.DATE }}"
+          echo "Repo: pipsnote | DB: ${{ env.DB_NAME }}"
+          echo "Storage: GitHub branch '${{ env.BACKUP_BRANCH }}' (${KEEP_DAYS}d retention)"
+          echo "==============================="
