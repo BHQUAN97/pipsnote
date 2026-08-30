@@ -9,6 +9,12 @@ const LOCALES: Array<{ code: string; label: string; flag: string }> = [
   { code: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
   { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'it', label: 'Italiano', flag: '🇮🇹' },
+  { code: 'pt', label: 'Português', flag: '🇵🇹' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  { code: 'pl', label: 'Polski', flag: '🇵🇱' },
+  { code: 'ja', label: '日本語', flag: '🇯🇵' },
 ];
 
 export default function LocaleSwitcher() {

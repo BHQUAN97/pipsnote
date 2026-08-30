@@ -9,6 +9,13 @@ import TagInput from '@/components/admin/TagInput';
 import PostTranslationPanel from '@/components/admin/PostTranslationPanel';
 import { slugify } from '@/lib/slugify';
 import { routing } from '@/i18n/routing';
+import { ChevronDown } from 'lucide-react';
+
+const LOCALE_LABELS: Record<string, string> = {
+  vi: 'Tiếng Việt', en: 'English', de: 'Deutsch', fr: 'Français',
+  es: 'Español', it: 'Italiano', pt: 'Português', ru: 'Русский',
+  pl: 'Polski', ja: '日本語',
+};
 
 const TRANSLATION_LOCALES = routing.locales.filter((l) => l !== routing.defaultLocale);
 
@@ -60,6 +67,10 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
   const [activeTab, setActiveTab] = useState<'original' | string>('original');
   const [translateAllLoading, setTranslateAllLoading] = useState(false);
   const [translateAllMsg, setTranslateAllMsg] = useState('');
+  const [localeMenuOpen, setLocaleMenuOpen] = useState(false);
+
+  const toggleLocaleMenu = () => setLocaleMenuOpen((o) => !o);
+  const localeLabel = (locale: string) => LOCALE_LABELS[locale] || locale;
 
   useEffect(() => {
     fetch('/api/admin/categories')
@@ -141,50 +152,68 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
   return (
     <div className="max-w-3xl">
       {postId && TRANSLATION_LOCALES.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1 border-b border-gray-line mb-5">
-          <button
-            type="button"
-            onClick={() => setActiveTab('original')}
-            className={`flex items-center gap-2 rounded-t-md px-4 py-2 text-sm font-medium transition-colors ${
-              activeTab === 'original'
-                ? 'border-b-2 border-brand text-brand'
-                : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Original
-          </button>
-          {TRANSLATION_LOCALES.map((locale) => (
+        <div className="flex flex-wrap items-center gap-2 border-b border-gray-line mb-5 pb-3">
+          <div className="flex gap-1">
             <button
-              key={locale}
               type="button"
-              onClick={() => setActiveTab(locale)}
-              className={`flex items-center gap-2 rounded-t-md px-4 py-2 text-sm font-medium uppercase transition-colors ${
-                activeTab === locale
-                  ? 'border-b-2 border-brand text-brand'
-                  : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700'
+              onClick={() => setActiveTab('original')}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'original'
+                  ? 'bg-brand text-white'
+                  : 'text-gray-600 hover:bg-gray-bg'
               }`}
             >
-              {locale}
-            </button>
-          ))}
-
-          <div className="ml-auto ml-auto px-1">
-            <button
-              type="button"
-              onClick={handleTranslateAll}
-              disabled={translateAllLoading || !postId}
-              className="ml-auto min-h-[36px] rounded-md border border-gray-line px-4 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-bg disabled:opacity-50 flex items-center gap-2"
-            >
-              {translateAllLoading ? (
-                <>
-                  <span className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
-                  Đang dịch…
-                </>
-              ) : (
-                <>✨ Dịch tất cả bằng AI</>
-              )}
+              Bản gốc
             </button>
           </div>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={toggleLocaleMenu}
+              className={`flex h-9 items-center gap-2 rounded-md border px-3 text-sm font-medium ${
+                activeTab !== 'original'
+                  ? 'border-brand text-brand'
+                  : 'border-gray-line text-gray-600 hover:bg-gray-bg'
+              }`}
+            >
+              <span>{activeTab !== 'original' ? localeLabel(activeTab) : 'Ngôn ngữ…'}</span>
+              <ChevronDown size={14} />
+            </button>
+            {localeMenuOpen && (
+              <div className="absolute left-0 top-full z-30 mt-1 w-56 overflow-hidden rounded-md border border-gray-line bg-bg py-1 shadow-elevated-static">
+                {TRANSLATION_LOCALES.map((locale) => (
+                  <button
+                    key={locale}
+                    type="button"
+                    onClick={() => { setActiveTab(locale); setLocaleMenuOpen(false); }}
+                    className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors hover:bg-gray-bg ${
+                      activeTab === locale ? 'font-semibold text-brand' : 'text-gray-600'
+                    }`}
+                  >
+                    <span>{localeLabel(locale)}</span>
+                    <span className="font-mono text-xs text-gray-400">{locale}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={handleTranslateAll}
+            disabled={translateAllLoading}
+            className="ml-auto flex h-9 items-center gap-2 rounded-md border border-brand/40 px-4 text-xs font-medium text-brand transition-colors hover:bg-brand/10 disabled:opacity-50"
+          >
+            {translateAllLoading ? (
+              <>
+                <span className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
+                Đang dịch…
+              </>
+            ) : (
+              <>✨ Dịch tất cả bằng AI</>
+            )}
+          </button>
         </div>
       )}
 

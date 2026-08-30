@@ -1,13 +1,61 @@
 import { logger } from '@/lib/logger';
 import { HttpError } from '@/lib/httpError';
+import { getSiteSettings } from '@/lib/settings';
 
-// Backend dịch AI — dùng OpenRouter (OpenAI-compatible) hoặc Gemini qua OpenRouter.
-// Cấu hình bằng env:
-//   AI_TRANSLATE_BASE_URL  (default: https://openrouter.ai/api/v1)
-//   AI_TRANSLATE_API_KEY   (default: process.env.OPENROUTER_API_KEY / ANTHROPIC_API_KEY fallback)
-//   AI_TRANSLATE_MODEL     (default: google/gemini-3.7-flash)
-const BASE_URL = process.env.AI_TRANSLATE_BASE_URL || 'https://openrouter.ai/api/v1';
-const MODEL = process.env.AI_TRANSLATE_MODEL || 'google/gemini-3.7-flash';
+// Backend dịch AI — cấu hình lấy từ site_settings (DB, quản qua admin UI)
+// với fallback về env. Không bị CI ghi đè như env.
+//
+// Keys site_settings:
+//   ai_translate_provider  ('openrouter' | 'gemini' | 'anthropic' | 'openai' | 'custom')
+//   ai_translate_api_key
+//   ai_translate_model
+//   ai_translate_base_url
+//
+// Fallback env: AI_TRANSLATE_PROVIDER / AI_TRANSLATE_API_KEY / AI_TRANSLATE_MODEL / AI_TRANSLATE_BASE_URL
+
+// Provider presets → base_url + model gợi ý
+const PROVIDER_PRESETS: Record<string, { baseUrl: string; model: string }> = {
+  openrouter: { baseUrl: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.7-flash' },
+  gemini: { baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai', model: 'gemini-2.0-flash' },
+  openai: { baseUrl: 'https://api.openai.com/v1', model: 'gpt-4o-mini' },
+  custom: { baseUrl: '', model: '' },
+};
+
+interface AiConfig {
+  baseUrl: string;
+  apiKey: string | undefined;
+  model: string;
+  provider: string;
+  systemPrompt: string | null;
+}
+
+async function resolveAiConfig(): Promise<AiConfig> {
+  const s = await getSiteSettings();
+  const provider = s.ai_translate_provider || process.env.AI_TRANSLATE_PROVIDER || 'openrouter';
+  const preset = PROVIDER_PRESETS[provider];
+
+  const baseUrl =
+    s.ai_translate_base_url ||
+    process.env.AI_TRANSLATE_BASE_URL ||
+    preset?.baseUrl ||
+    'https://openrouter.ai/api/v1';
+
+  const model =
+    s.ai_translate_model ||
+    process.env.AI_TRANSLATE_MODEL ||
+    preset?.model ||
+    'google/gemini-3.7-flash';
+
+  const apiKey =
+    s.ai_translate_api_key ||
+    process.env.AI_TRANSLATE_API_KEY ||
+    process.env.OPENROUTER_API_KEY ||
+    process.env.ANTHROPIC_API_KEY;
+
+  const systemPrompt = s.ai_translate_prompt || process.env.AI_TRANSLATE_PROMPT || null;
+
+  return { baseUrl, apiKey, model, provider, systemPrompt };
+}
 
 export interface TranslatePostInput {
   title: string;
@@ -31,6 +79,17 @@ const LOCALE_NAMES: Record<string, string> = {
   en: 'English',
   de: 'German',
   fr: 'French',
+  es: 'Spanish',
+  it: 'Italian',
+  pt: 'Portuguese',
+  ru: 'Russian',
+  ja: 'Japanese',
+  zh: 'Chinese',
+  ko: 'Korean',
+  pl: 'Polish',
+  nl: 'Dutch',
+  tr: 'Turkish',
+  ar: 'Arabic',
 };
 
 const EMIT_TRANSLATION_TOOL = {
@@ -49,18 +108,15 @@ const EMIT_TRANSLATION_TOOL = {
   },
 };
 
-function resolveApiKey(): string | undefined {
-  return (
-    process.env.AI_TRANSLATE_API_KEY ||
-    process.env.OPENROUTER_API_KEY ||
-    process.env.ANTHROPIC_API_KEY
-  );
+// Tất cả provider đều OpenAI-compatible → dùng Bearer token + /chat/completions.
+function buildAuthHeaders(_provider: string, apiKey: string): Record<string, string> {
+  return { 'content-type': 'application/json', authorization: `Bearer ${apiKey}` };
 }
 
 function extractToolArguments(data: Record<string, unknown>): Record<string, unknown> | null {
   // OpenAI-compatible: choices[0].message.tool_calls[0].function.arguments (JSON string)
   const choices = data?.choices as Array<{
-    message?: { tool_calls?: Array<{ function?: { arguments?: string } }> };
+    message?: { tool_calls?: Array<{ function?: { arguments?: string } }>; content?: string };
   }>;
   const toolCalls = choices?.[0]?.message?.tool_calls;
   const args = toolCalls?.[0]?.function?.arguments;
@@ -76,19 +132,22 @@ function extractToolArguments(data: Record<string, unknown>): Record<string, unk
 export async function translatePostContent(
   input: TranslatePostInput
 ): Promise<TranslatePostResult> {
-  const apiKey = resolveApiKey();
-  if (!apiKey) {
-    throw new HttpError(500, 'AI translation is not configured (missing AI_TRANSLATE_API_KEY / OPENROUTER_API_KEY / ANTHROPIC_API_KEY)');
+  const config = await resolveAiConfig();
+  if (!config.apiKey) {
+    throw new HttpError(
+      500,
+      'AI translation is not configured. Vào Admin → Settings → AI Translation để nhập API key.'
+    );
   }
 
   const targetLanguage = LOCALE_NAMES[input.targetLocale] ?? input.targetLocale;
 
+  // System prompt: từ cấu hình DB hoặc mặc định. Placeholder {language} được thay.
+  const defaultSystem = 'You are a professional forex/crypto blog translator. Translate the following blog post into {language}. Preserve the HTML tag structure of "content" exactly — translate only the text nodes, never the tags/attributes. Do not translate brand names, broker names, currency symbols, or numbers. Call the emit_translation tool with the translated fields.';
+  const systemPrompt = (config.systemPrompt || defaultSystem)
+    .replace(/\{language\}/g, targetLanguage);
+
   const userMessage = [
-    `You are a professional forex/crypto blog translator. Translate the following blog post into ${targetLanguage}.`,
-    'Preserve the HTML tag structure of "content" exactly — translate only the text nodes, never the tags/attributes.',
-    'Do not translate brand names, broker names, currency symbols, or numbers.',
-    'Call the emit_translation tool with the translated fields.',
-    '',
     `TITLE:\n${input.title}`,
     `EXCERPT:\n${input.excerpt ?? ''}`,
     `CONTENT (HTML):\n${input.content}`,
@@ -96,21 +155,25 @@ export async function translatePostContent(
     `SEO_DESC:\n${input.seoDesc ?? ''}`,
   ].join('\n');
 
+  const url = `${config.baseUrl}/chat/completions`;
+
+  const body = {
+    model: config.model,
+    max_tokens: 8192,
+    tools: [{ type: 'function', function: EMIT_TRANSLATION_TOOL }],
+    tool_choice: { type: 'function', function: { name: 'emit_translation' } },
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userMessage },
+    ],
+  };
+
   let res: Response;
   try {
-    res = await fetch(`${BASE_URL}/chat/completions`, {
+    res = await fetch(url, {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 8192,
-        tools: [{ type: 'function', function: EMIT_TRANSLATION_TOOL }],
-        tool_choice: { type: 'function', function: { name: 'emit_translation' } },
-        messages: [{ role: 'user', content: userMessage }],
-      }),
+      headers: buildAuthHeaders(config.provider, config.apiKey),
+      body: JSON.stringify(body),
     });
   } catch (err) {
     logger.error({ err }, 'AI translation request failed (network)');
@@ -118,9 +181,9 @@ export async function translatePostContent(
   }
 
   if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    logger.error({ status: res.status, body }, 'AI translation request failed (API error)');
-    throw new HttpError(502, 'AI translation failed');
+    const bodyText = await res.text().catch(() => '');
+    logger.error({ status: res.status, body: bodyText }, 'AI translation request failed (API error)');
+    throw new HttpError(502, 'AI translation failed (provider returned error)');
   }
 
   const data = await res.json();

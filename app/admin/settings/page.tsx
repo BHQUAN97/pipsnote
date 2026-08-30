@@ -54,6 +54,7 @@ const TABS = [
   { key: 'colors', label: 'Theme Colors' },
   { key: 'layout', label: 'Layout' },
   { key: 'backgrounds', label: 'Ảnh nền' },
+  { key: 'ai-translation', label: 'AI Dịch' },
 ] as const;
 
 type TabKey = (typeof TABS)[number]['key'];
@@ -347,6 +348,82 @@ export default function AdminSettingsPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'ai-translation' && (
+        <section className="mb-8 p-4 sm:p-6 border rounded-sm">
+          <h2 className="text-xl font-semibold mb-1">Cấu hình AI Dịch</h2>
+          <p className="text-sm text-gray-mid mb-5">
+            Nhà cung cấp, API key, model và system prompt cho tính năng dịch bài đa ngôn ngữ.
+            Được lưu vào database (không bị ghi đè khi deploy).
+          </p>
+
+          <div className="space-y-5 max-w-xl">
+            <div>
+              <label className="block text-sm font-medium mb-2">Nhà cung cấp (Provider)</label>
+              <select
+                value={settings.ai_translate_provider || 'openrouter'}
+                onChange={(e) => setKey('ai_translate_provider', e.target.value)}
+                className="admin-input"
+              >
+                <option value="openrouter">OpenRouter (Gemini/DeepSeek/GPT…)</option>
+                <option value="gemini">Google Gemini (gần nhất)</option>
+                <option value="openai">OpenAI</option>
+                <option value="custom">Tùy chỉnh (OpenAI-compatible)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">API Key</label>
+              <input
+                type="password"
+                value={settings.ai_translate_api_key || ''}
+                onChange={(e) => setKey('ai_translate_api_key', e.target.value)}
+                placeholder="sk-... / AIza... / key OpenRouter"
+                className="admin-input"
+              />
+              <p className="mt-1 text-xs text-gray-mid">
+                Lưu trong DB. Có thể dùng key OpenRouter hoặc Google Gemini.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Model</label>
+              <input
+                type="text"
+                value={settings.ai_translate_model || ''}
+                onChange={(e) => setKey('ai_translate_model', e.target.value)}
+                placeholder="vd: google/gemini-3.7-flash, gpt-4o-mini, gemini-2.0-flash"
+                className="admin-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Base URL (để trống nếu dùng preset)</label>
+              <input
+                type="text"
+                value={settings.ai_translate_base_url || ''}
+                onChange={(e) => setKey('ai_translate_base_url', e.target.value)}
+                placeholder="https://openrouter.ai/api/v1"
+                className="admin-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">System Prompt (điều chỉnh cách dịch)</label>
+              <textarea
+                value={settings.ai_translate_prompt || ''}
+                onChange={(e) => setKey('ai_translate_prompt', e.target.value)}
+                rows={5}
+                className="admin-input"
+                placeholder="Bạn là biên dịch viên chuyên nghiệp về forex/crypto. Dịch sang {language}…"
+              />
+              <p className="mt-1 text-xs text-gray-mid">
+                Dùng placeholder <code>{'{language}'}</code> cho tên ngôn ngữ. Để trống để dùng mặc định.
+              </p>
+            </div>
           </div>
         </section>
       )}
