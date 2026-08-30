@@ -58,6 +58,8 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'original' | string>('original');
+  const [translateAllLoading, setTranslateAllLoading] = useState(false);
+  const [translateAllMsg, setTranslateAllMsg] = useState('');
 
   useEffect(() => {
     fetch('/api/admin/categories')
@@ -111,17 +113,42 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
     }
   }
 
+  async function handleTranslateAll() {
+    if (!postId) return;
+    setTranslateAllLoading(true);
+    setTranslateAllMsg('');
+    const results: string[] = [];
+    let failed = 0;
+    for (const locale of TRANSLATION_LOCALES) {
+      try {
+        const res = await fetch(`/api/admin/posts/${postId}/translations/${locale}/ai`, { method: 'POST' });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          failed++;
+          results.push(`${locale}: ${data.error || 'lỗi'}`);
+        } else {
+          results.push(`${locale}: ✓`);
+        }
+      } catch {
+        failed++;
+        results.push(`${locale}: lỗi kết nối`);
+      }
+    }
+    setTranslateAllMsg(`Đã dịch ${TRANSLATION_LOCALES.length - failed}/${TRANSLATION_LOCALES.length} ngôn ngữ. ${results.join(' · ')}`);
+    setTranslateAllLoading(false);
+  }
+
   return (
     <div className="max-w-3xl">
       {postId && TRANSLATION_LOCALES.length > 0 && (
-        <div className="flex gap-2 border-b border-gray-line mb-5">
+        <div className="flex flex-wrap items-center gap-1 border-b border-gray-line mb-5">
           <button
             type="button"
             onClick={() => setActiveTab('original')}
-            className={`min-h-[44px] px-4 text-sm font-medium border-b-2 -mb-px ${
+            className={`flex items-center gap-2 rounded-t-md px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'original'
-                ? 'border-brand text-brand'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-b-2 border-brand text-brand'
+                : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             Original
@@ -131,15 +158,39 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
               key={locale}
               type="button"
               onClick={() => setActiveTab(locale)}
-              className={`min-h-[44px] px-4 text-sm font-medium border-b-2 -mb-px uppercase ${
+              className={`flex items-center gap-2 rounded-t-md px-4 py-2 text-sm font-medium uppercase transition-colors ${
                 activeTab === locale
-                  ? 'border-brand text-brand'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-b-2 border-brand text-brand'
+                  : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
               {locale}
             </button>
           ))}
+
+          <div className="ml-auto ml-auto px-1">
+            <button
+              type="button"
+              onClick={handleTranslateAll}
+              disabled={translateAllLoading || !postId}
+              className="ml-auto min-h-[36px] rounded-md border border-gray-line px-4 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-bg disabled:opacity-50 flex items-center gap-2"
+            >
+              {translateAllLoading ? (
+                <>
+                  <span className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
+                  Đang dịch…
+                </>
+              ) : (
+                <>✨ Dịch tất cả bằng AI</>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {translateAllMsg && (
+        <div className="mb-4 rounded-md border border-brand/30 bg-brand/10 px-4 py-2 text-sm text-ink">
+          {translateAllMsg}
         </div>
       )}
 

@@ -137,17 +137,21 @@ export default function PostTranslationPanel({
     <div className="space-y-5">
       {error && <div className="p-3 bg-red text-white rounded-sm text-sm">{error}</div>}
 
-      <div className="flex items-center justify-between">
-        <span className="text-xs uppercase tracking-wide text-gray-500">
-          {translation.status === 'published' ? 'Published' : 'Draft'} · source: {translation.source}
-        </span>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span
+            className={`badge ${translation.status === 'published' ? 'badge-published' : 'badge-draft'}`}>
+            {translation.status === 'published' ? '✓ Đã xuất bản' : '◦ Bản nháp'}
+          </span>
+          <span className="text-xs text-gray-500">nguồn: {translation.source}</span>
+        </div>
         <button
           type="button"
           onClick={handleAiTranslate}
           disabled={busy}
-          className="text-sm min-h-[44px] px-4 py-2 border border-gray-line rounded-sm hover:bg-gray-bg disabled:opacity-50"
+          className="ml-auto rounded-md border border-gray-line px-4 py-2 text-sm transition-colors hover:bg-gray-bg disabled:opacity-50"
         >
-          {aiLoading ? 'Translating...' : 'Re-translate with AI'}
+          {aiLoading ? 'Đang dịch…' : '✨ Dịch lại bằng AI'}
         </button>
       </div>
 
@@ -169,7 +173,7 @@ export default function PostTranslationPanel({
           value={values.excerpt}
           onChange={(e) => update('excerpt', e.target.value)}
           rows={3}
-          className="w-full px-4 py-2 border border-gray-line rounded-sm"
+          className="admin-input"
           disabled={busy}
         />
       </div>
@@ -196,27 +200,27 @@ export default function PostTranslationPanel({
           value={values.seo_desc}
           onChange={(e) => update('seo_desc', e.target.value)}
           rows={2}
-          className="w-full px-4 py-2 border border-gray-line rounded-sm"
+          className="admin-input"
           disabled={busy}
         />
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <button
           type="button"
           onClick={() => handleSave('draft')}
           disabled={busy}
-          className="min-h-[44px] px-6 py-2 border border-gray-line rounded-sm hover:bg-gray-bg disabled:opacity-50"
+          className="btn-secondary"
         >
-          {saving === 'draft' ? 'Saving...' : 'Save draft'}
+          {saving === 'draft' ? 'Đang lưu…' : 'Lưu bản nháp'}
         </button>
         <button
           type="button"
           onClick={() => handleSave('published')}
           disabled={busy}
-          className="min-h-[44px] px-6 py-2 bg-brand text-white rounded-sm hover:bg-brand-dark disabled:opacity-50"
+          className="btn-primary"
         >
-          {saving === 'published' ? 'Publishing...' : 'Publish translation'}
+          {saving === 'published' ? 'Đang xuất bản…' : 'Xuất bản bản dịch'}
         </button>
       </div>
     </div>
