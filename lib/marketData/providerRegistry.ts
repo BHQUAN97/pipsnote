@@ -5,14 +5,16 @@ import { fcsProvider } from './providers/fcs';
 import { coinGeckoProvider } from './providers/coinGecko';
 import { goldApiProvider } from './providers/goldApi';
 import { alpacaProvider } from './providers/alpaca';
+import { yahooProvider } from './providers/yahooFinance';
 import { getProviderConfigRows } from './providerConfig';
 
-// forex: twelvedata la primary, fcs la fallback khi twelvedata throw toan bo request
+// yahoo (free, khong can key) la fallback cuoi cung cho MOI nhom,
+// dam bao luon co nguon real khi cac nguon tra phi/khong key bi loi.
 const CATEGORY_CHAINS: Record<SymbolCategory, MarketDataProvider[]> = {
-  forex: [twelveDataProvider, fcsProvider],
-  commodity: [goldApiProvider],
-  crypto: [coinGeckoProvider],
-  stock: [alpacaProvider],
+  forex: [twelveDataProvider, fcsProvider, yahooProvider],
+  commodity: [goldApiProvider, yahooProvider],
+  crypto: [coinGeckoProvider, yahooProvider],
+  stock: [alpacaProvider, yahooProvider],
 };
 
 export async function getProviderChain(category: SymbolCategory): Promise<MarketDataProvider[]> {
