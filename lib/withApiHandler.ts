@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRequestLogger } from './logger';
+import { createRequestLogger, extractStack } from './logger';
 import { persistLog } from './logSink';
 import { HttpError } from './httpError';
 
@@ -48,20 +48,24 @@ export function withApiHandler(
 
     } catch (error) {
       if (error instanceof HttpError) {
+        const stack = extractStack(error);
         logger.warn({
           requestId,
           error: error.message,
           statusCode: error.statusCode,
+          stack,
         }, 'Request rejected');
-        // Persist warn đến DB
+        // Persist warn đến DB (kèm stack nếu có)
         await persistLog({
           level: 'warn',
           message: error.message,
+          stacktrace: stack,
           module: moduleName,
           requestId,
           url: req.url,
           method: req.method,
           statusCode: error.statusCode,
+          metadata: { name: error.name },
         });
 
         return NextResponse.json(
@@ -71,7 +75,7 @@ export function withApiHandler(
       }
 
       const message = error instanceof Error ? error.message : 'Unknown error';
-      const stacktrace = error instanceof Error ? error.stack : undefined;
+      const stacktrace = extractStack(error);
 
       logger.error({
         requestId,
@@ -79,7 +83,7 @@ export function withApiHandler(
         stack: stacktrace,
       }, 'Request failed');
 
-      // Persist log vào DB (fire-and-forget)
+      // Persist log vào DB (fire-and-forget) — đầy đủ message + stacktrace
       await persistLog({
         level: 'error',
         message,
@@ -89,6 +93,7 @@ export function withApiHandler(
         url: req.url,
         method: req.method,
         statusCode: 500,
+        metadata: { name: error instanceof Error ? error.name : typeof error },
       });
 
       // Trả về client message chung chung (không leak stacktrace)
