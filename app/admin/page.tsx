@@ -107,11 +107,11 @@ export default function AdminDashboardPage() {
           ) : (
             <ul className="flex flex-col gap-3">
               {data.topPosts.map((post) => (
-                <li key={post.id} className="flex items-center justify-between gap-3">
-                  <Link href={`/admin/posts/${post.id}/edit`} className="min-w-0 flex-1 truncate text-sm hover:underline">
+                <li key={post.id} className="flex items-start justify-between gap-3 border-b border-gray-line pb-3 last:border-0 last:pb-0">
+                  <Link href={`/admin/posts/${post.id}/edit`} className="line-clamp-2 min-w-0 flex-1 text-sm leading-snug hover:underline">
                     {post.title}
                   </Link>
-                  <span className="shrink-0 font-mono text-sm text-gray-mid">{post.view_count}</span>
+                  <span className="shrink-0 pt-px font-mono text-sm text-gray-mid">{post.view_count}</span>
                 </li>
               ))}
             </ul>
@@ -127,11 +127,11 @@ export default function AdminDashboardPage() {
           ) : (
             <ul className="flex flex-col gap-3">
               {data.topBrokers.map((broker) => (
-                <li key={broker.id} className="flex items-center justify-between gap-3">
-                  <Link href={`/admin/brokers/${broker.id}/edit`} className="truncate text-sm hover:underline">
+                <li key={broker.id} className="flex items-start justify-between gap-3 border-b border-gray-line pb-3 last:border-0 last:pb-0">
+                  <Link href={`/admin/brokers/${broker.id}/edit`} className="line-clamp-1 min-w-0 flex-1 truncate text-sm hover:underline">
                     {broker.name}
                   </Link>
-                  <span className="shrink-0 font-mono text-sm text-gray-mid">{broker.click_count}</span>
+                  <span className="shrink-0 pt-px font-mono text-sm text-gray-mid">{broker.click_count}</span>
                 </li>
               ))}
             </ul>
