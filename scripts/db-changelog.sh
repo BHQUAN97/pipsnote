@@ -26,7 +26,7 @@ APPLIED_BY="${APPLIED_BY:-$(whoami 2>/dev/null || echo ci)}"
 if [[ -n "${DB_PASSWORD:-}" ]]; then
   : # da co san
 elif [[ -f "$ENV_FILE" ]]; then
-  DB_PASSWORD="$(grep -E '^DB_PASSWORD=' "$ENV_FILE" | head -1 | cut -d= -f2-)"
+  DB_PASSWORD="$(grep -E '^DB_PASSWORD=' "$ENV_FILE" | head -1 | cut -d= -f2- || true)"
 fi
 if [[ -z "${DB_PASSWORD:-}" ]]; then
   log_error "Khong tim thay DB_PASSWORD"
