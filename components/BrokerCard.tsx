@@ -7,7 +7,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
       href={`/go/${broker.slug}`}
       target="_blank"
       rel="nofollow noopener"
-      className="card-elevated group flex flex-col gap-4 border border-gray-line bg-bg p-6 hover:-translate-y-1 hover:border-ink"
+      className="card-elevated group relative flex flex-col gap-4 border border-gray-line bg-bg p-6 hover:-translate-y-1.5 hover:border-ink/60 hover:shadow-soft"
     >
       <div className="flex items-start justify-between">
         <span className="flex items-center gap-2.5">
@@ -24,10 +24,10 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         </span>
         {broker.badge && (
           <span
-            className="font-mono text-badge uppercase tracking-[0.06em] px-2 py-1 text-white rounded-full"
+            className="glow-brand font-mono text-badge uppercase tracking-[0.06em] px-2.5 py-1 text-white rounded-full"
             style={
               broker.badge === 'Hot'
-                ? { background: 'linear-gradient(135deg, var(--red), var(--red-dark))', boxShadow: '0 2px 8px rgba(46,139,255,0.35)' }
+                ? { background: 'linear-gradient(135deg, var(--red), var(--red-dark))' }
                 : undefined
             }
           >
@@ -61,8 +61,9 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         </div>
       </div>
 
-      <span className="mt-auto flex items-center justify-between rounded-sm bg-brand px-4 py-3.5 text-nav font-semibold text-white transition-colors group-hover:bg-brand-dark">
-        Open account <span aria-hidden>→</span>
+      <span className="mt-auto flex items-center justify-between gap-2 overflow-hidden rounded-lg bg-brand px-4 py-3.5 text-nav font-semibold text-white transition-all duration-200 group-hover:bg-brand-dark">
+        <span>Open account</span>
+        <span className="inline-block transition-transform duration-200 group-hover:translate-x-1" aria-hidden>→</span>
       </span>
     </a>
   );

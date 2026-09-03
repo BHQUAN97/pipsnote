@@ -29,7 +29,7 @@ export default function Newsletter({ bgUrl }: { bgUrl?: string }) {
   }
 
   return (
-    <div className="relative flex flex-col items-start gap-10 overflow-hidden bg-surface-dark p-8 text-white md:flex-row md:items-center md:justify-between md:p-14">
+    <div className="relative flex flex-col items-start gap-10 overflow-hidden rounded-2xl bg-surface-dark p-8 text-white shadow-soft md:flex-row md:items-center md:justify-between md:p-14">
       {bgUrl && (
         <>
           <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover object-center" />

@@ -52,7 +52,80 @@ body {
   background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-space-grotesk), sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── Signal V2 — modern dark upgrade ──────────────────────────── */
+/* Ambient gradient-mesh background bleeds (hero + site accent) — soft,
+   non-intrusive, respects light theme via opacity presets. */
+.bg-mesh {
+  position: relative;
+}
+.bg-mesh::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(50% 55% at 12% 8%, rgba(255, 176, 32, 0.10) 0%, transparent 62%),
+    radial-gradient(46% 50% at 92% 18%, rgba(46, 139, 255, 0.12) 0%, transparent 60%),
+    radial-gradient(60% 60% at 50% 108%, rgba(255, 176, 32, 0.06) 0%, transparent 60%);
+}
+[data-theme="light"] .bg-mesh::before {
+  background:
+    radial-gradient(50% 55% at 12% 8%, rgba(201, 127, 0, 0.06) 0%, transparent 62%),
+    radial-gradient(46% 50% at 92% 18%, rgba(46, 139, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(60% 60% at 50% 108%, rgba(201, 127, 0, 0.05) 0%, transparent 60%);
+}
+
+/* Frosted-glass surface — backdrop blur + translucent bg + hairline border */
+.glass {
+  background: color-mix(in srgb, var(--gray-bg) 62%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid color-mix(in srgb, var(--ink) 9%, transparent);
+}
+[data-theme="light"] .glass {
+  background: color-mix(in srgb, #ffffff 70%, transparent);
+}
+
+/* Brand glow ring — pulsing CTA / key accent surfaces */
+.glow-brand {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--red) 40%, transparent),
+    0 8px 30px -6px color-mix(in srgb, var(--red) 45%, transparent);
+}
+.shadow-soft {
+  box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* Gradient accent text (wordmark/badge) */
+.text-gradient {
+  background: linear-gradient(120deg, var(--red) 0%, color-mix(in srgb, var(--red) 60%, #fff) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Smooth entrance for cards on scroll-reveal (applied via hover mostly) */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Thin branded scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--surface-dark); }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--gray-mid) 38%, transparent);
+  border-radius: 999px;
+  border: 2px solid var(--surface-dark);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gray-mid); }
+
+/* Selection */
+::selection { background: color-mix(in srgb, var(--red) 30%, transparent); color: var(--ink); }
 
 /* Global background image — dùng Cuộn bình thường (không fixed) để không vỡ trên
    mobile/iOS. Tô thêm 1 layer tối (gradient) đè lên ảnh để nội dung dễ đọc & hài hoà. */

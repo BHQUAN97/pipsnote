@@ -26,7 +26,7 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
                 <a
                   key={s}
                   href="#"
-                  className="flex h-[34px] w-[34px] items-center justify-center border border-gray-line font-mono text-nav transition-colors hover:bg-surface-dark hover:text-white"
+                  className="flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-gray-line font-mono text-nav text-gray-mid transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:bg-brand hover:text-white"
                 >
                   {s}
                 </a>

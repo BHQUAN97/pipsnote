@@ -33,20 +33,22 @@ export default async function Home() {
       <TickerStrip show={showTicker} items={tickerItems} bgUrl={tickerBg} />
       <Hero bgUrl={heroBg} />
 
-      <section id="brokers" className="py-16 md:py-[72px]">
+      <section id="brokers" className="bg-mesh py-16 md:py-[72px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
+              <span className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.14em] text-brand">
+                <span className="h-px w-8 bg-brand/70" />
                 {t('tradingPartners')}
               </span>
-              <h2 className="mt-1 text-h2 md:text-h2-lg">{t('topRatedBrokers')}</h2>
+              <h2 className="mt-2 text-h2 md:text-h2-lg">{t('topRatedBrokers')}</h2>
             </div>
             <Link
               href={routes.brokers}
-              className="border-b-2 border-brand pb-0.5 text-nav font-semibold"
+              className="group border-b-2 border-brand pb-0.5 text-nav font-semibold"
             >
               {t('viewFullComparison')}
+              <span className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </div>
           <BrokerGrid limit={6} />
@@ -57,22 +59,24 @@ export default async function Home() {
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
+              <span className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.14em] text-brand">
+                <span className="h-px w-8 bg-brand/70" />
                 {t('insightsAnalysis')}
               </span>
-              <h2 className="mt-1 text-h2 md:text-h2-lg">{t('latestPosts')}</h2>
+              <h2 className="mt-2 text-h2 md:text-h2-lg">{t('latestPosts')}</h2>
             </div>
             <Link
               href={routes.blog}
-              className="border-b-2 border-brand pb-0.5 text-nav font-semibold"
+              className="group border-b-2 border-brand pb-0.5 text-nav font-semibold"
             >
               {t('viewAll')}
+              <span className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </div>
           <div className="mb-11 flex flex-wrap gap-3">
             <Link
               href={routes.blog}
-              className="border border-surface-dark bg-surface-dark px-4.5 py-2.5 text-sm font-medium text-white"
+              className="glow-brand rounded-full border border-surface-dark bg-surface-dark px-4.5 py-2.5 text-sm font-medium text-white"
             >
               {tCat('all')}
             </Link>
@@ -80,7 +84,7 @@ export default async function Home() {
               <Link
                 key={cat.id}
                 href={routes.blogCategory(cat.slug)}
-                className="border border-gray-line px-4.5 py-2.5 text-sm font-medium"
+                className="rounded-full border border-gray-line px-4.5 py-2.5 text-sm font-medium text-gray-mid transition-all duration-200 hover:-translate-y-0.5 hover:border-ink hover:text-ink"
               >
                 {cat.name}
               </Link>

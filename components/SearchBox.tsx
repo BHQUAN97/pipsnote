@@ -39,7 +39,7 @@ export default function SearchBox() {
       />
       <button
         type="submit"
-        className="h-11 min-w-11 rounded-sm border border-surface-dark bg-surface-dark px-4.5 text-sm font-medium text-white transition-colors hover:bg-brand hover:border-brand"
+        className="glow-brand h-11 min-w-11 rounded-lg border border-surface-dark bg-surface-dark px-4.5 text-sm font-medium text-white transition-colors duration-200 hover:border-brand hover:bg-brand"
       >
         {t('button')}
       </button>

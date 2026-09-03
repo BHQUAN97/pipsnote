@@ -26,10 +26,11 @@ export default function BlogListView({
   return (
     <section className="py-16 md:py-[72px]">
       <div className="mx-auto max-w-[1180px] px-7">
-        <span className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-brand">
+        <span className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.14em] text-brand">
+          <span className="h-px w-8 bg-brand/70" />
           {eyebrow}
         </span>
-        <h1 className="mt-1 mb-9 text-h2 md:text-h2-lg">{title}</h1>
+        <h1 className="mt-2 mb-9 text-h2 md:text-h2-lg">{title}</h1>
 
         <SearchBox />
         <CategoryFilter categories={categories} />
@@ -50,10 +51,10 @@ export default function BlogListView({
               <Link
                 key={p}
                 href={pageHref(p)}
-                className={`flex h-11 min-w-11 items-center justify-center border px-3 text-sm font-medium ${
+                className={`flex h-11 min-w-11 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-all duration-150 ${
                   p === currentPage
-                    ? 'border-surface-dark bg-surface-dark text-white'
-                    : 'border-gray-line'
+                    ? 'glow-brand border-surface-dark bg-surface-dark text-white'
+                    : 'border-gray-line text-gray-mid hover:-translate-y-0.5 hover:border-ink hover:text-ink'
                 }`}
               >
                 {p}

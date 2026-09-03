@@ -17,11 +17,12 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-line bg-bg">
+    <header className="sticky top-0 z-50 border-b border-gray-line bg-bg/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex h-[76px] max-w-[1180px] items-center justify-between gap-4 px-7">
-        <Link href="/" className="font-display text-wordmark tracking-tight">
+        <Link href="/" className="group relative font-display text-wordmark tracking-tight">
           {brand}
-          <span className="text-brand">{rest}</span>
+          <span className="text-gradient">{rest}</span>
+          <span className="absolute -bottom-1 left-0 h-0.5 w-0 rounded-full bg-brand transition-all duration-300 group-hover:w-full" />
         </Link>
 
         <nav className="hidden items-center gap-9 md:flex">
@@ -29,7 +30,7 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
             <Link
               key={link.href}
               href={link.href}
-              className="group relative py-1.5 text-sm font-medium"
+              className="group relative py-1.5 text-sm font-medium text-gray-mid transition-colors hover:text-ink"
             >
               {link.label}
               <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-brand transition-[width] duration-200 group-hover:w-full" />
@@ -40,7 +41,7 @@ export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string })
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/brokers"
-            className="rounded-sm bg-brand px-5 py-2.5 text-nav font-semibold text-white transition-colors hover:bg-brand-dark"
+            className="glow-brand rounded-lg bg-brand px-5 py-2.5 text-nav font-semibold text-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-dark"
           >
             {t('compareBrokers')}
           </Link>

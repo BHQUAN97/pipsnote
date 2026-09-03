@@ -26,10 +26,10 @@ export default function CategoryFilter({ categories }: { categories: Category[] 
       <button
         type="button"
         onClick={() => select('')}
-        className={`rounded-sm border px-4.5 py-2.5 text-sm font-medium transition-colors ${
+        className={`rounded-full border px-4.5 py-2.5 text-sm font-medium transition-all duration-200 ${
           active === ''
-            ? 'border-surface-dark bg-surface-dark text-white'
-            : 'border-gray-line hover:border-ink'
+            ? 'glow-brand border-surface-dark bg-surface-dark text-white'
+            : 'border-gray-line text-gray-mid hover:-translate-y-0.5 hover:border-ink hover:text-ink'
         }`}
       >
         {t('all')}
@@ -39,10 +39,10 @@ export default function CategoryFilter({ categories }: { categories: Category[] 
           key={cat.id}
           type="button"
           onClick={() => select(cat.slug)}
-          className={`rounded-sm border px-4.5 py-2.5 text-sm font-medium transition-colors ${
+          className={`rounded-full border px-4.5 py-2.5 text-sm font-medium transition-all duration-200 ${
             active === cat.slug
-              ? 'border-surface-dark bg-surface-dark text-white'
-              : 'border-gray-line hover:border-ink'
+              ? 'glow-brand border-surface-dark bg-surface-dark text-white'
+              : 'border-gray-line text-gray-mid hover:-translate-y-0.5 hover:border-ink hover:text-ink'
           }`}
         >
           {cat.name}

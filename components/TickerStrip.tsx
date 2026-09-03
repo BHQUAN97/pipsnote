@@ -40,12 +40,17 @@ export default function TickerStrip({
       {bgUrl && (
         <>
           <Image src={bgUrl} alt="" fill className="absolute inset-0 -z-20 object-cover object-center" />
-          <div className="absolute inset-0 -z-10 bg-surface-dark/80" />
+          <div className="absolute inset-0 -z-10 bg-surface-dark/85" />
         </>
       )}
-      <div className="animate-ticker-scroll relative z-10 inline-flex">
-        <TickerItems items={items} />
-        <TickerItems items={items} />
+      <div className="relative z-10 flex border-b border-white/5">
+        <span className="flex shrink-0 items-center gap-2 bg-brand px-4 py-2.5 font-mono text-meta font-bold uppercase tracking-[0.08em] text-surface-dark">
+          L I V E
+        </span>
+        <div className="animate-ticker-scroll inline-flex">
+          <TickerItems items={items} />
+          <TickerItems items={items} />
+        </div>
       </div>
     </div>
   );

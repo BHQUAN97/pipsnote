@@ -14,7 +14,7 @@ export default function PostCard({ post }: { post: Post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="card-elevated group block overflow-hidden border border-gray-line bg-bg hover:border-ink"
+      className="card-elevated group block overflow-hidden border border-gray-line bg-bg hover:-translate-y-1.5 hover:border-ink/60 hover:shadow-soft"
     >
       {post.featured_image ? (
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-bg">
