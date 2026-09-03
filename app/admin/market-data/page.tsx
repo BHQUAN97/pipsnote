@@ -63,6 +63,16 @@ export default function AdminMarketDataPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
+  const [refreshResult, setRefreshResult] = useState<string | null>(null);
+
+  // Form thêm mã mới
+  const [showAdd, setShowAdd] = useState(false);
+  const [newLabel, setNewLabel] = useState('');
+  const [newCategory, setNewCategory] = useState<'forex' | 'crypto' | 'commodity' | 'stock'>('forex');
+  const [newDecimals, setNewDecimals] = useState('4');
+  const [newYahooCode, setNewYahooCode] = useState('');
+  const [addError, setAddError] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
 
   const load = useCallback(() => {
     fetch('/api/admin/market-data')
@@ -81,14 +91,50 @@ export default function AdminMarketDataPage() {
   async function handleRefresh() {
     setRefreshing(true);
     setRefreshError(null);
+    setRefreshResult(null);
     try {
       const res = await fetch('/api/admin/market-data/refresh', { method: 'POST' });
+      const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error();
+      const ok = data?.succeeded?.length ?? 0;
+      const failed = data?.failed?.length ?? 0;
+      setRefreshResult(`Đã đồng bộ: ${ok} symbol OK${failed ? `, ${failed} thất bại` : ''}`);
       load();
     } catch {
-      setRefreshError('Refresh failed. Try again.');
+      setRefreshError('Đồng bộ thất bại. Thử lại.');
     } finally {
       setRefreshing(false);
+    }
+  }
+
+  async function handleAdd() {
+    setAdding(true);
+    setAddError(null);
+    try {
+      const res = await fetch('/api/admin/market-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label: newLabel.trim(),
+          category: newCategory,
+          decimals: parseInt(newDecimals, 10) || 2,
+          yahooCode: newYahooCode.trim() || undefined,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        const err = data?.error ? JSON.stringify(data.error) : 'Thêm mã thất bại.';
+        setAddError(err);
+        return;
+      }
+      load();
+      setShowAdd(false);
+      setNewLabel('');
+      setNewYahooCode('');
+    } catch {
+      setAddError('Thêm mã thất bại. Thử lại.');
+    } finally {
+      setAdding(false);
     }
   }
 
@@ -122,17 +168,84 @@ export default function AdminMarketDataPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold sm:text-3xl">Market Data</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {refreshError && <span className="text-sm text-down">{refreshError}</span>}
+          {refreshResult && <span className="text-sm text-up">{refreshResult}</span>}
+          <button
+            onClick={() => {
+              setShowAdd((v) => !v);
+              setAddError(null);
+            }}
+            className="rounded-sm border border-brand px-3 py-2 text-sm font-medium text-brand"
+          >
+            {showAdd ? 'Huỷ' : '+ Thêm mã mới'}
+          </button>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
             className="rounded-sm bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
-            {refreshing ? 'Refreshing…' : 'Refresh now'}
+            {refreshing ? 'Đang đồng bộ…' : 'Đồng bộ ngay'}
           </button>
         </div>
       </div>
+
+      {showAdd && (
+        <div className="mb-6 grid gap-3 border border-gray-line p-4 sm:grid-cols-[1fr_1fr_1fr_1fr_auto]">
+          <div>
+            <label className="mb-1 block text-xs font-medium text-gray-mid">Tên mã (VD: EUR/USD)</label>
+            <input
+              value={newLabel}
+              onChange={(e) => setNewLabel(e.target.value)}
+              placeholder="EUR/USD"
+              className="min-h-[44px] w-full border border-gray-line bg-transparent px-3 text-sm"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-gray-mid">Nhóm</label>
+            <select
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value as typeof newCategory)}
+              className="min-h-[44px] w-full border border-gray-line bg-transparent px-3 text-sm"
+            >
+              <option value="forex">Forex</option>
+              <option value="crypto">Crypto</option>
+              <option value="commodity">Commodity</option>
+              <option value="stock">Cổ phiếu</option>
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-gray-mid">Số chữ số thập phân</label>
+            <input
+              type="number"
+              min={0}
+              max={6}
+              value={newDecimals}
+              onChange={(e) => setNewDecimals(e.target.value)}
+              className="min-h-[44px] w-full border border-gray-line bg-transparent px-3 text-sm"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-gray-mid">Mã Yahoo (tuỳ chọn)</label>
+            <input
+              value={newYahooCode}
+              onChange={(e) => setNewYahooCode(e.target.value)}
+              placeholder="EURUSD=X"
+              className="min-h-[44px] w-full border border-gray-line bg-transparent px-3 text-sm"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={handleAdd}
+              disabled={adding || !newLabel.trim()}
+              className="min-h-[44px] rounded-sm bg-brand px-4 text-sm font-medium text-white disabled:opacity-50"
+            >
+              {adding ? 'Đang thêm…' : 'Thêm'}
+            </button>
+          </div>
+          {addError && <p className="text-sm text-down sm:col-span-5">{addError}</p>}
+        </div>
+      )}
 
       <ProviderSettingsPanel />
 

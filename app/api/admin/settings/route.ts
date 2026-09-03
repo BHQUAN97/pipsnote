@@ -34,6 +34,21 @@ const KEY_SCHEMAS: Record<string, z.ZodTypeAny> = {
   'layout.show_ticker': BoolStringSchema,
   'layout.hero_variant': HeroVariantSchema,
   'layout.site_name': z.string().min(1).max(100),
+  'footer.contact_email': z.string().email().max(200),
+  'market.refresh_interval_minutes': z.string().regex(/^\d+$/).refine((v) => {
+    const n = parseInt(v, 10);
+    return n >= 1 && n <= 1440;
+  }, { message: 'Phải là số phút từ 1 đến 1440' }),
+  'market.history_retention_days': z.string().regex(/^\d+$/).refine((v) => {
+    const n = parseInt(v, 10);
+    return n >= 1 && n <= 365;
+  }, { message: 'Phải là số ngày từ 1 đến 365' }),
+  'site_url': z
+    .string()
+    .max(200)
+    .refine((v) => /^https?:\/\/.+/i.test(v), {
+      message: 'Site URL phải bắt đầu bằng http:// hoặc https://',
+    }),
   'bg.global': ImageUrlSchema,
   'bg.hero': ImageUrlSchema,
   'bg.ticker': ImageUrlSchema,

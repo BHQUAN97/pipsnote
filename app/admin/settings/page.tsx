@@ -283,11 +283,72 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setKey('layout.site_name', e.target.value)}
                 className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
                 placeholder="TopTrendMarkets"
-                maxLength={100}
-              />
-            </div>
-          </div>
-        </section>
+                              maxLength={100}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm mb-2">Site URL</label>
+                            <input
+                              type="text"
+                              value={settings['site_url'] ?? ''}
+                              onChange={(e) => setKey('site_url', e.target.value)}
+                              className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                              placeholder="https://toptrendmarkets.com"
+                              maxLength={200}
+                            />
+                            <p className="mt-1 text-xs opacity-60">
+                                                            Dùng cho robots.txt, sitemap, canonical, metadataBase.
+                                                          </p>
+                                                        </div>
+                                                        <div>
+                                                          <label className="block text-sm mb-2">Contact email</label>
+                                                          <input
+                                                            type="email"
+                                                            value={settings['footer.contact_email'] ?? ''}
+                                                            onChange={(e) => setKey('footer.contact_email', e.target.value)}
+                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                                                            placeholder="hello@toptrendmarkets.com"
+                                                            maxLength={200}
+                                                          />
+                                                          <p className="mt-1 text-xs opacity-60">
+                                                            Hiển thị ở footer và trang liên hệ.
+                                                          </p>
+                                                        </div>
+                                                      </div>
+                                                      <div className="mt-4 border-t pt-4">
+                                                        <h3 className="mb-2 font-semibold">Market data (tự cập nhật)</h3>
+                                                        <div className="space-y-3">
+                                                          <div>
+                                                            <label className="block text-sm mb-2">Chu kỳ refresh (phút)</label>
+                                                            <input
+                                                              type="number"
+                                                              min={1}
+                                                              max={1440}
+                                                              value={settings['market.refresh_interval_minutes'] ?? '15'}
+                                                              onChange={(e) => setKey('market.refresh_interval_minutes', e.target.value)}
+                                                              className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                                                            />
+                                                            <p className="mt-1 text-xs opacity-60">
+                                                              Bao lâu lấy giá mới một lần (1–1440). Thay đổi có hiệu lực chu kỳ sau, không cần restart.
+                                                            </p>
+                                                          </div>
+                                                          <div>
+                                                            <label className="block text-sm mb-2">Giữ lịch sử giá (ngày)</label>
+                                                            <input
+                                                              type="number"
+                                                              min={1}
+                                                              max={365}
+                                                              value={settings['market.history_retention_days'] ?? '30'}
+                                                              onChange={(e) => setKey('market.history_retention_days', e.target.value)}
+                                                              className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                                                            />
+                                                            <p className="mt-1 text-xs opacity-60">
+                                                              Dữ liệu cũ ngoài số ngày này sẽ bị dọn. Dữ liệu lịch sử dùng để vẽ biểu đồ thời gian.
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                    </section>
       )}
 
       {activeTab === 'backgrounds' && (

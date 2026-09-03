@@ -1,13 +1,16 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { routes } from '@/lib/routes';
+import { getSiteSettings } from '@/lib/settings';
 import RiskDisclaimer from './RiskDisclaimer';
 
-export default function Footer({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
+export default async function Footer({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
   const brand = siteName.slice(0, 4).toUpperCase();
   const rest = siteName.slice(4).toUpperCase();
+  const settings = await getSiteSettings();
+  const contactEmail = settings['footer.contact_email'] || 'hello@toptrendmarkets.com';
 
   return (
     <footer className="border-t border-gray-line bg-bg pt-16">
@@ -74,8 +77,8 @@ export default function Footer({ siteName = 'TopTrendMarkets' }: { siteName?: st
             <h4 className="mb-4 font-mono text-meta uppercase tracking-[0.08em] text-gray-mid">
               {t('contact')}
             </h4>
-            <a href="mailto:hello@toptrendmarkets.com" className="mb-3 block text-sm hover:text-brand">
-              hello@toptrendmarkets.com
+            <a href={`mailto:${contactEmail}`} className="mb-3 block text-sm hover:text-brand">
+              {contactEmail}
             </a>
             <Link href={routes.contact} className="mb-3 block text-sm hover:text-brand">
               {t('sendFeedback')}
