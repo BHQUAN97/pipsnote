@@ -1,15 +1,15 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { routes } from '@/lib/routes';
 import { getSiteSettings } from '@/lib/settings';
 import RiskDisclaimer from './RiskDisclaimer';
 
 export default async function Footer({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
-  const t = useTranslations('footer');
-  const tNav = useTranslations('nav');
+  const t = await getTranslations('footer');
+  const tNav = await getTranslations('nav');
+  const settings = await getSiteSettings();
   const brand = siteName.slice(0, 4).toUpperCase();
   const rest = siteName.slice(4).toUpperCase();
-  const settings = await getSiteSettings();
   const contactEmail = settings['footer.contact_email'] || 'hello@toptrendmarkets.com';
 
   return (
