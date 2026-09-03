@@ -3,6 +3,7 @@ import { Archivo_Black, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
 import { getSiteSettings } from "@/lib/settings";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin", "vietnamese"],
@@ -23,14 +24,18 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pipsnote.com"),
-  title: "PIPSNOTE - Forex & Crypto Trading Insights",
-  description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
-  alternates: {
-    languages: { en: "/", vi: "/vi" },
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = (await getSiteUrl());
+  return {
+    metadataBase: new URL(baseUrl),
+    title: "PIPSNOTE - Forex & Crypto Trading Insights",
+    description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
+    alternates: {
+      canonical: "/",
+      languages: { en: "/", vi: "/vi" },
+    },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 
