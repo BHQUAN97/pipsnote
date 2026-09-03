@@ -35,6 +35,9 @@ const KEY_SCHEMAS: Record<string, z.ZodTypeAny> = {
   'layout.hero_variant': HeroVariantSchema,
   'layout.site_name': z.string().min(1).max(100),
   'footer.contact_email': z.string().email().max(200),
+  'seo.og_image': z.string().max(500),
+  'seo.logo_image': z.string().max(500),
+  'seo.favicon': z.string().max(500),
   'market.refresh_interval_minutes': z.string().regex(/^\d+$/).refine((v) => {
     const n = parseInt(v, 10);
     return n >= 1 && n <= 1440;

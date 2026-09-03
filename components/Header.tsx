@@ -1,11 +1,14 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { routes } from '@/lib/routes';
+import { getSiteSettings } from '@/lib/settings';
 import ThemeToggle from './ThemeToggle';
 import LocaleSwitcher from './LocaleSwitcher';
 
-export default function Header({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
-  const t = useTranslations('nav');
+export default async function Header({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
+  const t = await getTranslations('nav');
+  const settings = await getSiteSettings();
+  const logoImage = settings['seo.logo_image'] || '';
   const brand = siteName.slice(0, 4).toUpperCase();
   const rest = siteName.slice(4).toUpperCase();
 
@@ -19,9 +22,15 @@ export default function Header({ siteName = 'TopTrendMarkets' }: { siteName?: st
   return (
     <header className="sticky top-0 z-50 border-b border-gray-line bg-bg/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex h-[76px] max-w-[1180px] items-center justify-between gap-4 px-7">
-        <Link href="/" className="group relative font-display text-wordmark tracking-tight">
-          {brand}
-          <span className="text-gradient">{rest}</span>
+        <Link href="/" className="group relative flex items-center font-display text-wordmark tracking-tight">
+          {logoImage ? (
+            <img src={logoImage} alt={siteName} className="h-8 w-auto max-w-[220px] object-contain" />
+          ) : (
+            <>
+              {brand}
+              <span className="text-gradient">{rest}</span>
+            </>
+          )}
           <span className="absolute -bottom-1 left-0 h-0.5 w-0 rounded-full bg-brand transition-all duration-300 group-hover:w-full" />
         </Link>
 

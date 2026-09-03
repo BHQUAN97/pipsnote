@@ -314,6 +314,45 @@ export default function AdminSettingsPage() {
                                                             Hiển thị ở footer và trang liên hệ.
                                                           </p>
                                                         </div>
+                                                        <div>
+                                                          <label className="block text-sm mb-2">Logo (ảnh tiêu đề)</label>
+                                                          <input
+                                                            value={settings['seo.logo_image'] ?? ''}
+                                                            onChange={(e) => setKey('seo.logo_image', e.target.value)}
+                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                                                            placeholder="/logo.png hoặc https://..."
+                                                            maxLength={500}
+                                                          />
+                                                          <p className="mt-1 text-xs opacity-60">
+                                                            Logo hiển thị ở header thay cho tên chữ. Rỗng = dùng tên chữ.
+                                                          </p>
+                                                        </div>
+                                                        <div>
+                                                          <label className="block text-sm mb-2">Favicon</label>
+                                                          <input
+                                                            value={settings['seo.favicon'] ?? ''}
+                                                            onChange={(e) => setKey('seo.favicon', e.target.value)}
+                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                                                            placeholder="/favicon.ico hoặc https://..."
+                                                            maxLength={500}
+                                                          />
+                                                          <p className="mt-1 text-xs opacity-60">
+                                                            Icon tab trình duyệt. Rỗng = dùng app/favicon.ico mặc định.
+                                                          </p>
+                                                        </div>
+                                                        <div>
+                                                          <label className="block text-sm mb-2">Ảnh chia sẻ (OG Image)</label>
+                                                          <input
+                                                            value={settings['seo.og_image'] ?? ''}
+                                                            onChange={(e) => setKey('seo.og_image', e.target.value)}
+                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
+                                                            placeholder="/og.png (1200x630) hoặc https://..."
+                                                            maxLength={500}
+                                                          />
+                                                          <p className="mt-1 text-xs opacity-60">
+                                                            Preview khi chia sẻ link (Telegram/Facebook/Twitter). Rỗng = /og.png mặc định.
+                                                          </p>
+                                                        </div>
                                                       </div>
                                                       <div className="mt-4 border-t pt-4">
                                                         <h3 className="mb-2 font-semibold">Market data (tự cập nhật)</h3>

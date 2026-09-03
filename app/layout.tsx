@@ -28,6 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = (await getSiteUrl());
   const settings = await getSiteSettings();
   const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
+  const ogImage = settings['seo.og_image'] || '/og.png';
+  const absOg = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
+  const favicon = settings['seo.favicon'] || '';
   return {
     metadataBase: new URL(baseUrl),
     title: {
@@ -41,12 +44,15 @@ export async function generateMetadata(): Promise<Metadata> {
       title: `${siteName} - Forex & Crypto Trading Insights`,
       description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
       url: '/',
+      images: [{ url: absOg, width: 1200, height: 630, alt: siteName }],
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: `${siteName} - Forex & Crypto Trading Insights`,
       description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
+      images: [absOg],
     },
+    icons: favicon ? { icon: favicon } : undefined,
     alternates: {
       canonical: "/",
       languages: { en: "/", vi: "/vi" },

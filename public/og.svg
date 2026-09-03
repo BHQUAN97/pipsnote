@@ -1,0 +1,38 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0e14"/>
+      <stop offset="55%" stop-color="#121826"/>
+      <stop offset="100%" stop-color="#1a1426"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.15" r="0.55">
+      <stop offset="0%" stop-color="#ffb020" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffb020" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- grid lines -->
+  <g stroke="#ffffff" stroke-opacity="0.05">
+    <line x1="0" y1="157" x2="1200" y2="157"/><line x1="0" y1="315" x2="1200" y2="315"/><line x1="0" y1="472" x2="1200" y2="472"/>
+    <line x1="300" y1="0" x2="300" y2="630"/><line x1="600" y1="0" x2="600" y2="630"/><line x1="900" y1="0" x2="900" y2="630"/>
+  </g>
+
+  <!-- candlestick glyph -->
+  <g stroke="#ffb020" stroke-width="8" stroke-linecap="round">
+    <line x1="390" y1="120" x2="390" y2="470"/>
+    <line x1="555" y1="210" x2="555" y2="470"/>
+    <line x1="720" y1="150" x2="720" y2="470"/>
+    <line x1="885" y1="265" x2="885" y2="470"/>
+  </g>
+
+  <!-- brand -->
+  <text x="80" y="120" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800" fill="#ffb020" letter-spacing="1">TOPTREND</text>
+  <text x="80" y="196" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="1">MARKETS</text>
+
+  <text x="80" y="252" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#8b94a7" letter-spacing="0.5">Forex &amp; Crypto Trading Insights</text>
+
+  <text x="80" y="516" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#ffb020" opacity="0.7">toptrendmarkets.com</text>
+</svg>
