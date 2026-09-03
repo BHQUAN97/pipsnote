@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Fragment } from 'react';
 import ProviderSettingsPanel from '@/components/admin/ProviderSettingsPanel';
+import MarketChart from '@/components/admin/MarketChart';
 
 interface MarketDataRow {
   id: number;
@@ -73,6 +74,7 @@ export default function AdminMarketDataPage() {
   const [newYahooCode, setNewYahooCode] = useState('');
   const [addError, setAddError] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const load = useCallback(() => {
     fetch('/api/admin/market-data')
@@ -272,8 +274,19 @@ export default function AdminMarketDataPage() {
               </thead>
               <tbody>
                 {items.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-line last:border-0 hover:bg-gray-bg">
-                    <td className="p-3 font-medium">{row.label}</td>
+                  <Fragment key={row.id}>
+                  <tr className="border-b border-gray-line last:border-0 hover:bg-gray-bg">
+                    <td className="p-3 font-medium">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedId(expandedId === row.id ? null : row.id)}
+                        className="flex items-center gap-1 text-left hover:text-brand"
+                        aria-expanded={expandedId === row.id}
+                      >
+                        {expandedId === row.id ? '▾' : '▸'}
+                        <span>{row.label}</span>
+                      </button>
+                    </td>
                     <td className="p-3 text-gray-mid">{row.category}</td>
                     <td className="p-3">{formatPrice(row.price, row.decimals)}</td>
                     <td className="p-3">{formatChangePercent(row.change_percent)}</td>
@@ -316,6 +329,14 @@ export default function AdminMarketDataPage() {
                       </div>
                     </td>
                   </tr>
+                  {expandedId === row.id && (
+                    <tr className="border-b border-gray-line bg-gray-bg/50 last:border-0">
+                      <td colSpan={9} className="p-4">
+                        <MarketChart symbolId={row.id} label={row.label} decimals={row.decimals} />
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>
