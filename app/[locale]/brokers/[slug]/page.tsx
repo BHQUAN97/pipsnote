@@ -26,8 +26,9 @@ export async function generateMetadata({
   const broker = await getBroker(slug);
   if (!broker) return {};
 
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${broker.name} Review | PIPSNOTE`,
+    title: `${broker.name} Review | ${siteName}`,
     description: broker.description || `Detailed review of ${broker.name}.`,
     alternates: {
       languages: { en: `/brokers/${slug}`, vi: `/vi/brokers/${slug}` },
@@ -45,7 +46,7 @@ export default async function BrokerDetailPage({
   if (!broker) notFound();
 
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   const specs = [
     { label: 'Spread from', value: broker.spread_from },

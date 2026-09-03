@@ -7,9 +7,10 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('about');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('title')} | PIPSNOTE`,
-    description: t('intro', { siteName: 'PIPSNOTE' }),
+    title: `${t('title')} | ${siteName}`,
+    description: t('intro', { siteName }),
     alternates: { languages: { en: '/about', vi: '/vi/about' } },
   };
 }
@@ -19,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export default async function AboutPage() {
   const t = await getTranslations('about');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>

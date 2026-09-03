@@ -5,7 +5,8 @@ import { getSiteSettings } from '@/lib/settings';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('maintenance');
-  return { title: `${t('title')} | PIPSNOTE` };
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
+  return { title: `${t('title')} | ${siteName}` };
 }
 
 export const dynamic = 'force-dynamic';
@@ -13,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export default async function MaintenancePage() {
   const t = await getTranslations('maintenance');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-bg px-7 text-center">

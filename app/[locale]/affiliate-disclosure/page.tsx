@@ -7,9 +7,10 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('affiliateDisclosure');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('title')} | PIPSNOTE`,
-    description: 'How PIPSNOTE earns affiliate commissions from broker partners.',
+    title: `${t('title')} | ${siteName}`,
+    description: `How ${siteName} earns affiliate commissions from broker partners.`,
     alternates: { languages: { en: '/affiliate-disclosure', vi: '/vi/affiliate-disclosure' } },
   };
 }
@@ -19,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export default async function AffiliateDisclosurePage() {
   const t = await getTranslations('affiliateDisclosure');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>
@@ -53,7 +54,7 @@ export default async function AffiliateDisclosurePage() {
               <p>
                 {t.rich('section4Body', {
                   email: (chunks) => (
-                    <a href="mailto:hello@pipsnote.com" className="text-brand underline">
+                    <a href="mailto:hello@toptrendmarkets.com" className="text-brand underline">
                       {chunks}
                     </a>
                   ),

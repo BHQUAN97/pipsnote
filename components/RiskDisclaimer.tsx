@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 
-export default function RiskDisclaimer({ siteName = 'PIPSNOTE' }: { siteName?: string }) {
+export default function RiskDisclaimer({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
   const t = useTranslations('riskDisclaimer');
 
   return (

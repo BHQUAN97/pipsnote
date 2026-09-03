@@ -7,9 +7,10 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('privacyPolicy');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('title')} | PIPSNOTE`,
-    description: 'How PIPSNOTE collects, uses, and protects your personal data.',
+    title: `${t('title')} | ${siteName}`,
+    description: `How ${siteName} collects, uses, and protects your personal data.`,
     alternates: { languages: { en: '/privacy-policy', vi: '/vi/privacy-policy' } },
   };
 }
@@ -19,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export default async function PrivacyPolicyPage() {
   const t = await getTranslations('privacyPolicy');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>
@@ -53,7 +54,7 @@ export default async function PrivacyPolicyPage() {
               <p>
                 {t.rich('section4Body', {
                   email: (chunks) => (
-                    <a href="mailto:hello@pipsnote.com" className="text-brand underline">
+                    <a href="mailto:hello@toptrendmarkets.com" className="text-brand underline">
                       {chunks}
                     </a>
                   ),
@@ -81,7 +82,7 @@ export default async function PrivacyPolicyPage() {
               <p>
                 {t.rich('section8Body', {
                   email: (chunks) => (
-                    <a href="mailto:hello@pipsnote.com" className="text-brand underline">
+                    <a href="mailto:hello@toptrendmarkets.com" className="text-brand underline">
                       {chunks}
                     </a>
                   ),

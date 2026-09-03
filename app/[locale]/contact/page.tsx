@@ -7,9 +7,10 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('contact');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('title')} | PIPSNOTE`,
-    description: 'Get in touch with the PIPSNOTE team.',
+    title: `${t('title')} | ${siteName}`,
+    description: `Get in touch with the ${siteName} team.`,
     alternates: { languages: { en: '/contact', vi: '/vi/contact' } },
   };
 }
@@ -19,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export default async function ContactPage() {
   const t = await getTranslations('contact');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>
@@ -33,10 +34,10 @@ export default async function ContactPage() {
           <div className="border border-gray-line p-6">
             <h2 className="mb-2 text-lg font-semibold text-ink">{t('emailHeading')}</h2>
             <a
-              href="mailto:hello@pipsnote.com"
+              href="mailto:hello@toptrendmarkets.com"
               className="text-sm font-medium text-brand underline"
             >
-              hello@pipsnote.com
+              hello@toptrendmarkets.com
             </a>
             <p className="mt-3 text-sm leading-relaxed text-gray-mid">{t('responseNote')}</p>
           </div>

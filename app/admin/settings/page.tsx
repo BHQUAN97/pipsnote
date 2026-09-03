@@ -20,7 +20,7 @@ const DEFAULT_SETTINGS: Settings = {
   'theme.dark_default': 'false',
   'layout.show_ticker': 'true',
   'layout.hero_variant': 'editorial',
-  'layout.site_name': 'PIPSNOTE',
+  'layout.site_name': 'TopTrendMarkets',
   'bg.global': '',
   'bg.hero': '',
   'bg.ticker': '',
@@ -282,7 +282,7 @@ export default function AdminSettingsPage() {
                 value={settings['layout.site_name'] ?? ''}
                 onChange={(e) => setKey('layout.site_name', e.target.value)}
                 className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
-                placeholder="PIPSNOTE"
+                placeholder="TopTrendMarkets"
                 maxLength={100}
               />
             </div>

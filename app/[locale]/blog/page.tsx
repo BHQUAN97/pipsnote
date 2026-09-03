@@ -13,8 +13,9 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('blogList');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('metaTitle')} | PIPSNOTE`,
+    title: `${t('metaTitle')} | ${siteName}`,
     description: t('metaDescription'),
     alternates: { languages: { en: '/blog', vi: '/vi/blog' } },
   };
@@ -46,7 +47,7 @@ export default async function BlogPage({
   const offset = (currentPage - 1) * PAGE_SIZE;
 
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   const categories = await query<Category[]>('SELECT * FROM categories ORDER BY name');
 
   let posts: Post[];

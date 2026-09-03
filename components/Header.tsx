@@ -4,7 +4,7 @@ import { routes } from '@/lib/routes';
 import ThemeToggle from './ThemeToggle';
 import LocaleSwitcher from './LocaleSwitcher';
 
-export default function Header({ siteName = 'PIPSNOTE' }: { siteName?: string }) {
+export default function Header({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
   const t = useTranslations('nav');
   const brand = siteName.slice(0, 4).toUpperCase();
   const rest = siteName.slice(4).toUpperCase();

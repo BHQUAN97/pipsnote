@@ -3,7 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { routes } from '@/lib/routes';
 import RiskDisclaimer from './RiskDisclaimer';
 
-export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string }) {
+export default function Footer({ siteName = 'TopTrendMarkets' }: { siteName?: string }) {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
   const brand = siteName.slice(0, 4).toUpperCase();
@@ -74,8 +74,8 @@ export default function Footer({ siteName = 'PIPSNOTE' }: { siteName?: string })
             <h4 className="mb-4 font-mono text-meta uppercase tracking-[0.08em] text-gray-mid">
               {t('contact')}
             </h4>
-            <a href="mailto:hello@pipsnote.com" className="mb-3 block text-sm hover:text-brand">
-              hello@pipsnote.com
+            <a href="mailto:hello@toptrendmarkets.com" className="mb-3 block text-sm hover:text-brand">
+              hello@toptrendmarkets.com
             </a>
             <Link href={routes.contact} className="mb-3 block text-sm hover:text-brand">
               {t('sendFeedback')}

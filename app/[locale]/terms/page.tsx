@@ -8,9 +8,10 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('terms');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('title')} | PIPSNOTE`,
-    description: 'Terms and conditions for using the PIPSNOTE website.',
+    title: `${t('title')} | ${siteName}`,
+    description: `Terms and conditions for using the ${siteName} website.`,
     alternates: { languages: { en: '/terms', vi: '/vi/terms' } },
   };
 }
@@ -20,7 +21,7 @@ export const dynamic = 'force-dynamic';
 export default async function TermsPage() {
   const t = await getTranslations('terms');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>
@@ -72,7 +73,7 @@ export default async function TermsPage() {
               <p>
                 {t.rich('section6Body', {
                   email: (chunks) => (
-                    <a href="mailto:hello@pipsnote.com" className="text-brand underline">
+                    <a href="mailto:hello@toptrendmarkets.com" className="text-brand underline">
                       {chunks}
                     </a>
                   ),

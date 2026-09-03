@@ -10,8 +10,9 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('brokersList');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('metaTitle')} | PIPSNOTE`,
+    title: `${t('metaTitle')} | ${siteName}`,
     description: t('metaDescription'),
     alternates: { languages: { en: '/brokers', vi: '/vi/brokers' } },
   };
@@ -33,7 +34,7 @@ export default async function BrokersPage({
   const offset = (currentPage - 1) * PAGE_SIZE;
 
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   const [countRows, brokers] = await Promise.all([
     query<{ total: number }[]>('SELECT COUNT(*) AS total FROM brokers WHERE is_active = 1'),

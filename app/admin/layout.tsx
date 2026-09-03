@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               P
             </span>
-            PIPSNOTE
+            TopTrendMarkets
             <span className="hidden text-sm font-normal sm:inline" style={{ color: 'var(--gray-mid)' }}>
               Admin
             </span>

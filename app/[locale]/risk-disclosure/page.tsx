@@ -8,9 +8,10 @@ import Footer from '@/components/Footer';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('riskDisclosure');
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${t('title')} | PIPSNOTE`,
-    description: 'Risk warning for forex and CFD trading content on PIPSNOTE.',
+    title: `${t('title')} | ${siteName}`,
+    description: `Risk warning for forex and CFD trading content on ${siteName}.`,
     alternates: { languages: { en: '/risk-disclosure', vi: '/vi/risk-disclosure' } },
   };
 }
@@ -20,7 +21,7 @@ export const dynamic = 'force-dynamic';
 export default async function RiskDisclosurePage() {
   const t = await getTranslations('riskDisclosure');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>

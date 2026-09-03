@@ -26,9 +26,11 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = (await getSiteUrl());
+  const settings = await getSiteSettings();
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   return {
     metadataBase: new URL(baseUrl),
-    title: "PIPSNOTE - Forex & Crypto Trading Insights",
+    title: `${siteName} - Forex & Crypto Trading Insights`,
     description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
     alternates: {
       canonical: "/",

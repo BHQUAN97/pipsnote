@@ -75,7 +75,7 @@ export default async function BlogDetailPage({
   const tags = await getPostTags(post.id);
   const t = await getTranslations('blogDetail');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   const related = post.category_id
     ? await query<Post[]>(

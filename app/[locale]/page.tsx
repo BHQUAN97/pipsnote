@@ -19,7 +19,7 @@ export default async function Home() {
   const t = await getTranslations('home');
   const tCat = await getTranslations('categoryFilter');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   const showTicker = settings['layout.show_ticker'] !== 'false';
   const tickerItems = showTicker ? await getMarketDataSnapshot() : [];
   const heroBg = settings['bg.hero'] || undefined;

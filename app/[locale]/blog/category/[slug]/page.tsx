@@ -28,8 +28,9 @@ export async function generateMetadata({
   const category = await getCategory(slug);
   if (!category) return {};
 
+  const siteName = (await getSiteSettings())['layout.site_name'] || 'TopTrendMarkets';
   return {
-    title: `${category.name} | PIPSNOTE Blog`,
+    title: `${category.name} | ${siteName} Blog`,
     description:
       category.description ||
       `${category.name} articles — market analysis, trading guides, and broker reviews.`,
@@ -62,7 +63,7 @@ export default async function BlogCategoryPage({
   const offset = (currentPage - 1) * PAGE_SIZE;
 
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   const categories = await query<Category[]>('SELECT * FROM categories ORDER BY name');
 
   const { items: posts, total } = await getPublishedPosts({

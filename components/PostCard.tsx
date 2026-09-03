@@ -40,7 +40,7 @@ export default function PostCard({ post }: { post: Post }) {
           {/* glow dot accent */}
           <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full" style={{ background: 'var(--red)', boxShadow: '0 0 12px var(--red)' }} />
           <span className="relative font-mono text-[11px] uppercase tracking-[0.12em] text-white/60">
-            {post.category_name ?? 'PIPSNOTE · Markets'}
+            {post.category_name ?? 'TopTrendMarkets · Markets'}
           </span>
         </div>
       )}

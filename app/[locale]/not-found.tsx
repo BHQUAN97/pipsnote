@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 export default async function LocaleNotFound() {
   const t = await getTranslations('notFound');
   const settings = await getSiteSettings();
-  const siteName = settings['layout.site_name'] || 'PIPSNOTE';
+  const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
 
   return (
     <>
