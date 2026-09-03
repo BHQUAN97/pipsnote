@@ -30,8 +30,23 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   return {
     metadataBase: new URL(baseUrl),
-    title: `${siteName} - Forex & Crypto Trading Insights`,
+    title: {
+      default: `${siteName} - Forex & Crypto Trading Insights`,
+      template: `%s | ${siteName}`,
+    },
     description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
+    openGraph: {
+      type: 'website',
+      siteName,
+      title: `${siteName} - Forex & Crypto Trading Insights`,
+      description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
+      url: '/',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${siteName} - Forex & Crypto Trading Insights`,
+      description: "Your trusted source for Forex and Crypto market analysis, broker reviews, and trading strategies",
+    },
     alternates: {
       canonical: "/",
       languages: { en: "/", vi: "/vi" },
