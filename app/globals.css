@@ -241,6 +241,12 @@ html[lang="vi"] h3 {
   max-width: 100%;
 }
 
+/* Căn lề ảnh trong bài (data-align từ editor) */
+.article-content img[data-align='left'] { float: left; margin: 0 1em 0.5em 0; }
+.article-content img[data-align='right'] { float: right; margin: 0 0 0.5em 1em; }
+.article-content img[data-align='center'] { display: block; margin-left: auto; margin-right: auto; }
+.article-content img:not([data-align]):not([style*='width']) { display: block; margin-left: auto; margin-right: auto; }
+
 /* ── Admin scope — LUÔN dark, không theo theme toggle của trang public ── */
 .admin-scope {
   --bg: #0a0f1a;

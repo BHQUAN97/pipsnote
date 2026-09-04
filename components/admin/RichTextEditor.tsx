@@ -6,6 +6,25 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+
+// Ảnh cho phép căn lề (data-align) + resize (style width %) — mở rộng node mặc định, không cần extension riêng.
+const ExtImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      dataAlign: {
+        default: null,
+        parseHTML: (el) => el.getAttribute('data-align'),
+        renderHTML: (attrs) => (attrs.dataAlign ? { 'data-align': attrs.dataAlign } : {}),
+      },
+      width: {
+        default: null,
+        parseHTML: (el) => el.style.width || null,
+        renderHTML: (attrs) => (attrs.width ? { style: `width:${attrs.width};` } : {}),
+      },
+    };
+  },
+});
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import Highlight from '@tiptap/extension-highlight';
@@ -41,8 +60,8 @@ export default function RichTextEditor({ value, onChange, disabled }: RichTextEd
       StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
       Underline,
       Link.configure({ openOnClick: false, validate: (href) => isUrlSafe(href), HTMLAttributes: { rel: 'noopener noreferrer' } }),
-      Image,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      ExtImage,
+      TextAlign.configure({ types: ['heading', 'paragraph', 'image'] }),
       Placeholder.configure({ placeholder: 'Viết nội dung bài viết…' }),
       Highlight.configure({ multicolor: true }),
       CharacterCount,
@@ -168,6 +187,17 @@ export default function RichTextEditor({ value, onChange, disabled }: RichTextEd
         <TB active={editor.isActive('link')} onClick={addLink} label="Liên kết"><LinkIcon size={15} /></TB>
         <TB onClick={() => fileInputRef.current?.click()} label="Upload ảnh" busy={uploading}><ImageIcon size={15} /></TB>
         <TB onClick={addImageUrl} label="Ảnh từ URL"><ImagePlus size={15} /></TB>
+        {editor.isActive('image') && (
+          <>
+            <Sep />
+            <TB active={editor.getAttributes('image').dataAlign === 'left'} onClick={() => editor.chain().focus().updateAttributes('image', { dataAlign: 'left', width: null }).run()} label="Ảnh trái"><AlignLeft size={15} /></TB>
+            <TB active={editor.getAttributes('image').dataAlign === 'center' || (editor.getAttributes('image').dataAlign == null && editor.getAttributes('image').width == null)} onClick={() => editor.chain().focus().updateAttributes('image', { dataAlign: 'center', width: null }).run()} label="Ảnh giữa"><AlignCenter size={15} /></TB>
+            <TB active={editor.getAttributes('image').dataAlign === 'right'} onClick={() => editor.chain().focus().updateAttributes('image', { dataAlign: 'right', width: null }).run()} label="Ảnh phải"><AlignRight size={15} /></TB>
+            <Sep />
+            <TB active={editor.getAttributes('image').width === '50%'} onClick={() => editor.chain().focus().updateAttributes('image', { width: '50%' }).run()} label="Thu nhỏ 50%"><Minus size={15} /></TB>
+            <TB active={editor.getAttributes('image').width === '100%'} onClick={() => editor.chain().focus().updateAttributes('image', { width: '100%', dataAlign: null }).run()} label="Kích thước gốc"><Maximize2 size={15} /></TB>
+          </>
+        )}
         <Sep />
         <TB onClick={() => editor.chain().focus().undo().run()} label="Hoàn tác" disabled={!editor.can().undo()}><Undo size={15} /></TB>
         <TB onClick={() => editor.chain().focus().redo().run()} label="Làm lại" disabled={!editor.can().redo()}><Redo size={15} /></TB>

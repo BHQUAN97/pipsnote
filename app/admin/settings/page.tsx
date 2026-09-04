@@ -105,6 +105,65 @@ export default function AdminSettingsPage() {
     }
   };
 
+  // Field ảnh dùng chung (Logo / Favicon / OG) — upload file thay vì gõ URL
+  const PicField = ({
+    key,
+    label,
+    helper,
+  }: {
+    key: string;
+    label: string;
+    helper: string;
+  }) => (
+    <div>
+      <label className="block text-sm mb-2">{label}</label>
+      <div className="flex flex-wrap items-center gap-3 mb-2">
+        {settings[key] ? (
+          <div className="relative h-16 w-28 overflow-hidden rounded-sm border bg-gray-bg">
+            <Image src={settings[key]} alt="" fill className="object-contain" />
+          </div>
+        ) : (
+          <div className="flex h-16 w-28 items-center justify-center rounded-sm border text-xs text-gray-mid">
+            Chưa có
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() => setKey(key, '')}
+          disabled={!settings[key] || uploadingKey !== null}
+          className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg disabled:opacity-50"
+        >
+          Xoá ảnh
+        </button>
+        <label className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg cursor-pointer flex items-center">
+          {uploadingKey === key ? 'Đang tải...' : 'Tải ảnh lên'}
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            disabled={uploadingKey !== null}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = '';
+              if (file) handleBgUpload(key, file);
+            }}
+          />
+        </label>
+        {settings[key] && (
+          <input
+            type="text"
+            value={settings[key]}
+            onChange={(e) => setKey(key, e.target.value)}
+            className="min-h-[44px] flex-1 min-w-[180px] px-3 py-2 border rounded-sm text-xs font-mono"
+            aria-label={`${label} URL`}
+          />
+        )}
+      </div>
+      {uploadError && uploadError && <p className="mb-2 text-sm text-down">{uploadError}</p>}
+      <p className="mt-1 text-xs opacity-60">{helper}</p>
+    </div>
+  );
+
   const handlePreset = async (preset: string) => {
     setSaving(true);
     setMessage('');
@@ -315,43 +374,25 @@ export default function AdminSettingsPage() {
                                                           </p>
                                                         </div>
                                                         <div>
-                                                          <label className="block text-sm mb-2">Logo (ảnh tiêu đề)</label>
-                                                          <input
-                                                            value={settings['seo.logo_image'] ?? ''}
-                                                            onChange={(e) => setKey('seo.logo_image', e.target.value)}
-                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
-                                                            placeholder="/logo.png hoặc https://..."
-                                                            maxLength={500}
+                                                          <PicField
+                                                            key="seo.logo_image"
+                                                            label="Logo (ảnh tiêu đề)"
+                                                            helper="Logo hiển thị ở header thay cho tên chữ. Rỗng = dùng tên chữ."
                                                           />
-                                                          <p className="mt-1 text-xs opacity-60">
-                                                            Logo hiển thị ở header thay cho tên chữ. Rỗng = dùng tên chữ.
-                                                          </p>
                                                         </div>
                                                         <div>
-                                                          <label className="block text-sm mb-2">Favicon</label>
-                                                          <input
-                                                            value={settings['seo.favicon'] ?? ''}
-                                                            onChange={(e) => setKey('seo.favicon', e.target.value)}
-                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
-                                                            placeholder="/favicon.ico hoặc https://..."
-                                                            maxLength={500}
+                                                          <PicField
+                                                            key="seo.favicon"
+                                                            label="Favicon"
+                                                            helper="Icon tab trình duyệt. Rỗng = dùng app/favicon.ico mặc định."
                                                           />
-                                                          <p className="mt-1 text-xs opacity-60">
-                                                            Icon tab trình duyệt. Rỗng = dùng app/favicon.ico mặc định.
-                                                          </p>
                                                         </div>
                                                         <div>
-                                                          <label className="block text-sm mb-2">Ảnh chia sẻ (OG Image)</label>
-                                                          <input
-                                                            value={settings['seo.og_image'] ?? ''}
-                                                            onChange={(e) => setKey('seo.og_image', e.target.value)}
-                                                            className="w-full min-h-[44px] px-4 py-2 border rounded-sm"
-                                                            placeholder="/og.png (1200x630) hoặc https://..."
-                                                            maxLength={500}
+                                                          <PicField
+                                                            key="seo.og_image"
+                                                            label="Ảnh chia sẻ (OG Image)"
+                                                            helper="Preview khi chia sẻ link (Telegram/Facebook/Twitter). Rỗng = /og.png mặc định."
                                                           />
-                                                          <p className="mt-1 text-xs opacity-60">
-                                                            Preview khi chia sẻ link (Telegram/Facebook/Twitter). Rỗng = /og.png mặc định.
-                                                          </p>
                                                         </div>
                                                       </div>
                                                       <div className="mt-4 border-t pt-4">
