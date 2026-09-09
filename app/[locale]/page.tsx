@@ -8,12 +8,17 @@ import type { Category } from '@/lib/types';
 import Header from '@/components/Header';
 import TickerStrip from '@/components/TickerStrip';
 import Hero from '@/components/Hero';
+import MarqueeBand from '@/components/MarqueeBand';
 import BrokerGrid from '@/components/BrokerGrid';
 import BlogGrid from '@/components/BlogGrid';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
+import ParticleField from '@/components/ParticleField';
+import MotionController from '@/components/MotionController';
 
 export const dynamic = 'force-dynamic';
+
+const SECTION_WORDS = ['Forex', 'CFD', 'Indices', 'Commodities', 'Crypto'];
 
 export default async function Home() {
   const t = await getTranslations('home');
@@ -22,61 +27,67 @@ export default async function Home() {
   const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   const showTicker = settings['layout.show_ticker'] !== 'false';
   const tickerItems = showTicker ? await getMarketDataSnapshot() : [];
-  const heroBg = settings['bg.hero'] || undefined;
-  const tickerBg = settings['bg.ticker'] || undefined;
   const newsletterBg = settings['bg.newsletter'] || undefined;
   const categories = await query<Category[]>('SELECT * FROM categories ORDER BY name');
 
   return (
     <>
+      <ParticleField />
+      <MotionController />
       <Header siteName={siteName} />
-      <TickerStrip show={showTicker} items={tickerItems} bgUrl={tickerBg} />
-      <Hero bgUrl={heroBg} />
+      <TickerStrip show={showTicker} items={tickerItems} />
 
-      <section id="brokers" className="bg-mesh py-16 md:py-[72px]">
+      <Hero />
+
+      {/* Infinite editorial marquee band */}
+      <MarqueeBand items={SECTION_WORDS} />
+
+      {/* 01 — Trading partners */}
+      <section id="brokers" className="relative overflow-hidden bg-mesh py-20 md:py-28" data-fade>
         <div className="mx-auto max-w-[1180px] px-7">
-          <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.14em] text-brand">
-                <span className="h-px w-8 bg-brand/70" />
-                {t('tradingPartners')}
+              <span className="flex items-center gap-3">
+                <span className="sec-num font-mono">01</span>
+                <span className="c-eyebrow">{t('tradingPartners')}</span>
               </span>
-              <h2 className="mt-2 text-h2 md:text-h2-lg">{t('topRatedBrokers')}</h2>
+              <h2 className="mt-3 h-section text-white">{t('topRatedBrokers')}</h2>
             </div>
             <Link
               href={routes.brokers}
-              className="group border-b-2 border-brand pb-0.5 text-nav font-semibold"
+              className="group hover-line pb-1 text-body-lg font-semibold text-gray-mid transition-colors hover:text-ink"
             >
               {t('viewFullComparison')}
-              <span className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
+              <span className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </div>
           <BrokerGrid limit={6} />
         </div>
       </section>
 
-      <section id="blog" className="border-y border-gray-line bg-gray-bg py-16 md:py-[72px]">
+      {/* 02 — Insights & analysis */}
+      <section id="blog" className="relative overflow-hidden border-y border-gray-line bg-gray-bg py-20 md:py-28" data-fade>
         <div className="mx-auto max-w-[1180px] px-7">
-          <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.14em] text-brand">
-                <span className="h-px w-8 bg-brand/70" />
-                {t('insightsAnalysis')}
+              <span className="flex items-center gap-3">
+                <span className="sec-num font-mono">02</span>
+                <span className="c-eyebrow">{t('insightsAnalysis')}</span>
               </span>
-              <h2 className="mt-2 text-h2 md:text-h2-lg">{t('latestPosts')}</h2>
+              <h2 className="mt-3 h-section text-white">{t('latestPosts')}</h2>
             </div>
             <Link
               href={routes.blog}
-              className="group border-b-2 border-brand pb-0.5 text-nav font-semibold"
+              className="group hover-line pb-1 text-body-lg font-semibold text-gray-mid transition-colors hover:text-ink"
             >
               {t('viewAll')}
-              <span className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
+              <span className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </div>
-          <div className="mb-11 flex flex-wrap gap-3">
+          <div className="mb-10 flex flex-wrap gap-3">
             <Link
               href={routes.blog}
-              className="glow-brand rounded-full border border-surface-dark bg-surface-dark px-4.5 py-2.5 text-sm font-medium text-white"
+              className="rounded-full border border-brand bg-brand px-5 py-2.5 text-sm font-medium text-white"
             >
               {tCat('all')}
             </Link>
@@ -84,7 +95,7 @@ export default async function Home() {
               <Link
                 key={cat.id}
                 href={routes.blogCategory(cat.slug)}
-                className="rounded-full border border-gray-line px-4.5 py-2.5 text-sm font-medium text-gray-mid transition-all duration-200 hover:-translate-y-0.5 hover:border-ink hover:text-ink"
+                className="rounded-full border border-gray-line px-5 py-2.5 text-sm font-medium text-gray-mid transition-all duration-200 hover:-translate-y-0.5 hover:border-ink hover:text-ink"
               >
                 {cat.name}
               </Link>
@@ -94,7 +105,8 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-16 md:py-[72px]">
+      {/* 03 — Newsletter */}
+      <section className="py-20 md:py-28" data-fade>
         <div className="mx-auto max-w-[1180px] px-7">
           <Newsletter bgUrl={newsletterBg} />
         </div>

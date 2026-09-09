@@ -1,16 +1,17 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
-/* "Signal" — dark-first financial terminal identity (docs/DESIGN_SYSTEM.md) */
+/* "Signal" — dark-first financial terminal identity (docs/DESIGN_SYSTEM.md)
+   ── Awwwards editorial upgrade ── deep dark / ivory / malt-amber accent   */
 :root {
-  --bg: #0b0e14;
-  --ink: #e8ebf2;
+  --bg: #0a0d13;
+  --ink: #f5f5f7;
   --surface-dark: #05070a;
-  --red: #ffb020;
-  --red-dark: #d68f0c;
-  --gray-bg: #131721;
-  --gray-line: #232a38;
-  --gray-mid: #8891a6;
+  --red: #f3b728;
+  --red-dark: #e5a93c;
+  --gray-bg: #10141d;
+  --gray-line: #1f2633;
+  --gray-mid: #8e9aa8;
   --up: #17c879;
   --down: #f0455c;
   --shadow-elevated: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -8px rgba(0, 0, 0, 0.55);
@@ -19,14 +20,14 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0b0e14;
-  --ink: #e8ebf2;
+  --bg: #0a0d13;
+  --ink: #f5f5f7;
   --surface-dark: #05070a;
-  --red: #ffb020;
-  --red-dark: #d68f0c;
-  --gray-bg: #131721;
-  --gray-line: #232a38;
-  --gray-mid: #8891a6;
+  --red: #f3b728;
+  --red-dark: #e5a93c;
+  --gray-bg: #10141d;
+  --gray-line: #1f2633;
+  --gray-mid: #8e9aa8;
   --up: #17c879;
   --down: #f0455c;
 }
@@ -36,8 +37,8 @@
   --bg: #f6f7fa;
   --ink: #0b0e14;
   --surface-dark: #0b0e14;
-  --red: #c97f00;
-  --red-dark: #a66900;
+  --red: #e5a93c;
+  --red-dark: #c98d1f;
   --gray-bg: #eef1f5;
   --gray-line: #dce1e8;
   --gray-mid: #5b6472;
@@ -126,6 +127,134 @@ body {
 
 /* Selection */
 ::selection { background: color-mix(in srgb, var(--red) 30%, transparent); color: var(--ink); }
+
+/* ── Awwwards editorial upgrade ─────────────────────────────── */
+
+/* Display headline — geometric heavy, fluid clamp, tight tracking */
+.h-display {
+  font-family: var(--font-archivo-black), sans-serif;
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  font-size: clamp(2.5rem, 5vw, 6rem);
+}
+html[lang="vi"] .h-display {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  font-size: clamp(2.5rem, 5vw, 6rem);
+}
+
+/* Editorial section heading — oversized, bracketed by a meta eyebrow */
+.h-section {
+  font-family: var(--font-archivo-black), sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.9rem, 3.6vw, 3.6rem);
+}
+html[lang="vi"] .h-section {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.9rem, 3.6vw, 3.6rem);
+}
+
+/* Eyebrow meta label — mono, track-wild */
+.c-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+}
+.c-eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 1px;
+  background: var(--red);
+}
+
+/* Kinetic mask reveal — line-by-line on scroll. Markup:
+   <div class="k-mask"><div class="k-line" data-reveal>…</div></div>
+   `.k-line` starts translated below + rotated out; JS adds .is-in. */
+.k-mask { overflow: hidden; display: block; }
+html.js .k-line {
+  display: inline-block;
+  transform: translateY(112%) rotateX(-18deg);
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease;
+  transform-origin: left bottom;
+  will-change: transform;
+}
+html.js .k-line.is-in {
+  transform: translateY(0) rotateX(0);
+  opacity: 1;
+}
+
+/* Generic fade-up on scroll (cards) — hidden only under JS, else SSR-visible */
+html.js [data-fade] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.js [data-fade].is-in { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  html.js .k-line, html.js [data-fade] { transition: none; opacity: 1; transform: none; }
+}
+
+/* Infinite marquee — editorial word band */
+.marquee-track { display: flex; width: max-content; animation: marquee-x var(--marquee-dur, 30s) linear infinite; }
+@keyframes marquee-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-wrap { overflow: hidden; }
+
+/* Frosted card w/ ambient radial glow behind */
+.card-glow {
+  position: relative;
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--gray-bg) 62%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 24px 60px -20px rgba(0,0,0,0.6);
+}
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px -2px 60% auto;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(80% 90% at 85% 0%, rgba(243,183,40,0.16) 0%, transparent 60%),
+    radial-gradient(70% 80% at 8% 90%, rgba(46,139,255,0.10) 0%, transparent 60%);
+}
+
+/* Section index numeral — editorial numbering (01, 02…) */
+.sec-num {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  color: color-mix(in srgb, var(--red) 65%, transparent);
+  letter-spacing: 0.05em;
+}
+
+/* Magnetic hover underline for editorial nav links */
+.hover-line {
+  position: relative;
+}
+.hover-line::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 100%;
+  bottom: -2px; height: 1px;
+  background: var(--red);
+  transition: right 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hover-line:hover::after { right: 0; left: 100%; }
 
 /* Global background image — dùng Cuộn bình thường (không fixed) để không vỡ trên
    mobile/iOS. Tô thêm 1 layer tối (gradient) đè lên ảnh để nội dung dễ đọc & hài hoà. */

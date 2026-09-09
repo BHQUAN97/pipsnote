@@ -94,6 +94,7 @@ export default async function RootLayout({
               (function() {
                 const stored = localStorage.getItem('theme');
                 if (stored) document.documentElement.setAttribute('data-theme', stored);
+                document.documentElement.classList.add('js');
               })();
             `,
           }}
