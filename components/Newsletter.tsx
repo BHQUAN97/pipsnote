@@ -52,12 +52,12 @@ export default function Newsletter({ bgUrl }: { bgUrl?: string }) {
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === 'loading'}
             placeholder={t('emailPlaceholder')}
-            className="min-w-0 flex-1 border border-white/20 bg-transparent px-4 py-4 text-sm text-white placeholder:text-white/40 transition-colors focus:border-brand focus:outline-none disabled:opacity-60"
+            className="min-w-0 flex-1 rounded-full border border-white/12 bg-white/[0.06] px-5 py-3.5 text-sm text-white placeholder:text-white/40 backdrop-blur-sm transition-all focus:border-brand focus:bg-white/[0.09] focus:outline-none disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="shrink-0 bg-brand px-6 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
+            className="shrink-0 rounded-full bg-brand px-7 text-sm font-semibold text-white transition-all hover:bg-brand-dark disabled:opacity-60"
           >
             {status === 'loading' ? '...' : t('subscribe')}
           </button>

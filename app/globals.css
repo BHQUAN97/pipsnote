@@ -305,15 +305,30 @@ html[lang="vi"] h3 {
 }
 
 .card-elevated {
-  box-shadow: var(--shadow-elevated);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  border-radius: 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--gray-line) 55%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gray-bg) 88%, #0a0d13) 0%,
+    color-mix(in srgb, var(--gray-bg) 40%, #05070a) 100%
+  );
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 14px 38px -16px rgba(0, 0, 0, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .card-elevated:hover {
-  transform: translateY(-2px);
-  border-color: var(--gray-mid);
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--red) 32%, color-mix(in srgb, var(--gray-line) 68%, transparent));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--red) 10%, transparent),
+    0 22px 60px -22px rgba(0, 0, 0, 0.65);
+}
+.card-elevated-static {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 14px 38px -16px rgba(0, 0, 0, 0.55);
+  border-radius: 1.35rem;
 }
 
+/* Dropdown/elevated-static panels (LocaleSwitcher, admin) — shadow only, no surface */
 .shadow-elevated-static {
   box-shadow: var(--shadow-elevated);
 }

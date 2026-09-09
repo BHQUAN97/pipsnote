@@ -7,7 +7,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
       href={`/go/${broker.slug}`}
       target="_blank"
       rel="nofollow noopener"
-      className="card-elevated group relative flex flex-col gap-4 border border-gray-line bg-bg p-6 hover:-translate-y-1.5 hover:border-ink/60 hover:shadow-soft"
+      className="card-elevated group relative flex flex-col gap-5 p-7 hover:-translate-y-1"
     >
       <div className="flex items-start justify-between">
         <span className="flex items-center gap-2.5">
@@ -61,7 +61,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         </div>
       </div>
 
-      <span className="mt-auto flex items-center justify-between gap-2 overflow-hidden rounded-lg bg-brand px-4 py-3.5 text-nav font-semibold text-white transition-all duration-200 group-hover:bg-brand-dark">
+      <span className="mt-auto flex items-center justify-between gap-2 overflow-hidden rounded-full bg-brand px-5 py-3.5 text-nav font-semibold text-white transition-all duration-200 group-hover:bg-brand-dark">
         <span>Open account</span>
         <span className="inline-block transition-transform duration-200 group-hover:translate-x-1" aria-hidden>→</span>
       </span>
