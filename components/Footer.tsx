@@ -8,8 +8,8 @@ export default async function Footer({ siteName = 'TopTrendMarkets' }: { siteNam
   const t = await getTranslations('footer');
   const tNav = await getTranslations('nav');
   const settings = await getSiteSettings();
-  const brand = siteName.slice(0, 4).toUpperCase();
-  const rest = siteName.slice(4).toUpperCase();
+  const brand = siteName.slice(0, 8).toUpperCase();
+  const rest = siteName.slice(8).toUpperCase();
   const contactEmail = settings['footer.contact_email'] || 'hello@toptrendmarkets.com';
 
   return (
@@ -19,7 +19,7 @@ export default async function Footer({ siteName = 'TopTrendMarkets' }: { siteNam
           <div>
             <div className="mb-3.5 font-display text-wordmark">
               {brand}
-              <span className="text-brand">{rest}</span>
+              <span className="text-up">{rest}</span>
             </div>
             <p className="mb-5 max-w-[280px] text-sm leading-relaxed text-gray-mid">
               {t('tagline')}

@@ -9,8 +9,8 @@ export default async function Header({ siteName = 'TopTrendMarkets' }: { siteNam
   const t = await getTranslations('nav');
   const settings = await getSiteSettings();
   const logoImage = settings['seo.logo_image'] || '';
-  const brand = siteName.slice(0, 4).toUpperCase();
-  const rest = siteName.slice(4).toUpperCase();
+  const brand = siteName.slice(0, 8).toUpperCase();
+  const rest = siteName.slice(8).toUpperCase();
 
   const NAV_LINKS = [
     { href: '/blog', label: t('blog') },
@@ -28,7 +28,7 @@ export default async function Header({ siteName = 'TopTrendMarkets' }: { siteNam
           ) : (
             <>
               {brand}
-              <span className="text-gradient">{rest}</span>
+              <span className="text-up">{rest}</span>
             </>
           )}
           <span className="absolute -bottom-1 left-0 h-0.5 w-0 rounded-full bg-brand transition-all duration-300 group-hover:w-full" />
