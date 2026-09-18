@@ -11,7 +11,6 @@ import Hero from '@/components/Hero';
 import MarqueeBand from '@/components/MarqueeBand';
 import BrokerGrid from '@/components/BrokerGrid';
 import BlogGrid from '@/components/BlogGrid';
-import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
 import ParticleField from '@/components/ParticleField';
 import MotionController from '@/components/MotionController';
@@ -27,7 +26,6 @@ export default async function Home() {
   const siteName = settings['layout.site_name'] || 'TopTrendMarkets';
   const showTicker = settings['layout.show_ticker'] !== 'false';
   const tickerItems = showTicker ? await getMarketDataSnapshot() : [];
-  const newsletterBg = settings['bg.newsletter'] || undefined;
   const categories = await query<Category[]>('SELECT * FROM categories ORDER BY name');
 
   return (
@@ -102,13 +100,6 @@ export default async function Home() {
             ))}
           </div>
           <BlogGrid limit={6} />
-        </div>
-      </section>
-
-      {/* 03 — Newsletter */}
-      <section className="py-20 md:py-28" data-fade>
-        <div className="mx-auto max-w-[1180px] px-7">
-          <Newsletter bgUrl={newsletterBg} />
         </div>
       </section>
 
