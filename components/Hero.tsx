@@ -39,7 +39,7 @@ export default function Hero({ bgUrl }: { bgUrl?: string }) {
             <span className="c-eyebrow">{t('eyebrow')}</span>
             <h1 className="mt-6">
               <span className="k-mask block"><span className="k-line h-display">{t('headlineLine1')}</span></span>
-              <span className="k-mask block"><span className="k-line h-display text-gradient">{t('headlineLine2')}</span></span>
+              <span className="k-mask block"><span className="k-line h-display text-up">{t('headlineLine2')}</span></span>
             </h1>
             <p className="mt-8 max-w-[560px] text-body-lg leading-relaxed text-gray-mid" data-fade>
               {t('subtitle')}
