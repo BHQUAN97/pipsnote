@@ -20,7 +20,7 @@ export default async function Header({ siteName = 'TopTrendMarkets' }: { siteNam
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-line bg-bg/80 backdrop-blur-xl backdrop-saturate-150">
+    <header className="sticky top-0 z-50 border-b border-gray-line bg-bg">
       <div className="mx-auto flex h-[76px] max-w-[1180px] items-center justify-between gap-4 px-7">
         <Link href="/" className="group relative flex items-center font-display text-wordmark tracking-tight">
           {logoImage ? (

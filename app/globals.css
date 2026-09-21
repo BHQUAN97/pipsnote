@@ -218,9 +218,7 @@ html.js [data-fade].is-in { opacity: 1; transform: translateY(0); }
 .card-glow {
   position: relative;
   border-radius: 1.25rem;
-  background: color-mix(in srgb, var(--gray-bg) 62%, transparent);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  backdrop-filter: blur(20px) saturate(150%);
+  background: var(--gray-bg);
   border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 24px 60px -20px rgba(0,0,0,0.6);
 }
