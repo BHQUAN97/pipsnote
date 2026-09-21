@@ -37,6 +37,7 @@ interface PostFormValues {
   read_time: string;
   seo_title: string;
   seo_desc: string;
+  cta_url: string;
   tags: TagOption[];
 }
 
@@ -53,6 +54,7 @@ function toFormValues(post?: Post | null): PostFormValues {
     read_time: post?.read_time != null ? String(post.read_time) : '',
     seo_title: post?.seo_title ?? '',
     seo_desc: post?.seo_desc ?? '',
+    cta_url: post?.cta_url ?? '',
     tags: post?.tags ?? [],
   };
 }
@@ -100,6 +102,7 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
       read_time: values.read_time ? Number(values.read_time) : null,
       seo_title: values.seo_title || null,
       seo_desc: values.seo_desc || null,
+      cta_url: values.cta_url || null,
       tag_ids: values.tags.map((tag) => tag.id),
     };
 
@@ -370,6 +373,18 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
           rows={2}
           className="w-full px-4 py-2 border border-gray-line rounded-sm"
           disabled={saving}
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm mb-2 font-medium">Đăng Kí Ngay URL (broker signup link)</label>
+        <Input
+          type="text"
+          value={values.cta_url}
+          onChange={(e) => update('cta_url', e.target.value)}
+          className="w-full"
+          disabled={saving}
+          placeholder="https://..."
         />
       </div>
 

@@ -64,7 +64,7 @@ ssh_exec "
         echo 'Pulling latest code...'
         cd ${APP_DIR}
         git fetch origin ${BRANCH}
-        git reset --hard origin/${BRANCH}
+        git merge --ff-only FETCH_HEAD
     else
         echo 'Cloning repository...'
         git clone -b ${BRANCH} ${REPO_URL} ${APP_DIR}

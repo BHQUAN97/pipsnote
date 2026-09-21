@@ -184,6 +184,7 @@ function docToPost(doc: PostSearchDoc): Post {
     read_time: doc.read_time,
     seo_title: null,
     seo_desc: null,
+    cta_url: null,
     published_at: doc.published_at,
   };
 }

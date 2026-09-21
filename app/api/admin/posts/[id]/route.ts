@@ -27,6 +27,7 @@ const PostUpdateSchema = z.object({
   read_time: z.number().int().nonnegative().nullable().optional(),
   seo_title: z.string().max(200).nullable().optional(),
   seo_desc: z.string().max(300).nullable().optional(),
+  cta_url: z.string().max(500).nullable().optional(),
   tag_ids: z.array(z.number().int().positive()).optional(),
 });
 

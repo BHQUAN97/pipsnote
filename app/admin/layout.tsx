@@ -13,6 +13,7 @@ const NAV_ITEMS: Array<{ href: string; label: string; roles: AdminUser['role'][]
   { href: '/admin/users', label: 'Users', roles: ['superadmin'] },
   { href: '/admin/settings', label: 'Settings', roles: ['superadmin'] },
   { href: '/admin/logs', label: 'Logs', roles: ['superadmin'] },
+  { href: '/admin/password', label: 'Password', roles: ['superadmin', 'editor', 'author'] },
 ];
 
 // Icon đơn giản (unicode) cho từng nav item
@@ -24,6 +25,7 @@ const NAV_ICON: Record<string, string> = {
   Users: '☻',
   Settings: '⚙',
   Logs: '☰',
+  Password: '🔑',
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

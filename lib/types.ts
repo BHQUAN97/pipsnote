@@ -76,6 +76,7 @@ export interface Post {
   read_time: number | null;
   seo_title: string | null;
   seo_desc: string | null;
+  cta_url: string | null;
   published_at: string | null;
   author_name?: string | null;
   tags?: { id: number; name: string; slug: string }[];

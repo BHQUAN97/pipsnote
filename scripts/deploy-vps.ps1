@@ -62,7 +62,7 @@ Write-Info "✓ Shared infrastructure running"
 
 # ── Step 2: Clone/update repository ────────────────────────
 Write-Log "Step 2: Cloning/updating repository..."
-$cloneCmd = "if [ -d $APP_DIR/.git ]; then echo 'Pulling...'; cd $APP_DIR && git fetch origin $BRANCH && git reset --hard origin/$BRANCH; else echo 'Cloning...'; git clone -b $BRANCH $REPO_URL $APP_DIR; fi"
+$cloneCmd = "if [ -d $APP_DIR/.git ]; then echo 'Pulling...'; cd $APP_DIR && git fetch origin $BRANCH && git merge --ff-only FETCH_HEAD; else echo 'Cloning...'; git clone -b $BRANCH $REPO_URL $APP_DIR; fi"
 
 SSH-Exec $cloneCmd | Out-Null
 

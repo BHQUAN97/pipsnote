@@ -26,6 +26,7 @@ const PostCreateSchema = z.object({
   read_time: z.number().int().nonnegative().nullable().optional(),
   seo_title: z.string().max(200).nullable().optional(),
   seo_desc: z.string().max(300).nullable().optional(),
+  cta_url: z.string().max(500).nullable().optional(),
   tag_ids: z.array(z.number().int().positive()).optional(),
 });
 
@@ -100,8 +101,8 @@ async function postHandler(req: NextRequest) {
     const result = await query<ResultSetHeader>(
       `INSERT INTO posts
         (title, slug, excerpt, content, featured_image, author_id, category_id, status,
-         is_featured, read_time, seo_title, seo_desc, published_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         is_featured, read_time, seo_title, seo_desc, cta_url, published_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.title,
         data.slug,
@@ -115,6 +116,7 @@ async function postHandler(req: NextRequest) {
         data.read_time ?? null,
         data.seo_title ?? null,
         data.seo_desc ?? null,
+        data.cta_url ?? null,
         publishedAt,
       ]
     );

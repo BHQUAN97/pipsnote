@@ -146,6 +146,19 @@ export default async function BlogDetailPage({
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
+          {post.cta_url && (
+            <div className="mt-10 text-center">
+              <a
+                href={post.cta_url}
+                target="_blank"
+                rel="nofollow noopener"
+                className="inline-flex items-center justify-center rounded-sm bg-brand px-8 py-4 text-base font-semibold text-white hover:bg-brand-dark"
+              >
+                Đăng Kí Ngay →
+              </a>
+            </div>
+          )}
+
           <div className="mt-12 border-t border-gray-line pt-6">
             <RiskDisclaimer siteName={siteName} />
           </div>

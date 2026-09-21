@@ -21,7 +21,7 @@ ssh $VPS "docker ps | grep -E 'shared-mysql|shared-nginx'" || { echo "Shared inf
 echo "[3/10] Cloning/updating repository..."
 ssh $VPS "
 if [ -d $APP_DIR/.git ]; then
-    cd $APP_DIR && git fetch origin main && git reset --hard origin/main
+    cd $APP_DIR && git fetch origin main && git merge --ff-only FETCH_HEAD
 else
     git clone -b main https://github.com/BHQUAN97/pipsnote.git $APP_DIR
 fi
