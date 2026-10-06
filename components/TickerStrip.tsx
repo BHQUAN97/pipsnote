@@ -43,11 +43,19 @@ export default function TickerStrip({
           <div className="absolute inset-0 -z-10 bg-surface-dark/85" />
         </>
       )}
-      <div className="relative z-10 flex border-b border-white/5">
-        <span className="flex shrink-0 items-center gap-2 bg-brand px-4 py-2.5 font-mono text-meta font-bold uppercase tracking-[0.08em] text-surface-dark">
+      <div className="relative z-10 flex items-stretch border-b border-white/5">
+        <span className="relative z-10 flex shrink-0 items-center gap-2 bg-brand px-4 py-2.5 font-mono text-meta font-bold uppercase tracking-[0.08em] text-surface-dark">
           L I V E
         </span>
-        <div className="animate-ticker-scroll inline-flex">
+        {/* Fade 64px ở mép trái: giá cuộn sang trái sẽ mờ dần TRƯỚC khi chạm badge "L I V E",
+            không bao giờ đè/che chữ live. */}
+        <div
+          className="animate-ticker-scroll inline-flex"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent, black 64px)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 64px)',
+          }}
+        >
           <TickerItems items={items} />
           <TickerItems items={items} />
         </div>

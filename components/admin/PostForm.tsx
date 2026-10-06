@@ -376,15 +376,19 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
         />
       </div>
 
-      <div>
-        <label className="block text-sm mb-2 font-medium">Đăng Kí Ngay URL (broker signup link)</label>
+      <div className="rounded-md border border-gray-line p-4">
+        <label className="block text-sm mb-1 font-semibold">Đăng Kí Ngay — nút đăng ký broker</label>
+        <p className="mb-2 text-xs text-gray-mid">
+          Dán link đăng ký broker (vd <code className="text-ink">https://broker.com/register?ref=…</code>). Nếu có link, cuối bài hiện nút
+          {" "}“Đăng Kí Ngay →” để khách bấm đăng ký. Để trống nếu bài không cần.
+        </p>
         <Input
           type="text"
           value={values.cta_url}
           onChange={(e) => update('cta_url', e.target.value)}
           className="w-full"
           disabled={saving}
-          placeholder="https://..."
+          placeholder="https://broker.com/register?ref=…"
         />
       </div>
 
