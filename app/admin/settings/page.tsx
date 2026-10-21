@@ -106,21 +106,23 @@ export default function AdminSettingsPage() {
   };
 
   // Field ảnh dùng chung (Logo / Favicon / OG) — upload file thay vì gõ URL
+  // LƯU Ý: dùng prop `fieldKey`, KHÔNG dùng `key` — React dành riêng `key` cho
+  // reconciliation, không bao giờ truyền vào component (bug F5 mất ảnh 2026-10).
   const PicField = ({
-    key,
+    fieldKey,
     label,
     helper,
   }: {
-    key: string;
+    fieldKey: string;
     label: string;
     helper: string;
   }) => (
     <div>
       <label className="block text-sm mb-2">{label}</label>
       <div className="flex flex-wrap items-center gap-3 mb-2">
-        {settings[key] ? (
+        {settings[fieldKey] ? (
           <div className="relative h-16 w-28 overflow-hidden rounded-sm border bg-gray-bg">
-            <Image src={settings[key]} alt="" fill className="object-contain" />
+            <Image src={settings[fieldKey]} alt="" fill className="object-contain" />
           </div>
         ) : (
           <div className="flex h-16 w-28 items-center justify-center rounded-sm border text-xs text-gray-mid">
@@ -129,14 +131,14 @@ export default function AdminSettingsPage() {
         )}
         <button
           type="button"
-          onClick={() => setKey(key, '')}
-          disabled={!settings[key] || uploadingKey !== null}
+          onClick={() => setKey(fieldKey, '')}
+          disabled={!settings[fieldKey] || uploadingKey !== null}
           className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg disabled:opacity-50"
         >
           Xoá ảnh
         </button>
         <label className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg cursor-pointer flex items-center">
-          {uploadingKey === key ? 'Đang tải...' : 'Tải ảnh lên'}
+          {uploadingKey === fieldKey ? 'Đang tải...' : 'Tải ảnh lên'}
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
@@ -145,12 +147,12 @@ export default function AdminSettingsPage() {
             onChange={(e) => {
               const file = e.target.files?.[0];
               e.target.value = '';
-              if (file) handleBgUpload(key, file);
+              if (file) handleBgUpload(fieldKey, file);
             }}
           />
         </label>
       </div>
-      {uploadingKey === key && <p className="text-xs text-gray-mid">Đang tải lên...</p>}
+      {uploadingKey === fieldKey && <p className="text-xs text-gray-mid">Đang tải lên...</p>}
       {uploadError && <p className="mt-1 text-xs text-down">Lỗi tải ảnh: {uploadError}</p>}
       <p className="mt-1 text-xs opacity-60">{helper}</p>
     </div>
@@ -370,21 +372,21 @@ export default function AdminSettingsPage() {
                                                         </div>
                                                         <div>
                                                           <PicField
-                                                            key="seo.logo_image"
+                                                            fieldKey="seo.logo_image"
                                                             label="Logo (ảnh tiêu đề)"
                                                             helper="Logo hiển thị ở header thay cho tên chữ. Rỗng = dùng tên chữ."
                                                           />
                                                         </div>
                                                         <div>
                                                           <PicField
-                                                            key="seo.favicon"
+                                                            fieldKey="seo.favicon"
                                                             label="Favicon"
                                                             helper="Icon tab trình duyệt. Rỗng = dùng app/favicon.ico mặc định."
                                                           />
                                                         </div>
                                                         <div>
                                                           <PicField
-                                                            key="seo.og_image"
+                                                            fieldKey="seo.og_image"
                                                             label="Ảnh chia sẻ (OG Image)"
                                                             helper="Preview khi chia sẻ link (Telegram/Facebook/Twitter). Rỗng = /og.png mặc định."
                                                           />
