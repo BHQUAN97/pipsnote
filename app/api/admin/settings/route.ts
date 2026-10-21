@@ -4,6 +4,7 @@ import { withApiHandler } from '@/lib/withApiHandler';
 import { getSiteSettings, invalidateSiteSettingsCache } from '@/lib/settings';
 import { requireAdmin } from '@/lib/getAdminUser';
 import { query } from '@/lib/db';
+import { logger } from '@/lib/logger';
 
 const HexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 const BoolStringSchema = z.enum(['true', 'false']);
@@ -13,7 +14,7 @@ const ImageUrlSchema = z.union([
   z
     .string()
     .refine(
-      (v) => /^https?:\/\//.test(v) || v.startsWith('/images/backgrounds/'),
+      (v) => /^https?:\/\//.test(v) || v.startsWith('/images/backgrounds/') || v.startsWith('/api/media/'),
       'Invalid image URL'
     ),
 ]);
@@ -63,11 +64,8 @@ const KEY_SCHEMAS: Record<string, z.ZodTypeAny> = {
   'bg.newsletter': ImageUrlSchema,
 };
 
-const SettingsUpdateSchema = z
-  .record(z.string(), z.string())
-  .refine((obj) => Object.keys(obj).every((k) => k in KEY_SCHEMAS), {
-    message: 'Unknown setting key',
-  });
+const SettingsUpdateSchema = z.record(z.string(), z.string());
+void SettingsUpdateSchema;
 
 function getClientIp(req: NextRequest): string {
   return (
@@ -87,25 +85,21 @@ async function getHandler() {
 async function patchHandler(req: NextRequest) {
   const user = await requireAdmin(['superadmin']);
   const body = await req.json();
-  const parsed = SettingsUpdateSchema.safeParse(body);
-
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Invalid settings', details: parsed.error.issues },
-      { status: 400 }
-    );
-  }
-
-  const updates = Object.entries(parsed.data);
-  for (const [key, value] of updates) {
+  const updates: Array<[string, string]> = [];
+  const skipped: string[] = [];
+  for (const [key, value] of Object.entries(body)) {
     const schema = KEY_SCHEMAS[key];
+    if (!schema) {
+      skipped.push(key); // unknown key -> ignore, ko chem save
+      logger.warn({ msg: 'settings_patch_unknown_key', key }, 'Unknown setting key ignored');
+      continue;
+    }
     const valueResult = schema.safeParse(value);
     if (!valueResult.success) {
-      return NextResponse.json(
-        { error: `Invalid value for ${key}`, details: valueResult.error.issues },
-        { status: 400 }
-      );
+      skipped.push(key); // value loi -> bo qua key nay, van luu phan con lai
+      continue;
     }
+    updates.push([key, valueResult.data as string]);
   }
 
   const before = await getSiteSettings();
@@ -136,7 +130,7 @@ async function patchHandler(req: NextRequest) {
     ]
   );
 
-  return NextResponse.json({ success: true, settings: await getSiteSettings() });
+  return NextResponse.json({ success: true, skipped, settings: await getSiteSettings() });
 }
 
 export const GET = withApiHandler('admin-settings-get', getHandler);

@@ -150,6 +150,8 @@ export default function AdminSettingsPage() {
           />
         </label>
       </div>
+      {uploadingKey === key && <p className="text-xs text-gray-mid">Đang tải lên...</p>}
+      {uploadError && <p className="mt-1 text-xs text-down">Lỗi tải ảnh: {uploadError}</p>}
       <p className="mt-1 text-xs opacity-60">{helper}</p>
     </div>
   );
