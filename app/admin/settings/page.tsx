@@ -188,10 +188,13 @@ export default function AdminSettingsPage() {
         body: JSON.stringify(settings),
       });
 
-      if (!res.ok) throw new Error('Save failed');
-      setMessage('✓ Settings saved. Refresh page to see changes.');
-    } catch {
-      setMessage('Failed to save settings');
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => '');
+        throw new Error(`Save failed (${res.status}): ${errBody.slice(0, 300)}`);
+      }
+      setMessage('✓ Settings saved. Public site will show changes within a minute.');
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : 'Failed to save settings');
     } finally {
       setSaving(false);
     }
