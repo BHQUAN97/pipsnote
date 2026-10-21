@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Broker } from '@/lib/types';
 import Input from '@/components/ui/Input';
+import ImageUploader from '@/components/admin/ImageUploader';
 import { slugify } from '@/lib/slugify';
 
 interface BrokerFormValues {
@@ -139,16 +140,7 @@ export default function BrokerForm({ brokerId, initialBroker }: { brokerId?: num
         />
       </div>
 
-      <div>
-        <label className="block text-sm mb-2 font-medium">Logo (URL)</label>
-        <Input
-          type="text"
-          value={values.logo_url}
-          onChange={(e) => update('logo_url', e.target.value)}
-          className="w-full"
-          disabled={saving}
-        />
-      </div>
+      <ImageUploader label="Logo" value={values.logo_url} onChange={(v) => update('logo_url', v)} disabled={saving} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>

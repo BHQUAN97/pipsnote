@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Category, Post } from '@/lib/types';
 import Input from '@/components/ui/Input';
+import ImageUploader from '@/components/admin/ImageUploader';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import TagInput from '@/components/admin/TagInput';
 import PostTranslationPanel from '@/components/admin/PostTranslationPanel';
@@ -279,16 +280,12 @@ export default function PostForm({ postId, initialPost }: { postId?: number; ini
         <RichTextEditor value={values.content} onChange={(html) => update('content', html)} disabled={saving} />
       </div>
 
-      <div>
-        <label className="block text-sm mb-2 font-medium">Featured image (URL)</label>
-        <Input
-          type="text"
-          value={values.featured_image}
-          onChange={(e) => update('featured_image', e.target.value)}
-          className="w-full"
-          disabled={saving}
-        />
-      </div>
+      <ImageUploader
+        label="Featured image"
+        value={values.featured_image}
+        onChange={(v) => update('featured_image', v)}
+        disabled={saving}
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>

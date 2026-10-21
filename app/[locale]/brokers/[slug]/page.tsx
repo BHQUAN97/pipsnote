@@ -63,7 +63,17 @@ export default async function BrokerDetailPage({
         <div className="mx-auto max-w-[760px] px-7">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-h1 leading-tight md:text-h1-lg">{broker.name}</h1>
+              <h1 className="flex items-center gap-3 text-h1 leading-tight md:text-h1-lg">
+                {broker.logo_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={broker.logo_url}
+                    alt=""
+                    className="h-12 w-12 shrink-0 rounded-sm object-contain"
+                  />
+                )}
+                {broker.name}
+              </h1>
               {broker.rating != null && (
                 <span className="mt-1 block font-mono text-sm text-gray-mid">
                   ★ {Number(broker.rating).toFixed(1)} / 5

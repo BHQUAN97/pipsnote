@@ -149,17 +149,7 @@ export default function AdminSettingsPage() {
             }}
           />
         </label>
-        {settings[key] && (
-          <input
-            type="text"
-            value={settings[key]}
-            onChange={(e) => setKey(key, e.target.value)}
-            className="min-h-[44px] flex-1 min-w-[180px] px-3 py-2 border rounded-sm text-xs font-mono"
-            aria-label={`${label} URL`}
-          />
-        )}
       </div>
-      {uploadError && uploadError && <p className="mb-2 text-sm text-down">{uploadError}</p>}
       <p className="mt-1 text-xs opacity-60">{helper}</p>
     </div>
   );

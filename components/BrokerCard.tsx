@@ -9,9 +9,9 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
       rel="nofollow noopener"
       className="card-elevated group relative flex flex-col gap-5 p-7 hover:-translate-y-1"
     >
-      <div className="flex items-start justify-between">
-        <span className="flex items-center gap-2.5">
-          {broker.logo_url && (
+      <div className="flex items-start justify-between gap-3">
+        <span className="flex min-w-0 items-center gap-2.5">
+          {broker.logo_url ? (
             <Image
               src={broker.logo_url}
               alt=""
@@ -19,8 +19,12 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
               height={32}
               className="h-8 w-8 shrink-0 rounded-sm object-contain"
             />
+          ) : (
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm bg-surface-dark font-mono text-xs font-semibold text-gray-mid">
+              {broker.name.charAt(0).toUpperCase()}
+            </span>
           )}
-          <span className="font-display text-card-title">{broker.name}</span>
+          <span className="truncate font-display text-card-title">{broker.name}</span>
         </span>
         {broker.badge && (
           <span
