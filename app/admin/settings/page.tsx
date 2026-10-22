@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { X } from 'lucide-react';
 import { BACKGROUND_PRESETS } from '@/lib/backgroundPresets';
 
 type Settings = Record<string, string>;
@@ -123,20 +124,22 @@ export default function AdminSettingsPage() {
         {settings[fieldKey] ? (
           <div className="relative h-16 w-28 overflow-hidden rounded-sm border bg-gray-bg">
             <Image src={settings[fieldKey]} alt="" fill className="object-contain" />
+            <button
+              type="button"
+              onClick={() => setKey(fieldKey, '')}
+              disabled={uploadingKey !== null}
+              title="Xoá ảnh"
+              aria-label={`Xoá ảnh ${label}`}
+              className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900/70 text-white hover:bg-red-600 disabled:opacity-50"
+            >
+              <X size={12} strokeWidth={3} />
+            </button>
           </div>
         ) : (
           <div className="flex h-16 w-28 items-center justify-center rounded-sm border text-xs text-gray-mid">
             Chưa có
           </div>
         )}
-        <button
-          type="button"
-          onClick={() => setKey(fieldKey, '')}
-          disabled={!settings[fieldKey] || uploadingKey !== null}
-          className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg disabled:opacity-50"
-        >
-          Xoá ảnh
-        </button>
         <label className="min-h-[44px] px-4 py-2 border rounded-sm text-sm hover:bg-gray-bg cursor-pointer flex items-center">
           {uploadingKey === fieldKey ? 'Đang tải...' : 'Tải ảnh lên'}
           <input
